@@ -39,8 +39,12 @@ const {
 	currentCategory,
 	currentTags,
 } = Astro.props;
-const hasArticleSidebar = currentCategory !== undefined || currentTags !== undefined;
-const hasSidebarToc = siteConfig.toc.enable && (hasArticleSidebar || showToc) && headings.length > 0;
+const hasArticleSidebar =
+	currentCategory !== undefined || currentTags !== undefined;
+const hasSidebarToc =
+	siteConfig.toc.enable &&
+	(hasArticleSidebar || showToc) &&
+	headings.length > 0;
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;

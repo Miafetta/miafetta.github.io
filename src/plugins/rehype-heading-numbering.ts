@@ -146,7 +146,11 @@ function resetCounters(counters: number[], fromDepth: number) {
 	}
 }
 
-function formatDecimalLabel(counters: number[], startDepth: number, depth: number) {
+function formatDecimalLabel(
+	counters: number[],
+	startDepth: number,
+	depth: number,
+) {
 	const label = counters.slice(startDepth, depth + 1).join(".");
 	return depth === startDepth ? `${label}.` : label;
 }

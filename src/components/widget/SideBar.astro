@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
 import { getCategoryUrl, getTagUrl } from "../../utils/url-utils";
@@ -10,7 +11,6 @@ import Profile from "./Profile.astro";
 import Tag from "./Tags.astro";
 import TOC from "./TOC.astro";
 import WidgetLayout from "./WidgetLayout.astro";
-import { siteConfig } from "../../config";
 
 interface Props {
 	class?: string;

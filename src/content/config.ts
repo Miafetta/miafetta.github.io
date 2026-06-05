@@ -1,20 +1,23 @@
 import { defineCollection, z } from "astro:content";
 
 const createHeadingNumberingSchema = (defaultMode: "H2" | "none") =>
-	z.preprocess((value) => {
-		if (typeof value !== "string") {
+	z.preprocess(
+		(value) => {
+			if (typeof value !== "string") {
+				return value;
+			}
+
+			const mode = value.trim().toLowerCase();
+			if (mode === "h1") return "H1";
+			if (mode === "h2") return "H2";
+			if (mode === "roman") return "Roman";
+			if (mode === "chinese") return "Chinese";
+			if (mode === "none") return "none";
+
 			return value;
-		}
-
-		const mode = value.trim().toLowerCase();
-		if (mode === "h1") return "H1";
-		if (mode === "h2") return "H2";
-		if (mode === "roman") return "Roman";
-		if (mode === "chinese") return "Chinese";
-		if (mode === "none") return "none";
-
-		return value;
-	}, z.enum(["H1", "H2", "Roman", "Chinese", "none"]).default(defaultMode));
+		},
+		z.enum(["H1", "H2", "Roman", "Chinese", "none"]).default(defaultMode),
+	);
 
 const headingNumberingSchema = createHeadingNumberingSchema("H2");
 
