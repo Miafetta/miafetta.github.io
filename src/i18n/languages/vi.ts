@@ -3,12 +3,16 @@ import type { Translation } from "../translation";
 
 export const vi: Translation = {
 	[Key.home]: "Trang chủ",
-	[Key.about]: "Giới thiệu",
+	[Key.about]: "Về trang này",
 	[Key.archive]: "Kho bài",
+	[Key.resume]: "Về tôi",
 	[Key.search]: "Tìm kiếm",
 
 	[Key.tags]: "Thẻ",
 	[Key.categories]: "Danh mục",
+	[Key.currentCategory]: "Danh mục hiện tại",
+	[Key.currentTags]: "Thẻ hiện tại",
+	[Key.toc]: "Mục lục",
 	[Key.recentPosts]: "Bài viết mới nhất",
 
 	[Key.comments]: "Bình luận",

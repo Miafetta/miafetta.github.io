@@ -1,13 +1,16 @@
 ---
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/jetbrains-mono/wght-italic.css";
+import { normalizeHeadingNumbering } from "../../plugins/rehype-heading-numbering";
 
 interface Props {
 	class: string;
+	numbering?: string;
 }
 const className = Astro.props.class;
+const numbering = normalizeHeadingNumbering(Astro.props.numbering, "none");
 ---
-<div data-pagefind-body class={`prose dark:prose-invert prose-base !max-w-none custom-md ${className}`}>
+<div data-pagefind-body data-heading-numbering={numbering} class={`prose dark:prose-invert prose-base !max-w-none custom-md ${className}`}>
     <!--<div class="prose dark:prose-invert max-w-none custom-md">-->
     <!--<div class="max-w-none custom-md">-->
     <slot/>
@@ -40,4 +43,111 @@ document.addEventListener("click", function (e: MouseEvent) {
         target.setAttribute("data-timeout-id", newTimeoutId.toString());
     }
 });
+
+const REF_WIDTH = 1920;
+const REF_HEIGHT = 1080;
+const REF_AREA = REF_WIDTH * REF_HEIGHT;
+const MAX_UPSCALE = 1.25;
+const DESKTOP_MIN_WIDTH_RATIO = 0.36;
+const DESKTOP_MIN_NATURAL_WIDTH_RATIO = 0.75;
+const DESKTOP_MAX_HEIGHT_RATIO = 0.72;
+const MOBILE_MAX_HEIGHT_RATIO = 0.78;
+const MOBILE_QUERY = "(max-width: 768px)";
+const MIN_IMAGE_RADIUS = 4;
+const MAX_IMAGE_RADIUS = 12;
+const IMAGE_RADIUS_SHORT_SIDE_RATIO = 0.015;
+
+function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max);
+}
+
+function getMarkdownContentWidth(img: HTMLImageElement) {
+    const container = img.closest<HTMLElement>(".custom-md");
+    return container?.clientWidth || img.parentElement?.clientWidth || window.innerWidth;
+}
+
+function resizeMarkdownImage(img: HTMLImageElement) {
+    if (!img.complete || !img.naturalWidth || !img.naturalHeight) {
+        img.addEventListener("load", () => resizeMarkdownImage(img), { once: true });
+        return;
+    }
+
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+    const aspect = naturalWidth / naturalHeight;
+    const containerWidth = getMarkdownContentWidth(img);
+    const viewportHeight = window.innerHeight || REF_HEIGHT;
+    const maxUpscaledWidth = naturalWidth * MAX_UPSCALE;
+    const isMobile = window.matchMedia(MOBILE_QUERY).matches;
+
+    let targetWidth: number;
+    let maxHeight: number;
+
+    if (isMobile) {
+        targetWidth = Math.min(containerWidth, maxUpscaledWidth);
+        maxHeight = viewportHeight * MOBILE_MAX_HEIGHT_RATIO;
+    } else {
+        const areaScale = Math.sqrt((naturalWidth * naturalHeight) / REF_AREA);
+        const widthScale = naturalWidth / REF_WIDTH;
+        const contentScale = clamp(Math.max(areaScale, widthScale * 0.85), 0, 1);
+        const readableMinWidth = Math.min(
+            containerWidth * DESKTOP_MIN_WIDTH_RATIO,
+            naturalWidth * DESKTOP_MIN_NATURAL_WIDTH_RATIO,
+        );
+
+        targetWidth = containerWidth * contentScale;
+        targetWidth = Math.min(targetWidth, maxUpscaledWidth, containerWidth);
+        targetWidth = Math.max(targetWidth, readableMinWidth);
+        maxHeight = viewportHeight * DESKTOP_MAX_HEIGHT_RATIO;
+    }
+
+    let finalWidth = targetWidth;
+    let finalHeight = finalWidth / aspect;
+
+    if (finalHeight > maxHeight) {
+        finalHeight = maxHeight;
+        finalWidth = finalHeight * aspect;
+    }
+
+    img.style.width = `${Math.round(finalWidth)}px`;
+    img.style.height = `${Math.round(finalHeight)}px`;
+    img.style.setProperty(
+        "--markdown-image-radius",
+        `${Math.round(clamp(Math.min(finalWidth, finalHeight) * IMAGE_RADIUS_SHORT_SIDE_RATIO, MIN_IMAGE_RADIUS, MAX_IMAGE_RADIUS))}px`,
+    );
+}
+
+function layoutMarkdownImages() {
+    document.querySelectorAll<HTMLImageElement>(".custom-md img").forEach(resizeMarkdownImage);
+}
+
+let resizeFrame = 0;
+function scheduleMarkdownImageLayout() {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(layoutMarkdownImages);
+}
+
+let imageLayoutSwupHookRegistered = false;
+function setupMarkdownImageLayout() {
+    layoutMarkdownImages();
+
+    if (imageLayoutSwupHookRegistered) {
+        return;
+    }
+
+    const swup = (window as Window & { swup?: { hooks?: { on: (event: string, handler: () => void) => void } } }).swup;
+    if (swup?.hooks) {
+        swup.hooks.on("page:view", layoutMarkdownImages);
+        imageLayoutSwupHookRegistered = true;
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupMarkdownImageLayout, { once: true });
+} else {
+    setupMarkdownImageLayout();
+}
+
+document.addEventListener("swup:enable", setupMarkdownImageLayout, { once: true });
+window.addEventListener("resize", scheduleMarkdownImageLayout);
 </script>

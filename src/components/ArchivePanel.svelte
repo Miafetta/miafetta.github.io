@@ -5,22 +5,18 @@ import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import { getPostUrlBySlug } from "../utils/url-utils";
 
-export let tags: string[];
-export let categories: string[];
+export let tags: string[] = [];
+export let categories: string[] = [];
 export let sortedPosts: Post[] = [];
-
-const params = new URLSearchParams(window.location.search);
-tags = params.has("tag") ? params.getAll("tag") : [];
-categories = params.has("category") ? params.getAll("category") : [];
-const uncategorized = params.get("uncategorized");
+let uncategorized: string | null = null;
 
 interface Post {
 	slug: string;
 	data: {
 		title: string;
 		tags: string[];
-		category?: string;
-		published: Date;
+		category?: string | null;
+		published: Date | string;
 	};
 }
 
@@ -31,9 +27,14 @@ interface Group {
 
 let groups: Group[] = [];
 
-function formatDate(date: Date) {
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
+function toDate(date: Date | string) {
+	return date instanceof Date ? date : new Date(date);
+}
+
+function formatDate(date: Date | string) {
+	const normalizedDate = toDate(date);
+	const month = (normalizedDate.getMonth() + 1).toString().padStart(2, "0");
+	const day = normalizedDate.getDate().toString().padStart(2, "0");
 	return `${month}-${day}`;
 }
 
@@ -41,24 +42,30 @@ function formatTag(tagList: string[]) {
 	return tagList.map((t) => `#${t}`).join(" ");
 }
 
-onMount(async () => {
-	let filteredPosts: Post[] = sortedPosts;
+function buildGroups(
+	posts: Post[],
+	selectedTags: string[],
+	selectedCategories: string[],
+	showUncategorized: string | null,
+) {
+	let filteredPosts: Post[] = posts;
 
-	if (tags.length > 0) {
+	if (selectedTags.length > 0) {
 		filteredPosts = filteredPosts.filter(
 			(post) =>
 				Array.isArray(post.data.tags) &&
-				post.data.tags.some((tag) => tags.includes(tag)),
+				post.data.tags.some((tag) => selectedTags.includes(tag)),
 		);
 	}
 
-	if (categories.length > 0) {
+	if (selectedCategories.length > 0) {
 		filteredPosts = filteredPosts.filter(
-			(post) => post.data.category && categories.includes(post.data.category),
+			(post) =>
+				post.data.category && selectedCategories.includes(post.data.category),
 		);
 	}
 
-	if (uncategorized) {
+	if (showUncategorized) {
 		filteredPosts = filteredPosts.filter((post) => !post.data.category);
 	}
 
@@ -74,14 +81,21 @@ onMount(async () => {
 		{} as Record<number, Post[]>,
 	);
 
-	const groupedPostsArray = Object.keys(grouped).map((yearStr) => ({
+	return Object.keys(grouped).map((yearStr) => ({
 		year: Number.parseInt(yearStr, 10),
 		posts: grouped[Number.parseInt(yearStr, 10)],
 	}));
+}
 
-	groupedPostsArray.sort((a, b) => b.year - a.year);
+$: groups = buildGroups(sortedPosts, tags, categories, uncategorized).sort(
+	(a, b) => b.year - a.year,
+);
 
-	groups = groupedPostsArray;
+onMount(() => {
+	const params = new URLSearchParams(window.location.search);
+	tags = params.has("tag") ? params.getAll("tag") : [];
+	categories = params.has("category") ? params.getAll("category") : [];
+	uncategorized = params.get("uncategorized");
 });
 </script>
 

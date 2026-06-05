@@ -116,6 +116,15 @@
     @apply cursor-zoom-in
 }
 
+.custom-md img {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
 ::selection {
     background-color: var(--selection-bg)
 }

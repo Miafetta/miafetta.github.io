@@ -4,6 +4,11 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
+        .heading-number {
+            margin-right: 0.35ch;
+            font-variant-numeric: tabular-nums;
+        }
+
         .anchor {
             @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline !important;
 
@@ -20,11 +25,14 @@
     }
 
     a:not(.no-styling) {
-        @apply relative bg-none link font-medium text-[var(--primary)]
+        @apply relative bg-none font-medium text-[var(--primary)]
         underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
+        border-radius: 0.375rem;
         box-decoration-break: clone;
         -webkit-box-decoration-break: clone;
         display: inline-block;
+        margin: -0.25rem;
+        padding: 0.25rem;
     
         &:hover, &:active {
             @apply decoration-transparent;
@@ -95,6 +103,18 @@
         li::marker {
             @apply text-[var(--primary)];
         }
+    }
+
+    th[align="left"], td[align="left"] {
+        text-align: left;
+    }
+
+    th[align="center"], td[align="center"] {
+        text-align: center;
+    }
+
+    th[align="right"], td[align="right"] {
+        text-align: right;
     }
 
     blockquote {

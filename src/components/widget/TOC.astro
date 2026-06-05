@@ -1,14 +1,19 @@
 ---
 import type { MarkdownHeading } from "astro";
 import { siteConfig } from "../../config";
-import { url } from "../../utils/url-utils";
+import {
+	createHeadingNumberer,
+	getNumberedHeadingText,
+	normalizeHeadingNumbering,
+} from "../../plugins/rehype-heading-numbering";
 
 interface Props {
 	class?: string;
 	headings: MarkdownHeading[];
+	numbering?: string;
 }
 
-let { headings = [] } = Astro.props;
+let { headings = [], numbering } = Astro.props;
 
 let minDepth = 10;
 for (const heading of headings) {
@@ -16,7 +21,6 @@ for (const heading of headings) {
 }
 
 const className = Astro.props.class;
-const isPostsRoute = Astro.url.pathname.startsWith(url("/posts/"));
 
 const removeTailingHash = (text: string) => {
 	let lastIndexOfHash = text.lastIndexOf("#");
@@ -30,9 +34,25 @@ const removeTailingHash = (text: string) => {
 let heading1Count = 1;
 
 const maxLevel = siteConfig.toc.depth;
+const numberingMode = normalizeHeadingNumbering(numbering, "none");
+const hasHeadingNumbering = numberingMode !== "none";
+const headingNumberer = createHeadingNumberer(numberingMode);
+const headingLabels = new Map<string, string>();
+
+for (const heading of headings) {
+	const label = headingNumberer.next(heading.depth);
+	if (label) {
+		headingLabels.set(heading.slug, label);
+	}
+}
+
+const getTocHeadingText = (heading: MarkdownHeading) =>
+	getNumberedHeadingText(
+		removeTailingHash(heading.text),
+		headingLabels.get(heading.slug) ?? null,
+	);
 ---
-{isPostsRoute &&
-<table-of-contents class:list={[className, "group"]}>
+<table-of-contents class:list={[className, "group relative block"]}>
     {headings.filter((heading) => heading.depth < minDepth + maxLevel).map((heading) =>
             <a href={`#${heading.slug}`} class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl
         hover:bg-[var(--toc-btn-hover)] active:bg-[var(--toc-btn-active)] py-2
@@ -45,19 +65,20 @@ const maxLevel = siteConfig.toc.depth;
                     }
                 ]}
                 >
-                    {heading.depth == minDepth && heading1Count++}
-                    {heading.depth == minDepth + 1 && <div class="transition w-2 h-2 rounded-[0.1875rem] bg-[var(--toc-badge-bg)]"></div>}
+                    {!hasHeadingNumbering && heading.depth == minDepth && heading1Count++}
+                    {hasHeadingNumbering && <div class="transition w-2 h-2 rounded-[0.1875rem] bg-[var(--toc-badge-bg)]"></div>}
+                    {!hasHeadingNumbering && heading.depth == minDepth + 1 && <div class="transition w-2 h-2 rounded-[0.1875rem] bg-[var(--toc-badge-bg)]"></div>}
                     {heading.depth == minDepth + 2 && <div class="transition w-1.5 h-1.5 rounded-sm bg-black/5 dark:bg-white/10"></div>}
                 </div>
                 <div class:list={["transition text-sm", {
                     "text-50": heading.depth == minDepth || heading.depth == minDepth + 1,
                     "text-30": heading.depth == minDepth + 2,
-                }]}>{removeTailingHash(heading.text)}</div>
+                }]}>{getTocHeadingText(heading)}</div>
             </a>
     )}
     <div id="active-indicator" style="opacity: 0" class:list={[{'hidden': headings.length == 0}, "-z-10 absolute bg-[var(--toc-btn-hover)] left-0 right-0 rounded-xl transition-all " +
         "group-hover:bg-transparent border-2 border-[var(--toc-btn-hover)] group-hover:border-[var(--toc-btn-active)] border-dashed"]}></div>
-</table-of-contents>}
+</table-of-contents>
 
 <script>
 class TableOfContents extends HTMLElement {
@@ -115,10 +136,9 @@ class TableOfContents extends HTMLElement {
         if (min > max) {
             this.activeIndicator?.setAttribute("style", `opacity: 0`);
         } else {
-            let parentOffset = this.tocEl?.getBoundingClientRect().top || 0;
-            let scrollOffset = this.tocEl?.scrollTop || 0;
-            let top = this.tocEntries[min].getBoundingClientRect().top - parentOffset + scrollOffset;
-            let bottom = this.tocEntries[max].getBoundingClientRect().bottom - parentOffset + scrollOffset;
+            let parentOffset = this.getBoundingClientRect().top;
+            let top = this.tocEntries[min].getBoundingClientRect().top - parentOffset;
+            let bottom = this.tocEntries[max].getBoundingClientRect().bottom - parentOffset;
             this.activeIndicator?.setAttribute("style", `top: ${top}px; height: ${bottom - top}px`);
         }
     };
@@ -185,14 +205,24 @@ class TableOfContents extends HTMLElement {
             .composedPath()
             .find((element) => element instanceof HTMLAnchorElement);
 
-        if (anchor) {
-            const id = decodeURIComponent(anchor.hash?.substring(1));
-            const idx = this.headingIdxMap.get(id);
-            if (idx !== undefined) {
-                this.anchorNavTarget = this.headings[idx];
-            } else {
-                this.anchorNavTarget = null;
-            }
+        if (!(anchor instanceof HTMLAnchorElement)) return;
+
+        if (event instanceof MouseEvent &&
+            (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        ) {
+            return;
+        }
+
+        const id = decodeURIComponent(anchor.hash?.substring(1));
+        const idx = this.headingIdxMap.get(id);
+        if (idx !== undefined) {
+            const heading = this.headings[idx];
+            this.anchorNavTarget = heading;
+            event.preventDefault();
+            heading.scrollIntoView({ behavior: "smooth", block: "start" });
+            window.history.pushState(null, "", anchor.hash);
+        } else {
+            this.anchorNavTarget = null;
         }
     };
 
@@ -265,4 +295,38 @@ class TableOfContents extends HTMLElement {
 if (!customElements.get("table-of-contents")) {
     customElements.define("table-of-contents", TableOfContents);
 }
+
+const tocSmoothScrollWindow = window as Window & {
+    __tocSmoothScrollController?: AbortController;
+};
+tocSmoothScrollWindow.__tocSmoothScrollController?.abort();
+tocSmoothScrollWindow.__tocSmoothScrollController = new AbortController();
+
+document.addEventListener("click", (event) => {
+    const anchor = event
+        .composedPath()
+        .find((element) =>
+            element instanceof HTMLAnchorElement &&
+            element.closest("table-of-contents")
+        );
+
+    if (!(anchor instanceof HTMLAnchorElement)) return;
+
+    if (event instanceof MouseEvent &&
+        (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+    ) {
+        return;
+    }
+
+    const id = decodeURIComponent(anchor.hash?.substring(1));
+    const heading = document.getElementById(id);
+    if (!heading) return;
+
+    event.preventDefault();
+    heading.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.pushState(null, "", anchor.hash);
+}, {
+    capture: true,
+    signal: tocSmoothScrollWindow.__tocSmoothScrollController.signal,
+});
 </script>

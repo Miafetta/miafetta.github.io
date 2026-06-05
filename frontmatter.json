@@ -60,6 +60,19 @@
           "title": "language",
           "name": "language",
           "type": "string"
+        },
+        {
+          "title": "numbering",
+          "name": "numbering",
+          "type": "choice",
+          "choices": [
+            "H1",
+            "H2",
+            "Roman",
+            "Chinese",
+            "none"
+          ],
+          "default": "H2"
         }
       ]
     }

@@ -3,12 +3,16 @@ import type { Translation } from "../translation";
 
 export const th: Translation = {
 	[Key.home]: "หน้าแรก",
-	[Key.about]: "เกี่ยวกับ",
+	[Key.about]: "เกี่ยวกับเว็บไซต์นี้",
 	[Key.archive]: "คลัง",
+	[Key.resume]: "เกี่ยวกับฉัน",
 	[Key.search]: "ค้นหา",
 
 	[Key.tags]: "ป้ายกำกับ",
 	[Key.categories]: "หมวดหมู่",
+	[Key.currentCategory]: "หมวดหมู่ปัจจุบัน",
+	[Key.currentTags]: "ป้ายกำกับปัจจุบัน",
+	[Key.toc]: "สารบัญ",
 	[Key.recentPosts]: "โพสต์ล่าสุด",
 
 	[Key.comments]: "ความคิดเห็น",

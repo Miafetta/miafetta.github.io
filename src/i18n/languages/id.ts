@@ -3,12 +3,16 @@ import type { Translation } from "../translation";
 
 export const id: Translation = {
 	[Key.home]: "Beranda",
-	[Key.about]: "Tentang",
+	[Key.about]: "Tentang Situs Ini",
 	[Key.archive]: "Arsip",
+	[Key.resume]: "Tentang Saya",
 	[Key.search]: "Cari",
 
 	[Key.tags]: "Tag",
 	[Key.categories]: "Kategori",
+	[Key.currentCategory]: "Kategori Saat Ini",
+	[Key.currentTags]: "Tag Saat Ini",
+	[Key.toc]: "Daftar Isi",
 	[Key.recentPosts]: "Postingan Terbaru",
 
 	[Key.comments]: "Komentar",

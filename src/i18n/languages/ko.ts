@@ -3,12 +3,16 @@ import type { Translation } from "../translation";
 
 export const ko: Translation = {
 	[Key.home]: "홈",
-	[Key.about]: "소개",
+	[Key.about]: "사이트 소개",
 	[Key.archive]: "아카이브",
+	[Key.resume]: "내 소개",
 	[Key.search]: "검색",
 
 	[Key.tags]: "태그",
 	[Key.categories]: "카테고리",
+	[Key.currentCategory]: "현재 카테고리",
+	[Key.currentTags]: "현재 태그",
+	[Key.toc]: "목차",
 	[Key.recentPosts]: "최근 게시물",
 
 	[Key.comments]: "댓글",
