@@ -4,52 +4,52 @@
 ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
 ![Astro](https://img.shields.io/badge/Astro-5.x-orange)
 
-A personal static blog built with [Astro](https://astro.build), based on [Fuwari](https://github.com/saicaca/fuwari).
+基于 [Astro](https://astro.build) 和 [Fuwari](https://github.com/saicaca/fuwari) 修改的个人静态博客。
 
-[**🖥️ Live Site (GitHub Pages)**](https://miafetta.github.io)
+[**🖥️ 在线预览（GitHub Pages）**](https://miafetta.github.io)
 
 🌏 README in
-[**中文**](./README.zh-CN.md)
+[**English**](./README.en.md)
 
-## ✨ Features
+## ✨ 功能特性
 
-- [x] Built with [Astro](https://astro.build), [Svelte](https://svelte.dev) and [Tailwind CSS](https://tailwindcss.com)
-- [x] Smooth animations and page transitions
-- [x] Light / dark mode
-- [x] Customizable theme colors, banner and favicon
-- [x] Responsive design with mobile banner adjustments
-- [x] Search functionality with [Pagefind](https://pagefind.app/)
-- [x] Markdown extended features
-- [x] Configurable heading numbering for Markdown posts
-- [x] Table of contents for posts and the resume page
-- [x] Optional phone status card in the sidebar
-- [x] RSS feed and sitemap
-- [x] GitHub Pages deployment with GitHub Actions
+- [x] 基于 [Astro](https://astro.build)、[Svelte](https://svelte.dev) 和 [Tailwind CSS](https://tailwindcss.com) 开发
+- [x] 流畅的动画和页面过渡
+- [x] 亮色 / 暗色模式
+- [x] 自定义主题色、横幅图片和 favicon
+- [x] 响应式设计，并针对移动端横幅显示做了调整
+- [x] 使用 [Pagefind](https://pagefind.app/) 实现搜索
+- [x] Markdown 扩展语法
+- [x] Markdown 标题自动编号
+- [x] 文章页和“关于我”页面的文内目录
+- [x] 可选的侧边栏手机状态卡片
+- [x] RSS feed 和 sitemap
+- [x] 使用 GitHub Actions 部署到 GitHub Pages
 
-## 🚀 Getting Started
+## 🚀 使用方法
 
-1. Install dependencies:
+1. 安装依赖：
    ```sh
    pnpm install
    ```
-2. Start the local development server:
+2. 启动本地开发服务器：
    ```sh
    pnpm dev
    ```
-3. Edit the config file `src/config.ts` to customize the site.
-4. Run `pnpm new-post <filename>` to create a new post and edit it in `src/content/posts/`.
-5. Build the site before deployment:
+3. 通过配置文件 `src/config.ts` 自定义站点。
+4. 执行 `pnpm new-post <filename>` 创建新文章，并在 `src/content/posts/` 目录中编辑。
+5. 部署前构建站点：
    ```sh
    pnpm build
    ```
 
-## ⚙️ Site Configuration
+## ⚙️ 站点配置
 
-Most site options can be edited in `src/config.ts`, including the title, profile, banner, favicon, table of contents and phone status card.
+大部分站点选项都可以在 `src/config.ts` 中修改，包括标题、个人信息、横幅图片、favicon、文内目录和手机状态卡片。
 
-### Phone Status Card
+### 手机状态卡片
 
-The sidebar phone status card can be enabled or disabled in `siteConfig.phoneStatus`:
+侧边栏手机状态卡片可以通过 `siteConfig.phoneStatus` 开启或关闭：
 
 ```ts
 phoneStatus: {
@@ -60,9 +60,9 @@ phoneStatus: {
 },
 ```
 
-The card reads the latest device status from `apiUrl`. When the API is offline, `data` is `null`, or `device_name` is empty, it falls back to `fallbackTitle` and hides all detail modules. Empty fields are hidden as whole modules.
+卡片会从 `apiUrl` 读取最新设备状态。当 API 离线、`data` 为 `null`，或 `device_name` 为空时，会回退到 `fallbackTitle` 并隐藏所有详情模块。单个字段为空时，对应模块会整体隐藏。
 
-## 📝 Frontmatter of Posts
+## 📝 文章 Frontmatter
 
 ```yaml
 ---
@@ -73,79 +73,79 @@ image: ./cover.jpg
 tags: [Foo, Bar]
 category: Notes
 draft: false
-lang: en      # Set only if the post's language differs from the site's language in `config.ts`
+lang: en      # 仅当文章语言与 `config.ts` 中的网站语言不同时需要设置
 numbering: H2 # H1, H2, Roman, Chinese, none
 ---
 ```
 
-## 🧩 Markdown Extended Syntax
+## 🧩 Markdown 扩展语法
 
-In addition to Astro's default support for [GitHub Flavored Markdown](https://github.github.com/gfm/), several extra Markdown features are included:
+除 Astro 默认支持的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 外，本项目还包含以下扩展：
 
-- Admonitions
-- GitHub repository cards
-- Enhanced code blocks with Expressive Code
-- Math rendering with KaTeX
-- Heading anchors and table of contents
-- Optional automatic heading numbering
+- Admonitions 提示块
+- GitHub 仓库卡片
+- 使用 Expressive Code 增强代码块
+- 使用 KaTeX 渲染数学公式
+- 标题锚点和文内目录
+- 可选的标题自动编号
 
-### Heading Numbering
+### 标题自动编号
 
-Set `numbering` in frontmatter to control heading numbering:
+在 frontmatter 中设置 `numbering` 可以控制标题编号：
 
-| Value     | Action                                             |
-|:----------|:---------------------------------------------------|
-| `H1`      | Number from `h1` to `h6`                           |
-| `H2`      | Number from `h2` to `h6`; default style for guides |
-| `Roman`   | Use Roman / alphabetic / numeric mixed numbering   |
-| `Chinese` | Use Chinese-style numbering                        |
-| `none`    | Disable heading numbering                          |
+| 值        | 效果                                  |
+|:----------|:--------------------------------------|
+| `H1`      | 从 `h1` 到 `h6` 编号                  |
+| `H2`      | 从 `h2` 到 `h6` 编号，适合指南类文章 |
+| `Roman`   | 使用罗马数字、字母、数字混合编号     |
+| `Chinese` | 使用中文样式编号                      |
+| `none`    | 关闭标题编号                          |
 
-## ⚡ Commands
+## ⚡ 指令
 
-All commands are run from the root of the project, from a terminal:
+下列指令均需要在项目根目录执行：
 
-| Command                    | Action                                           |
-|:---------------------------|:-------------------------------------------------|
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`                 | Starts local dev server at `localhost:4321`      |
-| `pnpm build`               | Build the production site to `./dist/`           |
-| `pnpm preview`             | Preview the build locally, before deploying      |
-| `pnpm astro check`         | Run Astro checks for errors in the code          |
-| `pnpm biome ci ./src`      | Run formatting and lint checks with Biome        |
-| `pnpm format`              | Format the source code using Biome               |
-| `pnpm new-post <filename>` | Create a new post                                |
-| `pnpm astro ...`           | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro --help`        | Get help using the Astro CLI                     |
+| Command                    | Action                            |
+|:---------------------------|:----------------------------------|
+| `pnpm install`             | 安装依赖                          |
+| `pnpm dev`                 | 在 `localhost:4321` 启动开发服务器 |
+| `pnpm build`               | 构建生产站点到 `./dist/`          |
+| `pnpm preview`             | 本地预览已构建的网站              |
+| `pnpm astro check`         | 检查 Astro 代码错误               |
+| `pnpm biome ci ./src`      | 使用 Biome 执行格式和 lint 检查   |
+| `pnpm format`              | 使用 Biome 格式化源码             |
+| `pnpm new-post <filename>` | 创建新文章                        |
+| `pnpm astro ...`           | 执行 `astro add`、`astro check` 等 |
+| `pnpm astro --help`        | 显示 Astro CLI 帮助               |
 
-## 🚢 Deployment
+## 🚢 部署
 
-This site is configured for GitHub Pages:
+本站已配置为部署到 GitHub Pages：
 
 - `site`: `https://miafetta.github.io`
 - `base`: `/`
-- Deployment workflow: `.github/workflows/deploy.yml`
+- 部署工作流：`.github/workflows/deploy.yml`
 
-Push to the `main` branch to trigger checks and deployment.
+推送到 `main` 分支后会自动触发检查和部署。
 
-## 🔗 Related Projects
+## 🔗 相关项目
 
 ```text
 Miafetta/status-sync-android
         |
-        | Uploads device status
+        | 上传状态
         v
 Miafetta/status-sync-api
         |
-        | Outputs cleaned status JSON
+        | 输出清洗后的状态 JSON
         v
-Miafetta/miafetta.github.io  <- Current project
+Miafetta/miafetta.github.io  <- 当前项目
 ```
 
-- [Miafetta/status-sync-android](https://github.com/Miafetta/status-sync-android): Android status collector and uploader.
-- [Miafetta/status-sync-api](https://github.com/Miafetta/status-sync-api): Status data processing API.
-- [Miafetta/miafetta.github.io](https://github.com/Miafetta/miafetta.github.io): Blog display frontend, current project.
+- [Miafetta/status-sync-android](https://github.com/Miafetta/status-sync-android)：Android 状态采集与上传端。
+- [Miafetta/status-sync-api](https://github.com/Miafetta/status-sync-api)：状态数据处理 API。
+- [Miafetta/miafetta.github.io](https://github.com/Miafetta/miafetta.github.io)：博客展示端，当前项目。
 
 ## 📄 License
 
-This project is based on [Fuwari](https://github.com/saicaca/fuwari), which is licensed under the MIT License.
+本项目基于 [Fuwari](https://github.com/saicaca/fuwari) 修改，原项目使用 MIT License。
