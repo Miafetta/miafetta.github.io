@@ -34,6 +34,12 @@ export type SiteConfig = {
 		enable: boolean;
 		depth: 1 | 2 | 3;
 	};
+	phoneStatus: {
+		enable: boolean;
+		apiUrl: string;
+		refreshInterval: number;
+		fallbackTitle: string;
+	};
 
 	favicon: Favicon[];
 };

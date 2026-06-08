@@ -1,0 +1,269 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "../../config";
+
+const config = siteConfig.phoneStatus;
+---
+
+{
+	config.enable && (
+		<section
+			class="card-base px-4 py-4 onload-animation"
+			data-phone-status-card
+			data-api-url={config.apiUrl}
+			data-refresh-interval={String(config.refreshInterval)}
+			data-fallback-title={config.fallbackTitle}
+			style="animation-delay: 100ms"
+		>
+			<div class="flex items-center justify-between gap-3" data-phone-status-header style="margin-bottom: 0">
+				<div class="flex min-w-0 items-center gap-2">
+					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--btn-regular-bg)] text-[var(--primary)] transition">
+						<Icon name="material-symbols:smartphone-outline" class="text-[1.35rem]" />
+					</div>
+					<div class="min-w-0">
+						<div class="truncate text-sm font-bold text-75 transition" data-phone-status-title>
+							{config.fallbackTitle}
+						</div>
+						<div class="truncate text-xs text-30 transition" data-phone-status-updated>
+							正在获取
+						</div>
+					</div>
+				</div>
+				<div
+					class="rounded-full px-2 py-1 text-[0.7rem] font-bold transition bg-[oklch(0.93_0.03_var(--hue))] text-[var(--primary)] dark:bg-white/10"
+					data-phone-status-online
+				>
+					同步中
+				</div>
+			</div>
+
+			<div class="mb-3 rounded-lg bg-[var(--btn-regular-bg)] px-3 py-2 transition" data-phone-status-battery hidden style="display: none">
+				<div class="mb-2 flex items-center justify-between gap-3 text-xs">
+					<div class="flex items-center gap-1.5 font-medium text-50 transition" data-phone-status-battery-label-wrapper hidden style="display: none">
+						<Icon name="material-symbols:battery-5-bar-rounded" class="text-base" />
+						<span data-phone-status-battery-label></span>
+					</div>
+					<div class="text-30 transition" data-phone-status-charging hidden style="display: none"></div>
+				</div>
+				<div class="h-2 overflow-hidden rounded-full bg-black/10 transition dark:bg-white/10" data-phone-status-battery-progress hidden style="display: none">
+					<div
+						class="h-full w-0 rounded-full bg-[var(--primary)] transition-all duration-500"
+						data-phone-status-battery-bar
+					></div>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 gap-2 text-xs" data-phone-status-detail-grid hidden style="display: none">
+				<div class="flex min-w-0 items-center gap-2" data-phone-status-app-row hidden style="display: none">
+					<Icon name="material-symbols:select-window-2" class="shrink-0 text-base text-30" />
+					<div class="min-w-0">
+						<div class="text-30 transition">当前应用</div>
+						<div class="truncate font-medium text-75 transition" data-phone-status-app></div>
+					</div>
+				</div>
+				<div class="flex min-w-0 items-center gap-2" data-phone-status-network-row hidden style="display: none">
+					<Icon name="material-symbols:wifi-rounded" class="shrink-0 text-base text-30" />
+					<div class="min-w-0">
+						<div class="text-30 transition">网络信息</div>
+						<div class="truncate font-medium text-75 transition" data-phone-status-network></div>
+					</div>
+				</div>
+				<div class="flex min-w-0 items-center gap-2" data-phone-status-location-row hidden style="display: none">
+					<Icon name="material-symbols:location-on-outline-rounded" class="shrink-0 text-base text-30" />
+					<div class="min-w-0">
+						<div class="text-30 transition">当前位置</div>
+						<div class="truncate font-medium text-75 transition" data-phone-status-location></div>
+					</div>
+				</div>
+			</div>
+		</section>
+	)
+}
+
+<script>
+	type PhoneStatusData = {
+		device_name?: string | null;
+		battery_level?: number | string | null;
+		battery_charging?: boolean | null;
+		wifi_connected?: boolean | null;
+		wifi_ssid?: string | null;
+		network_type?: string | null;
+		current_app?: string | null;
+		location?: string | { province?: string; city?: string; district?: string } | null;
+		location_text?: string | null;
+		province?: string | null;
+		city?: string | null;
+		district?: string | null;
+	};
+
+	type PhoneStatusResponse = {
+		online?: boolean;
+		updated_at?: string | null;
+		data?: PhoneStatusData | null;
+	};
+
+	const getFallbackTitle = (root: Element) =>
+		root.getAttribute("data-fallback-title") || "主人正在绝赞摸鱼中…";
+
+	const getText = (value?: string | null) => value?.trim() || "";
+
+	const formatUpdatedAt = (value?: string | null) => {
+		if (!value) return "暂无更新时间";
+
+		const date = new Date(value);
+		if (Number.isNaN(date.getTime())) return value;
+
+		return `更新于 ${date.toLocaleTimeString("zh-CN", {
+			hour: "2-digit",
+			minute: "2-digit",
+		})}`;
+	};
+
+	const getLocationText = (data: PhoneStatusData) => {
+		if (typeof data.location_text === "string" && getText(data.location_text)) {
+			return getText(data.location_text);
+		}
+		if (typeof data.location === "string" && getText(data.location)) {
+			return getText(data.location);
+		}
+
+		const source =
+			typeof data.location === "object" && data.location ? data.location : data;
+		const location = [source.province, source.city, source.district]
+			.map((item) => getText(item))
+			.filter(Boolean)
+			.join("");
+
+		return location;
+	};
+
+	const getNetworkText = (data: PhoneStatusData) => {
+		if (data.wifi_connected) {
+			const wifiSsid = getText(data.wifi_ssid);
+			return wifiSsid ? `WiFi · ${wifiSsid}` : "WiFi";
+		}
+		return getText(data.network_type);
+	};
+
+	const setText = (root: Element, selector: string, value: string) => {
+		const element = root.querySelector<HTMLElement>(selector);
+		if (element) element.textContent = value;
+	};
+
+	const setVisible = (root: Element, selector: string, visible: boolean) => {
+		const element = root.querySelector<HTMLElement>(selector);
+		if (!element) return;
+		element.hidden = !visible;
+		element.style.display = visible ? "" : "none";
+	};
+
+	const setHasDetails = (root: Element, hasDetails: boolean) => {
+		const header = root.querySelector<HTMLElement>("[data-phone-status-header]");
+		if (header) header.style.marginBottom = hasDetails ? "0.75rem" : "0";
+	};
+
+	const clearStatusDetails = (root: Element) => {
+		setVisible(root, "[data-phone-status-location-row]", false);
+		setVisible(root, "[data-phone-status-battery]", false);
+		setVisible(root, "[data-phone-status-battery-label-wrapper]", false);
+		setVisible(root, "[data-phone-status-charging]", false);
+		setVisible(root, "[data-phone-status-battery-progress]", false);
+		setVisible(root, "[data-phone-status-detail-grid]", false);
+		setVisible(root, "[data-phone-status-network-row]", false);
+		setVisible(root, "[data-phone-status-app-row]", false);
+		root.querySelector<HTMLElement>("[data-phone-status-battery-bar]")?.style.setProperty("width", "0%");
+		setHasDetails(root, false);
+	};
+
+	const renderStatus = (root: Element, json: PhoneStatusResponse) => {
+		const data = json.data;
+		const deviceName = getText(data?.device_name);
+
+		setText(root, "[data-phone-status-updated]", formatUpdatedAt(json.updated_at));
+		setText(root, "[data-phone-status-online]", json.online ? "在线" : "离线");
+
+		if (!data || !deviceName) {
+			setText(root, "[data-phone-status-title]", getFallbackTitle(root));
+			clearStatusDetails(root);
+			return;
+		}
+
+		const batteryLevel = Number(data.battery_level);
+		const normalizedBattery = Number.isFinite(batteryLevel)
+			? Math.min(100, Math.max(0, batteryLevel))
+			: null;
+		const hasBattery = normalizedBattery !== null;
+		const hasCharging = typeof data.battery_charging === "boolean";
+		const hasBatterySection = hasBattery && hasCharging;
+		const locationText = getLocationText(data);
+		const networkText = getNetworkText(data);
+		const currentApp = getText(data.current_app);
+
+		setText(root, "[data-phone-status-title]", deviceName);
+		setText(root, "[data-phone-status-location]", locationText);
+		setVisible(root, "[data-phone-status-location-row]", Boolean(locationText));
+
+		setText(root, "[data-phone-status-battery-label]", hasBatterySection ? `电量 ${normalizedBattery}%` : "");
+		setText(root, "[data-phone-status-charging]", hasBatterySection ? (data.battery_charging ? "充电中" : "未充电") : "");
+		setVisible(root, "[data-phone-status-battery]", hasBatterySection);
+		setVisible(root, "[data-phone-status-battery-label-wrapper]", hasBatterySection);
+		setVisible(root, "[data-phone-status-charging]", hasBatterySection);
+		setVisible(root, "[data-phone-status-battery-progress]", hasBatterySection);
+		root.querySelector<HTMLElement>("[data-phone-status-battery-bar]")?.style.setProperty(
+			"width",
+			hasBatterySection ? `${normalizedBattery}%` : "0%",
+		);
+
+		setText(root, "[data-phone-status-network]", networkText);
+		setText(root, "[data-phone-status-app]", currentApp);
+		setVisible(root, "[data-phone-status-network-row]", Boolean(networkText));
+		setVisible(root, "[data-phone-status-app-row]", Boolean(currentApp));
+		setHasDetails(
+			root,
+			Boolean(hasBatterySection || currentApp || networkText || locationText),
+		);
+		setVisible(
+			root,
+			"[data-phone-status-detail-grid]",
+			Boolean(currentApp || networkText || locationText),
+		);
+	};
+
+	const loadPhoneStatus = async (root: Element) => {
+		const apiUrl = root.getAttribute("data-api-url");
+		if (!apiUrl) return;
+
+		try {
+			const response = await fetch(apiUrl, {
+				headers: {
+					accept: "application/json",
+				},
+				cache: "no-store",
+			});
+
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			renderStatus(root, await response.json());
+		} catch {
+			setText(root, "[data-phone-status-title]", getFallbackTitle(root));
+			setText(root, "[data-phone-status-online]", "离线");
+			setText(root, "[data-phone-status-updated]", "稍后自动重试");
+			clearStatusDetails(root);
+		}
+	};
+
+	const setupPhoneStatusCards = () => {
+		document.querySelectorAll("[data-phone-status-card]").forEach((root) => {
+			const interval = Number(root.getAttribute("data-refresh-interval")) || 60000;
+			loadPhoneStatus(root);
+			window.setInterval(() => loadPhoneStatus(root), interval);
+		});
+	};
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", setupPhoneStatusCards, {
+			once: true,
+		});
+	} else {
+		setupPhoneStatusCards();
+	}
+</script>

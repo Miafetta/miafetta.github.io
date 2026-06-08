@@ -7,6 +7,7 @@ import { getCategoryUrl, getTagUrl } from "../../utils/url-utils";
 import ButtonLink from "../control/ButtonLink.astro";
 import ButtonTag from "../control/ButtonTag.astro";
 import Categories from "./Categories.astro";
+import PhoneStatusCard from "./PhoneStatusCard.astro";
 import Profile from "./Profile.astro";
 import Tag from "./Tags.astro";
 import TOC from "./TOC.astro";
@@ -43,6 +44,7 @@ const normalizedTags =
 <div id="sidebar" class:list={[className, "w-full"]}>
     <div class="flex flex-col w-full gap-4 mb-4">
         <Profile></Profile>
+        <PhoneStatusCard></PhoneStatusCard>
     </div>
     <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
         <div id="sidebar-current-meta" class="flex flex-col w-full gap-4">

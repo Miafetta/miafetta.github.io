@@ -8,7 +8,7 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "Miafetta's Cafetaria",
+	title: "Miafetta's Cafe",
 	subtitle: "记录技术和一些有趣的东西",
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
@@ -29,6 +29,12 @@ export const siteConfig: SiteConfig = {
 		enable: true, // Display the table of contents on the right side of the post
 		depth: 3, // Maximum heading depth to show in the table, from 1 to 3
 	},
+	phoneStatus: {
+		enable: true, // Display the phone status in the top left corner
+		apiUrl: "https://blog.miafetta.cafe/api/status/latest", // API endpoint to fetch the latest phone status.
+		refreshInterval: 60_000, // Refresh interval for fetching phone status in milliseconds. Default is 60 seconds.
+		fallbackTitle: "正在绝赞摸鱼中……", // Fallback title to display when the API request fails or returns an error
+	},
 	favicon: [
 		// Leave this array empty to use the default favicon
 		// {
@@ -36,6 +42,18 @@ export const siteConfig: SiteConfig = {
 		//   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
 		//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
 		// }
+		{
+			src: "/favicon/favicon.svg",
+			sizes: "any",
+		},
+		{
+			src: "/favicon/favicon-32x32.png",
+			sizes: "32x32",
+		},
+		{
+			src: "/favicon/favicon-16x16.png",
+			sizes: "16x16",
+		},
 	],
 };
 
