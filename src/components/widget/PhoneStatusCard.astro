@@ -8,7 +8,7 @@ const config = siteConfig.phoneStatus;
 {
 	config.enable && (
 		<section
-			class="card-base px-4 py-4 onload-animation"
+			class="card-base phone-status-card px-4 py-4 onload-animation"
 			data-phone-status-card
 			data-api-url={config.apiUrl}
 			data-refresh-interval={String(config.refreshInterval)}
@@ -17,7 +17,7 @@ const config = siteConfig.phoneStatus;
 		>
 			<div class="flex items-center justify-between gap-3" data-phone-status-header style="margin-bottom: 0">
 				<div class="flex min-w-0 items-center gap-2">
-					<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--btn-regular-bg)] text-[var(--primary)] transition">
+					<div class="phone-status-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--btn-regular-bg)] text-[var(--primary)] transition">
 						<Icon name="material-symbols:smartphone-outline" class="text-[1.35rem]" />
 					</div>
 					<div class="min-w-0">
@@ -37,7 +37,7 @@ const config = siteConfig.phoneStatus;
 				</div>
 			</div>
 
-			<div class="mb-3 rounded-lg bg-[var(--btn-regular-bg)] px-3 py-2 transition" data-phone-status-battery hidden style="display: none">
+			<div class="phone-status-battery mb-3 rounded-lg bg-[var(--btn-regular-bg)] px-3 py-2 transition" data-phone-status-battery hidden style="display: none">
 				<div class="mb-2 flex items-center justify-between gap-3 text-xs">
 					<div class="flex items-center gap-1.5 font-medium text-50 transition" data-phone-status-battery-label-wrapper hidden style="display: none">
 						<Icon name="material-symbols:battery-5-bar-rounded" class="text-base" />
@@ -53,23 +53,23 @@ const config = siteConfig.phoneStatus;
 				</div>
 			</div>
 
-			<div class="grid grid-cols-1 gap-2 text-xs" data-phone-status-detail-grid hidden style="display: none">
-				<div class="flex min-w-0 items-center gap-2" data-phone-status-app-row hidden style="display: none">
-					<Icon name="material-symbols:select-window-2" class="shrink-0 text-base text-30" />
+			<div class="phone-status-detail-grid grid grid-cols-1 gap-2 text-xs" data-phone-status-detail-grid data-detail-count="0" hidden style="display: none">
+				<div class="phone-status-detail-item flex min-w-0 items-center gap-2" data-phone-status-app-row hidden style="display: none">
+					<Icon name="material-symbols:select-window-2" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
 						<div class="text-30 transition">当前应用</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-app></div>
 					</div>
 				</div>
-				<div class="flex min-w-0 items-center gap-2" data-phone-status-network-row hidden style="display: none">
-					<Icon name="material-symbols:wifi-rounded" class="shrink-0 text-base text-30" />
+				<div class="phone-status-detail-item flex min-w-0 items-center gap-2" data-phone-status-network-row hidden style="display: none">
+					<Icon name="material-symbols:wifi-rounded" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
 						<div class="text-30 transition">网络信息</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-network></div>
 					</div>
 				</div>
-				<div class="flex min-w-0 items-center gap-2" data-phone-status-location-row hidden style="display: none">
-					<Icon name="material-symbols:location-on-outline-rounded" class="shrink-0 text-base text-30" />
+				<div class="phone-status-detail-item phone-status-location-item flex min-w-0 items-center gap-2" data-phone-status-location-row hidden style="display: none">
+					<Icon name="material-symbols:location-on-outline-rounded" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
 						<div class="text-30 transition">当前位置</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-location></div>
@@ -162,6 +162,11 @@ const config = siteConfig.phoneStatus;
 		if (header) header.style.marginBottom = hasDetails ? "0.75rem" : "0";
 	};
 
+	const setDetailCount = (root: Element, count: number) => {
+		const grid = root.querySelector<HTMLElement>("[data-phone-status-detail-grid]");
+		if (grid) grid.dataset.detailCount = String(count);
+	};
+
 	const clearStatusDetails = (root: Element) => {
 		setVisible(root, "[data-phone-status-location-row]", false);
 		setVisible(root, "[data-phone-status-battery]", false);
@@ -173,6 +178,7 @@ const config = siteConfig.phoneStatus;
 		setVisible(root, "[data-phone-status-app-row]", false);
 		root.querySelector<HTMLElement>("[data-phone-status-battery-bar]")?.style.setProperty("width", "0%");
 		setHasDetails(root, false);
+		setDetailCount(root, 0);
 	};
 
 	const renderStatus = (root: Element, json: PhoneStatusResponse) => {
@@ -198,6 +204,7 @@ const config = siteConfig.phoneStatus;
 		const locationText = getLocationText(data);
 		const networkText = getNetworkText(data);
 		const currentApp = getText(data.current_app);
+		const detailCount = [currentApp, networkText, locationText].filter(Boolean).length;
 
 		setText(root, "[data-phone-status-title]", deviceName);
 		setText(root, "[data-phone-status-location]", locationText);
@@ -218,6 +225,7 @@ const config = siteConfig.phoneStatus;
 		setText(root, "[data-phone-status-app]", currentApp);
 		setVisible(root, "[data-phone-status-network-row]", Boolean(networkText));
 		setVisible(root, "[data-phone-status-app-row]", Boolean(currentApp));
+		setDetailCount(root, detailCount);
 		setHasDetails(
 			root,
 			Boolean(hasBatterySection || currentApp || networkText || locationText),
@@ -267,3 +275,47 @@ const config = siteConfig.phoneStatus;
 		setupPhoneStatusCards();
 	}
 </script>
+
+<style>
+	@media (max-width: 767px) {
+		.phone-status-card {
+			padding: 1rem;
+		}
+
+		.phone-status-icon {
+			width: 2.5rem;
+			height: 2.5rem;
+			border-radius: 0.875rem;
+		}
+
+		.phone-status-battery {
+			margin-bottom: 0.625rem;
+			border-radius: 0.875rem;
+			padding: 0.75rem;
+		}
+
+		.phone-status-detail-grid {
+			grid-template-columns: repeat(1, minmax(0, 1fr));
+			gap: 0.625rem;
+		}
+
+		.phone-status-detail-grid[data-detail-count="2"] {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.phone-status-detail-grid[data-detail-count="3"] {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.phone-status-detail-item {
+			align-items: flex-start;
+			min-height: 0;
+			padding: 0.25rem 0;
+		}
+
+		.phone-status-detail-icon {
+			margin-top: 0.125rem;
+			font-size: 1.125rem;
+		}
+	}
+</style>

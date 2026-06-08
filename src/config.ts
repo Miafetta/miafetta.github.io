@@ -31,9 +31,9 @@ export const siteConfig: SiteConfig = {
 	},
 	phoneStatus: {
 		enable: true, // Display the phone status in the top left corner
-		apiUrl: "https://api.miafetta.cafe/api/status/latest", // API endpoint to fetch the latest phone status.
+		apiUrl: "https://api.miafetta.cafe/status", // API endpoint to fetch the latest phone status.
 		refreshInterval: 60_000, // Refresh interval for fetching phone status in milliseconds. Default is 60 seconds.
-		fallbackTitle: "正在绝赞摸鱼中……", // Fallback title to display when the API request fails or returns an error
+		fallbackTitle: "绝赞摸鱼中……", // Fallback title to display when the API request fails or returns an error
 	},
 	favicon: [
 		// Leave this array empty to use the default favicon
