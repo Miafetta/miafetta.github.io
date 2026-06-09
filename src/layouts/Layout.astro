@@ -197,6 +197,20 @@ const bannerOffset =
 	.navbar-hidden {
 		@apply opacity-0 -translate-y-16
 	}
+	@media (max-width: 767px) {
+		#top-row {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4.5rem !important;
+		}
+
+		#navbar-wrapper {
+			opacity: 1 !important;
+			transform: translateY(0) !important;
+		}
+	}
 }
 </style>
 
