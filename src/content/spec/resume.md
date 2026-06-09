@@ -88,6 +88,6 @@ I am a junior undergraduate student in **Computer Science and Technology** at **
 
 ## Contact
 
-- Email: <2943812220@qq.com> (recommended) / <shen_kerui@163.com> / <shen_kerui@stu.xjtu.edu.cn>
+Email: <2943812220@qq.com> (recommended) / <shen_kerui@163.com> / <shen_kerui@stu.xjtu.edu.cn>
 
-[Download Chinese CV (PDF)](#)
+For the Chinese version of my resume, click <a href="/downloads/resume/resume-chinese-version.pdf" download>HERE</a>.

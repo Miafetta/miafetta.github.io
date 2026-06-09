@@ -7,6 +7,18 @@ numbering: none
 ## 友情链接
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+  <a class="card-github no-styling" href="https://ziyuliu258.cn/" target="_blank" rel="noopener">
+    <div class="gc-titlebar" style="margin-bottom: 0;">
+      <div class="gc-titlebar-left">
+        <div class="gc-owner">
+          <div class="gc-avatar" style="background-image: url('https://ziyuliu258.cn/images/avatar.jpg'); background-color: transparent;"></div>
+          <div class="gc-repo">ziyuliu258</div>
+        </div>
+      </div>
+    </div>
+    <div class="gc-description" style="margin-bottom: 0;">日拱一卒，功不唐捐。</div>
+  </a>
+  
   <a class="card-github no-styling" href="https://yibinlin6.github.io/" target="_blank" rel="noopener">
     <div class="gc-titlebar" style="margin-bottom: 0;">
       <div class="gc-titlebar-left">
@@ -17,19 +29,7 @@ numbering: none
       </div>
     </div>
     <div class="gc-description" style="margin-bottom: 0;">CS Undergraduate @XJTU</div>
-  </a>
-
-  <a class="card-github no-styling" href="https://ziyuliu258.cn/" target="_blank" rel="noopener">
-    <div class="gc-titlebar" style="margin-bottom: 0;">
-      <div class="gc-titlebar-left">
-        <div class="gc-owner">
-          <div class="gc-avatar" style="background-image: url('https://ziyuliu258.cn/images/avatar.jpg'); background-color: transparent;"></div>
-          <div class="gc-repo">ziyuliu258</div>
-        </div>
-      </div>
-    </div>
-    <div class="gc-description" style="margin-bottom: 0;">An undergraduate majoring in CS.</div>
-  </a>
+  </a> 
 </div>
 
 ## 特别感谢

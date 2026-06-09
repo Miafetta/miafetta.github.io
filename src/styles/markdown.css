@@ -105,6 +105,10 @@
         }
     }
 
+    th, td {
+        vertical-align: middle;
+    }
+
     th[align="left"], td[align="left"] {
         text-align: left;
     }

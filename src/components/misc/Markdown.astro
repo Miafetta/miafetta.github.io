@@ -67,6 +67,10 @@ function getMarkdownContentWidth(img: HTMLImageElement) {
 }
 
 function resizeMarkdownImage(img: HTMLImageElement) {
+    if (img.closest("table")) {
+        return;
+    }
+
     if (!img.complete || !img.naturalWidth || !img.naturalHeight) {
         img.addEventListener("load", () => resizeMarkdownImage(img), { once: true });
         return;

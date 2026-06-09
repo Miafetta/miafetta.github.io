@@ -125,6 +125,16 @@
     user-select: none;
 }
 
+.custom-md table img {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    max-width: none;
+    cursor: default;
+    pointer-events: none;
+    object-fit: contain;
+}
+
 ::selection {
     background-color: var(--selection-bg)
 }
