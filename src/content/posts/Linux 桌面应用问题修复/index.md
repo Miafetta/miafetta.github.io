@@ -78,11 +78,14 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 3. 在 `/usr/share/applications/` 目录中编辑应用的 `.desktop` 文件，添加或修改行 `Icon=` 为新图标目录。
 
 
-> 获取 App 图标的方法可以参考：[6 种方法，教你在 iOS 和 macOS 上获取 App 图标](https://sspai.com/post/40682)。
+> 获取 App 图标时，可以使用 [HQ ICON - 从 App Store 获取高清应用图标](https://icon.yukonga.top/) 查询并下载高清资源。
+>
+> *免责声明：通过上述网站获取的应用图标，其版权归原应用开发者或相关权利方所有。本文提供的图标仅用于个人学习、桌面美化和非商业用途展示，请勿用于商业项目、二次分发或其他可能侵犯权利方权益的场景。*
+>
 >
 > 下面是已经调整好尺寸和留白的几枚图标，可按需下载使用。
 >
-> | 应用 | 图标 | 下载 | 应用 | 图标 | 下载 |
+> | 应用 | 缩略图 | 原图 | 应用 | 缩略图 | 原图 |
 > | :-: | :-: | :-: | :-: | :-: | :-: |
 > | 明日方舟 | ![明日方舟](./media/arknights-app-icon.png) | <a href="/downloads/linux-desktop-app-icons/arknights-app.png" download>下载</a> | 鹰角启动器 | ![鹰角启动器](./media/hypergragh-launcher-app-icon.png) | <a href="/downloads/linux-desktop-app-icons/hypergragh-launcher-app.png" download>下载</a> |
 > | QQ | ![QQ](./media/qq-app-icon.png) | <a href="/downloads/linux-desktop-app-icons/qq-app.png" download>下载</a> | 微信 | ![微信](./media/wechat-app-icon.png) | <a href="/downloads/linux-desktop-app-icons/wechat-app.png" download>下载</a> |
