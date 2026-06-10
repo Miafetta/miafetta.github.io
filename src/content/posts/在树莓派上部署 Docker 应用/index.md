@@ -30,7 +30,7 @@ numbering: H2
 
 这样做的好处是目录结构清晰，后续迁移、备份、排查问题都比较方便。（小树莓派也需要收纳美学！）
 
-> 本文默认你已经安装好 Docker 和 Docker Compose。如果尚未安装，可以先参考对应系统的 Docker 安装教程，例如[安装 Docker 及 Docker Compose](https://blog.miafetta.cafe/posts/rabbitmq消息队列入门与实践/#11-安装--docker-及-docker-compose)。
+> 本文默认你已经安装好 Docker 和 Docker Compose。如果尚未安装，可以先参考对应系统的 Docker 安装教程，如：[安装 Docker 及 Docker Compose](https://blog.miafetta.cafe/posts/rabbitmq消息队列入门与实践/#1-安装并配置-docker)。
 
 ## 自动更新：WatchTower
 
