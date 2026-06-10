@@ -52,8 +52,6 @@ export function formatI18n(
 	values: Record<string, string | number>,
 ): string {
 	return i18n(key).replace(/\{(\w+)\}/g, (match, name) =>
-		Object.prototype.hasOwnProperty.call(values, name)
-			? String(values[name])
-			: match,
+		Object.hasOwn(values, name) ? String(values[name]) : match,
 	);
 }

@@ -46,7 +46,8 @@ export const es: Translation = {
 	[Key.bannerImageAlt]: "Imagen de banner del blog: {credit}",
 	[Key.profileImageAlt]: "Imagen de perfil del autor: {name}",
 	[Key.postCoverImageAlt]: "Imagen de portada de la publicación: {title}",
-	[Key.viewCategoryPosts]: "Ver todas las publicaciones de la categoría {category}",
+	[Key.viewCategoryPosts]:
+		"Ver todas las publicaciones de la categoría {category}",
 	[Key.viewTagPosts]: "Ver todas las publicaciones con la etiqueta {tag}",
 	[Key.previousPage]: "Página anterior",
 	[Key.nextPage]: "Página siguiente",
