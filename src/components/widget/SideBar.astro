@@ -2,7 +2,7 @@
 import type { MarkdownHeading } from "astro";
 import { siteConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
-import { i18n } from "../../i18n/translation";
+import { formatI18n, i18n } from "../../i18n/translation";
 import { getCategoryUrl, getTagUrl } from "../../utils/url-utils";
 import ButtonLink from "../control/ButtonLink.astro";
 import ButtonTag from "../control/ButtonTag.astro";
@@ -56,10 +56,10 @@ const normalizedTags =
                         class="onload-animation"
                         style="animation-delay: 150ms"
                     >
-                        <ButtonLink
-                            url={getCategoryUrl(currentCategory ?? null)}
-                            label={`View all posts in the ${normalizedCategory} category`}
-                        >
+						<ButtonLink
+							url={getCategoryUrl(currentCategory ?? null)}
+							label={formatI18n(I18nKey.viewCategoryPosts, {category: normalizedCategory})}
+						>
                             {normalizedCategory}
                         </ButtonLink>
                     </WidgetLayout>
@@ -71,10 +71,10 @@ const normalizedTags =
                     >
                         {normalizedTags.length > 0 ? (
                             <div class="flex gap-2 flex-wrap">
-                                {normalizedTags.map((tag) => (
-                                    <ButtonTag href={getTagUrl(tag)} label={`View all posts with the ${tag} tag`}>
-                                        {tag}
-                                    </ButtonTag>
+								{normalizedTags.map((tag) => (
+									<ButtonTag href={getTagUrl(tag)} label={formatI18n(I18nKey.viewTagPosts, {tag})}>
+										{tag}
+									</ButtonTag>
                                 ))}
                             </div>
                         ) : (

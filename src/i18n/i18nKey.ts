@@ -26,16 +26,47 @@ enum I18nKey {
 	postsCount = "postsCount",
 
 	themeColor = "themeColor",
+	displaySettings = "displaySettings",
+	resetToDefault = "resetToDefault",
 
 	lightMode = "lightMode",
 	darkMode = "darkMode",
 	systemMode = "systemMode",
+	lightDarkMode = "lightDarkMode",
 
 	more = "more",
+	menu = "menu",
+	navMenu = "navMenu",
+	backToTop = "backToTop",
+	goToResumePage = "goToResumePage",
+	visitImageSource = "visitImageSource",
+	bannerImageAlt = "bannerImageAlt",
+	profileImageAlt = "profileImageAlt",
+	postCoverImageAlt = "postCoverImageAlt",
+	viewCategoryPosts = "viewCategoryPosts",
+	viewTagPosts = "viewTagPosts",
+	previousPage = "previousPage",
+	nextPage = "nextPage",
+	pageNumber = "pageNumber",
+	noDescription = "noDescription",
 
 	author = "author",
 	publishedAt = "publishedAt",
 	license = "license",
+
+	phoneStatusFetching = "phoneStatusFetching",
+	phoneStatusSyncing = "phoneStatusSyncing",
+	phoneStatusCurrentApp = "phoneStatusCurrentApp",
+	phoneStatusNetworkInfo = "phoneStatusNetworkInfo",
+	phoneStatusCurrentLocation = "phoneStatusCurrentLocation",
+	phoneStatusNoUpdateTime = "phoneStatusNoUpdateTime",
+	phoneStatusUpdatedAt = "phoneStatusUpdatedAt",
+	phoneStatusOnline = "phoneStatusOnline",
+	phoneStatusOffline = "phoneStatusOffline",
+	phoneStatusBatteryLevel = "phoneStatusBatteryLevel",
+	phoneStatusCharging = "phoneStatusCharging",
+	phoneStatusNotCharging = "phoneStatusNotCharging",
+	phoneStatusRetryLater = "phoneStatusRetryLater",
 }
 
 export default I18nKey;

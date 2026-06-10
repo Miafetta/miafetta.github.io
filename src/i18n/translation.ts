@@ -46,3 +46,14 @@ export function i18n(key: I18nKey): string {
 	const lang = siteConfig.lang || "en";
 	return getTranslation(lang)[key];
 }
+
+export function formatI18n(
+	key: I18nKey,
+	values: Record<string, string | number>,
+): string {
+	return i18n(key).replace(/\{(\w+)\}/g, (match, name) =>
+		Object.prototype.hasOwnProperty.call(values, name)
+			? String(values[name])
+			: match,
+	);
+}

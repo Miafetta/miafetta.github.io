@@ -5,6 +5,8 @@ import type { APIContext } from "astro";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
 import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 
 const parser = new MarkdownIt();
 
@@ -21,7 +23,7 @@ export async function GET(context: APIContext) {
 
 	return rss({
 		title: siteConfig.title,
-		description: siteConfig.subtitle || "No description",
+		description: siteConfig.subtitle || i18n(I18nKey.noDescription),
 		site: context.site ?? "https://fuwari.vercel.app",
 		items: blog.map((post) => {
 			const content =

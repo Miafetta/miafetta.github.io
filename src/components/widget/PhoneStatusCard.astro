@@ -1,8 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
 import { siteConfig } from "../../config";
 
 const config = siteConfig.phoneStatus;
+const phoneStatusLocale = siteConfig.lang.replace("_", "-");
 ---
 
 {
@@ -13,6 +16,15 @@ const config = siteConfig.phoneStatus;
 			data-api-url={config.apiUrl}
 			data-refresh-interval={String(config.refreshInterval)}
 			data-fallback-title={config.fallbackTitle}
+			data-phone-status-locale={phoneStatusLocale}
+			data-label-no-update-time={i18n(I18nKey.phoneStatusNoUpdateTime)}
+			data-label-updated-at={i18n(I18nKey.phoneStatusUpdatedAt)}
+			data-label-online={i18n(I18nKey.phoneStatusOnline)}
+			data-label-offline={i18n(I18nKey.phoneStatusOffline)}
+			data-label-battery-level={i18n(I18nKey.phoneStatusBatteryLevel)}
+			data-label-charging={i18n(I18nKey.phoneStatusCharging)}
+			data-label-not-charging={i18n(I18nKey.phoneStatusNotCharging)}
+			data-label-retry-later={i18n(I18nKey.phoneStatusRetryLater)}
 			style="animation-delay: 100ms"
 		>
 			<div class="flex items-center justify-between gap-3" data-phone-status-header style="margin-bottom: 0">
@@ -25,7 +37,7 @@ const config = siteConfig.phoneStatus;
 							{config.fallbackTitle}
 						</div>
 						<div class="truncate text-xs text-30 transition" data-phone-status-updated>
-							正在获取
+							{i18n(I18nKey.phoneStatusFetching)}
 						</div>
 					</div>
 				</div>
@@ -33,7 +45,7 @@ const config = siteConfig.phoneStatus;
 					class="rounded-full px-2 py-1 text-[0.7rem] font-bold transition bg-[oklch(0.93_0.03_var(--hue))] text-[var(--primary)] dark:bg-white/10"
 					data-phone-status-online
 				>
-					同步中
+					{i18n(I18nKey.phoneStatusSyncing)}
 				</div>
 			</div>
 
@@ -57,21 +69,21 @@ const config = siteConfig.phoneStatus;
 				<div class="phone-status-detail-item flex min-w-0 items-center gap-2" data-phone-status-app-row hidden style="display: none">
 					<Icon name="material-symbols:select-window-2" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
-						<div class="text-30 transition">当前应用</div>
+						<div class="text-30 transition">{i18n(I18nKey.phoneStatusCurrentApp)}</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-app></div>
 					</div>
 				</div>
 				<div class="phone-status-detail-item flex min-w-0 items-center gap-2" data-phone-status-network-row hidden style="display: none">
 					<Icon name="material-symbols:wifi-rounded" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
-						<div class="text-30 transition">网络信息</div>
+						<div class="text-30 transition">{i18n(I18nKey.phoneStatusNetworkInfo)}</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-network></div>
 					</div>
 				</div>
 				<div class="phone-status-detail-item phone-status-location-item flex min-w-0 items-center gap-2" data-phone-status-location-row hidden style="display: none">
 					<Icon name="material-symbols:location-on-outline-rounded" class="phone-status-detail-icon shrink-0 text-base text-30" />
 					<div class="min-w-0">
-						<div class="text-30 transition">当前位置</div>
+						<div class="text-30 transition">{i18n(I18nKey.phoneStatusCurrentLocation)}</div>
 						<div class="truncate font-medium text-75 transition" data-phone-status-location></div>
 					</div>
 				</div>
@@ -103,20 +115,38 @@ const config = siteConfig.phoneStatus;
 	};
 
 	const getFallbackTitle = (root: Element) =>
-		root.getAttribute("data-fallback-title") || "主人正在绝赞摸鱼中…";
+		root.getAttribute("data-fallback-title") || "";
+
+	const getLabel = (root: Element, name: string) =>
+		root.getAttribute(`data-label-${name}`) || "";
+
+	const formatLabel = (
+		template: string,
+		values: Record<string, string | number>,
+	) =>
+		template.replace(/\{(\w+)\}/g, (match, name) =>
+			Object.prototype.hasOwnProperty.call(values, name)
+				? String(values[name])
+				: match,
+		);
 
 	const getText = (value?: string | null) => value?.trim() || "";
 
-	const formatUpdatedAt = (value?: string | null) => {
-		if (!value) return "暂无更新时间";
+	const formatUpdatedAt = (root: Element, value?: string | null) => {
+		if (!value) {
+			return getLabel(root, "no-update-time");
+		}
 
 		const date = new Date(value);
 		if (Number.isNaN(date.getTime())) return value;
 
-		return `更新于 ${date.toLocaleTimeString("zh-CN", {
+		const locale = root.getAttribute("data-phone-status-locale") || undefined;
+		const time = date.toLocaleTimeString(locale, {
 			hour: "2-digit",
 			minute: "2-digit",
-		})}`;
+		});
+
+		return formatLabel(getLabel(root, "updated-at"), { time });
 	};
 
 	const getLocationText = (data: PhoneStatusData) => {
@@ -185,8 +215,14 @@ const config = siteConfig.phoneStatus;
 		const data = json.data;
 		const deviceName = getText(data?.device_name);
 
-		setText(root, "[data-phone-status-updated]", formatUpdatedAt(json.updated_at));
-		setText(root, "[data-phone-status-online]", json.online ? "在线" : "离线");
+		setText(root, "[data-phone-status-updated]", formatUpdatedAt(root, json.updated_at));
+		setText(
+			root,
+			"[data-phone-status-online]",
+			json.online
+				? getLabel(root, "online")
+				: getLabel(root, "offline"),
+		);
 
 		if (!data || !deviceName) {
 			setText(root, "[data-phone-status-title]", getFallbackTitle(root));
@@ -210,8 +246,24 @@ const config = siteConfig.phoneStatus;
 		setText(root, "[data-phone-status-location]", locationText);
 		setVisible(root, "[data-phone-status-location-row]", Boolean(locationText));
 
-		setText(root, "[data-phone-status-battery-label]", hasBatterySection ? `电量 ${normalizedBattery}%` : "");
-		setText(root, "[data-phone-status-charging]", hasBatterySection ? (data.battery_charging ? "充电中" : "未充电") : "");
+		setText(
+			root,
+			"[data-phone-status-battery-label]",
+			hasBatterySection
+				? formatLabel(getLabel(root, "battery-level"), {
+						level: normalizedBattery,
+					})
+				: "",
+		);
+		setText(
+			root,
+			"[data-phone-status-charging]",
+			hasBatterySection
+				? data.battery_charging
+					? getLabel(root, "charging")
+					: getLabel(root, "not-charging")
+				: "",
+		);
 		setVisible(root, "[data-phone-status-battery]", hasBatterySection);
 		setVisible(root, "[data-phone-status-battery-label-wrapper]", hasBatterySection);
 		setVisible(root, "[data-phone-status-charging]", hasBatterySection);
@@ -253,8 +305,8 @@ const config = siteConfig.phoneStatus;
 			renderStatus(root, await response.json());
 		} catch {
 			setText(root, "[data-phone-status-title]", getFallbackTitle(root));
-			setText(root, "[data-phone-status-online]", "离线");
-			setText(root, "[data-phone-status-updated]", "稍后将自动重试");
+			setText(root, "[data-phone-status-online]", getLabel(root, "offline"));
+			setText(root, "[data-phone-status-updated]", getLabel(root, "retry-later"));
 			clearStatusDetails(root);
 		}
 	};
