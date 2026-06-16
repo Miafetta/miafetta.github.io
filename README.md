@@ -54,7 +54,7 @@
 ```ts
 phoneStatus: {
   enable: true,
-  apiUrl: "https://api.example.com/api/status/latest",
+  apiUrl: "https://api.example.com/hikari/status",
   refreshInterval: 60_000,
   fallbackTitle: "主人正在绝赞摸鱼中…",
 },
@@ -131,19 +131,19 @@ numbering: H2 # H1, H2, Roman, Chinese, none
 ## 🔗 相关项目
 
 ```text
-Miafetta/status-sync-android
+Miafetta/hikari-android
         |
         | 上传状态
         v
-Miafetta/status-sync-api
+Miafetta/hikari-api
         |
         | 输出清洗后的状态 JSON
         v
 Miafetta/miafetta.github.io  <- 当前项目
 ```
 
-- [Miafetta/status-sync-android](https://github.com/Miafetta/status-sync-android)：Android 状态采集与上传端。
-- [Miafetta/status-sync-api](https://github.com/Miafetta/status-sync-api)：状态数据处理 API。
+- [Miafetta/hikari-android](https://github.com/Miafetta/hikari-android)：Android 状态采集与上传端。
+- [Miafetta/hikari-api](https://github.com/Miafetta/hikari-api)：状态数据处理 API。
 - [Miafetta/miafetta.github.io](https://github.com/Miafetta/miafetta.github.io)：博客展示端，当前项目。
 
 ## 📄 License

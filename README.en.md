@@ -54,7 +54,7 @@ The sidebar phone status card can be enabled or disabled in `siteConfig.phoneSta
 ```ts
 phoneStatus: {
   enable: true,
-  apiUrl: "https://api.example.com/api/status/latest",
+  apiUrl: "https://api.example.com/hikari/status",
   refreshInterval: 60_000,
   fallbackTitle: "主人正在绝赞摸鱼中…",
 },
@@ -131,19 +131,19 @@ Push to the `main` branch to trigger checks and deployment.
 ## 🔗 Related Projects
 
 ```text
-Miafetta/status-sync-android
+Miafetta/hikari-android
         |
         | Uploads device status
         v
-Miafetta/status-sync-api
+Miafetta/hikari-api
         |
         | Outputs cleaned status JSON
         v
 Miafetta/miafetta.github.io  <- Current project
 ```
 
-- [Miafetta/status-sync-android](https://github.com/Miafetta/status-sync-android): Android status collector and uploader.
-- [Miafetta/status-sync-api](https://github.com/Miafetta/status-sync-api): Status data processing API.
+- [Miafetta/hikari-android](https://github.com/Miafetta/hikari-android): Android status collector and uploader.
+- [Miafetta/hikari-api](https://github.com/Miafetta/hikari-api): Status data processing API.
 - [Miafetta/miafetta.github.io](https://github.com/Miafetta/miafetta.github.io): Blog display frontend, current project.
 
 ## 📄 License

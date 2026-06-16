@@ -40,11 +40,11 @@ numbering: none
 
 ::github{repo="saicaca/fuwari"}
 
-侧边栏中的「当前状态」模块由本人开发的 [Status Sync Android](https://github.com/Miafetta/status-sync-android) 和 [Status Sync API](https://github.com/Miafetta/status-sync-api) 提供支持。
+侧边栏中的「当前状态」模块由本人开发的 [Hikari Android](https://github.com/Miafetta/hikari-android) 和 [Hikari API](https://github.com/Miafetta/hikari-api) 提供支持。
 
-::github{repo="Miafetta/status-sync-android"}
+::github{repo="Miafetta/hikari-android"}
 
-::github{repo="Miafetta/status-sync-api"}
+::github{repo="Miafetta/hikari-api"}
 
 ## 网站中使用的图片来源
 
