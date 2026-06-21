@@ -37,9 +37,9 @@ I am a junior undergraduate student in **Computer Science and Technology** at **
 ## Publications & Patents
 
 ### Publications
-
+- JinShan Liu, Haoran Qin, Xiaobing Tu, Jiacheng Liu, Jiahui Hu, Zhengan Yan, Yukun Xie, **Kerui Shen**, et al. "LinCa: Accelerating Diffusion Models via Learnable Decomposed Feature Caching." *European Conference on Computer Vision (ECCV)*, 2026. **(Accepted)**
 - Zhizhou Huang, Youmu Zhang, Chuanhao Lin, Quan Zhao, **Kerui Shen**, Lei Lu. "Zero-Query Decision-Based Black-Box via Sliding Window Patch Fusion." *The 3rd International Symposium on IoT and Intelligent Robotics (IoTIR)*, 2026. **(Accepted, to be indexed by EI/Scopus)**
-- JinShan Liu, Haoran Qin, Xiaobing Tu, Jiacheng Liu, Jiahui Hu, Zhengan Yan, Yukun Xie, **Kerui Shen**, et al. "LinCa: Accelerating Diffusion Models via Learnable Decomposed Feature Caching." *Submitted to European Conference on Computer Vision (ECCV)*, 2026. **(Under Review)**
+- Jie Ren, Chaoqun Dang, **Kerui Shen**, Lei Lu. "Hierarchical Cross-Level Feature Fusion and Multi-Scale Dual-Branch Positional Embedding Reconstruction Network for Few-Shot Fine-Grained Image Classification." Submitted to *Expert Systems*, 2026.
 
 ### Patents
 
