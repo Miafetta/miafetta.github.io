@@ -39,6 +39,9 @@ const className = Astro.props.class;
 const hasCover = image !== undefined && image !== null && image !== "";
 
 const coverWidth = "28%";
+const coverWidths = [320, 480, 640, 800, 960, 1200];
+const coverSizes =
+	"(min-width: 1280px) 21rem, (min-width: 768px) 28vw, calc(100vw - 2rem)";
 
 const { remarkPluginFrontmatter } = await entry.render();
 ---
@@ -89,6 +92,7 @@ const { remarkPluginFrontmatter } = await entry.render();
             </Icon>
         </div>
         <ImageWrapper src={image} basePath={path.join("content/posts/", getDir(entry.id))} alt={formatI18n(I18nKey.postCoverImageAlt, {title})}
+                  widths={coverWidths} sizes={coverSizes}
                   class="w-full h-full">
         </ImageWrapper>
     </a>}
