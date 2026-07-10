@@ -1,4 +1,6 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 const createHeadingNumberingSchema = (defaultMode: "H2" | "none") =>
 	z.preprocess(
@@ -22,6 +24,7 @@ const createHeadingNumberingSchema = (defaultMode: "H2" | "none") =>
 const headingNumberingSchema = createHeadingNumberingSchema("H2");
 
 const postsCollection = defineCollection({
+	loader: glob({ pattern: "*/index.md", base: "./src/content/posts" }),
 	schema: z.object({
 		title: z.string(),
 		published: z.date(),
@@ -41,11 +44,14 @@ const postsCollection = defineCollection({
 		nextSlug: z.string().default(""),
 	}),
 });
+
 const specCollection = defineCollection({
+	loader: glob({ pattern: "*.md", base: "./src/content/spec" }),
 	schema: z.object({
 		numbering: createHeadingNumberingSchema("none"),
 	}),
 });
+
 export const collections = {
 	posts: postsCollection,
 	spec: specCollection,

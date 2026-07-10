@@ -288,20 +288,16 @@ function toText(node: Element | ElementContent): string {
 }
 
 function addClassName(node: Element, className: string) {
-	const current = node.properties.className;
-	if (Array.isArray(current)) {
-		if (!current.includes(className)) {
-			current.push(className);
-		}
-		return;
+	const current = node.properties.className as string | string[] | undefined;
+	const classNames = Array.isArray(current)
+		? current
+		: typeof current === "string"
+			? current.split(/\s+/).filter(Boolean)
+			: [];
+
+	if (!classNames.includes(className)) {
+		classNames.push(className);
 	}
 
-	if (typeof current === "string") {
-		node.properties.className = current.includes(className)
-			? current
-			: `${current} ${className}`;
-		return;
-	}
-
-	node.properties.className = [className];
+	node.properties.className = classNames;
 }

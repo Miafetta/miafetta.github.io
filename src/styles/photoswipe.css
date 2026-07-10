@@ -1,3 +1,13 @@
+.pswp {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+}
+
+.pswp__bg {
+    opacity: 0.9;
+}
+
 .pswp__button {
     @apply transition bg-black/40 hover:bg-black/50 active:bg-black/60 flex items-center justify-center mr-0 w-12 h-12 !important;
 }

@@ -39,6 +39,26 @@ export function getDir(path: string): string {
 	return path.substring(0, lastSlashIndex + 1);
 }
 
+export function getPostContentBasePath(entry: {
+	id: string;
+	filePath?: string;
+}): string {
+	const filePath = entry.filePath?.replace(/\\/g, "/");
+	if (filePath) {
+		const srcContentIndex = filePath.lastIndexOf("src/content/posts/");
+		if (srcContentIndex >= 0) {
+			return getDir(filePath.slice(srcContentIndex + "src/".length));
+		}
+
+		const contentIndex = filePath.lastIndexOf("content/posts/");
+		if (contentIndex >= 0) {
+			return getDir(filePath.slice(contentIndex));
+		}
+	}
+
+	return getDir(`content/posts/${entry.id}/index.md`);
+}
+
 export function url(path: string) {
 	return joinUrl("", import.meta.env.BASE_URL, path);
 }
