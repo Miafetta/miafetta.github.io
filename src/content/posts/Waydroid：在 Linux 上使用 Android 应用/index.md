@@ -1,10 +1,10 @@
 ---
-title: "Waydroid：在 Linux 上使用 Android APP"
+title: "Waydroid：在 Linux 上使用 Android 应用"
 published: 2026-05-12
-description: "想在 Linux 桌面上运行 Android APP？本文以 Arch Linux 为例，记录了完整的 Waydroid 安装、配置和使用过程，助你安装一个 Android 子系统~"
+description: "想在 Linux 桌面上运行 Android 应用？本文以 Arch Linux 为例，记录了 Waydroid 从安装配置到应用管理的完整过程，助你获得一个Linux 上的 Android 子系统~"
 image: "./cover.png"
-tags: ["Waydroid", "Android"]
-category: "Arch Linux"
+tags: ["容器", "Linux", "Android", "Arch Linux", "Waydroid"]
+category: "指南"
 draft: false
 numbering: H2
 ---
@@ -151,7 +151,7 @@ sudo waydroid shell -- sh -c "https_proxy=http://192.168.240.1:10808 curl -I htt
 
 ### 安装 ARM 兼容层
 
-在 `X86_64` 机器上，Waydroid 默认更适合运行 x86 或 x86_64 架构的 Android 应用。但现实中，很多 Android APP 只提供 `arm64-v8a` 或 `armeabi-v7a` 架构版本，因此可能会出现应用无法安装、无法启动或启动后闪退的问题。
+在 `X86_64` 机器上，Waydroid 默认更适合运行 x86 或 x86_64 架构的 Android 应用。但现实中，很多 Android 应用只提供 `arm64-v8a` 或 `armeabi-v7a` 架构版本，因此可能会出现应用无法安装、无法启动或启动后闪退的问题。
 
 为了解决这个问题，可以安装 ARM 兼容层。这里使用 `waydroid_script` 安装 Intel Houdini：
 
@@ -178,7 +178,7 @@ waydroid session stop
 waydroid session start &
 ```
 
-安装兼容层后，Waydroid 就可以运行更多只提供 ARM 架构的 Android APP 了。不过，兼容层并不能保证所有应用都能完美运行，尤其是依赖反作弊、强设备校验、特殊图形接口或厂商框架的应用，仍然可能出现异常。
+安装兼容层后，Waydroid 就可以运行更多只提供 ARM 架构的 Android 应用了。不过，兼容层并不能保证所有应用都能完美运行，尤其是依赖反作弊、强设备校验、特殊图形接口或厂商框架的应用，仍然可能出现异常。
 
 ### （可选）进行 Google Play 保护认证
 
@@ -219,7 +219,11 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
    waydroid app list
    ```
 
-2. 创建一个脚本文件（假设路径在 `~/waydroid_icon_hiding.sh`）：
+2. 创建脚本文件（假设路径在 `~/waydroid_icon_hiding.sh`）
+
+   你可以点击<a href="/downloads/bash-scripts/waydroid_icon_hiding.sh" download>这里</a>下载脚本。
+   
+   如果你想自己创建脚本，也可以手动新建文件：
 
    ```bash frame="terminal"
    touch ~/waydroid_icon_hiding.sh
@@ -230,48 +234,46 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
    ```bash title="waydroid_icon_hiding.sh" frame="code" showLineNumbers
    # 需要隐藏的应用包名
    hide_apps=(
-     "com.google.android.googlequicksearchbox" # Google
-     "com.android.documentsui"                 # 文件
-     "com.google.android.apps.messaging"       # 信息
-     "com.android.vending"                     # Google Play 商店
-     "org.lineageos.recorder"                  # 录音机
-   # "com.netease.uuremote"                    # UU远程
-     "com.google.android.contacts"             # 通讯录
-     "com.android.gallery3d"                   # 图库
-   # "io.github.huskydg.magisk"                # Magisk Delta
-     "org.lineageos.jelly"                     # 浏览器
-     "org.lineageos.eleven"                    # 音乐
-     "org.lineageos.etar"                      # 日历
-     "org.lineageos.aperture"                  # 相机
-     "com.android.settings"                    # 设置
-     "com.android.calculator2"                 # 计算器
-     "com.android.deskclock"                   # 时钟
-     "com.google.android.apps.restore"         # Android Switch
+       "com.google.android.googlequicksearchbox" # Google
+       "com.android.documentsui"                 # 文件
+       "com.google.android.apps.messaging"       # 信息
+       "com.android.vending"                     # Google Play 商店
+       "org.lineageos.recorder"                  # 录音机
+       "com.google.android.contacts"             # 通讯录
+       "com.android.gallery3d"                   # 图库
+       # "io.github.huskydg.magisk"              # Magisk Delta
+       "org.lineageos.jelly"                     # 浏览器
+       "org.lineageos.eleven"                    # 音乐
+       "org.lineageos.etar"                      # 日历
+       "org.lineageos.aperture"                  # 相机
+       "com.android.settings"                    # 设置
+       "com.android.calculator2"                 # 计算器
+       "com.android.deskclock"                   # 时钟
+       "com.google.android.apps.restore"         # Android Switch
    )
    
    for app in "${hide_apps[@]}"; do
-     file="$HOME/.local/share/applications/waydroid.${app}.desktop"
-     if [ -f "$file" ]; then
-       # 1. 恢复文件写权限
-       chmod u+w "$file"
-       
-       # 2. 清理旧的错位属性
-       sed -i '/NoDisplay=true/d' "$file"
-       
-       # 3. 把 NoDisplay=true 挂在 [Desktop Entry] 的下一行
-       sed -i '/^\[Desktop Entry\]/a NoDisplay=true' "$file"
-       
-       # 4. 剥夺所有用户的写权限，防止 Waydroid 重启时覆盖
-       chmod a-w "$file"
-       echo "✅ 已成功隐藏并锁定: $app $app"
-     else
-       echo "⚠️ 未找到文件 (可能已被隐藏或未生成): $app"
-     fi
+       file="$HOME/.local/share/applications/waydroid.${app}.desktop"
+       if [ -f "$file" ]; then
+           # 恢复文件写权限
+           chmod u+w "$file"
+           
+           # 清理旧属性
+           sed -i '/NoDisplay=true/d' "$file"
+           # 把 NoDisplay=true 添加在 [Desktop Entry] 的下一行
+           sed -i '/^\[Desktop Entry\]/a NoDisplay=true' "$file"
+           
+           # 移除所有用户的写权限，防止 Waydroid 重启时覆盖
+           chmod a-w "$file"
+           echo "[+] 已成功隐藏并锁定: $app $app"
+       else
+           echo "[!] 未找到文件 (可能已被隐藏或未生成): $app"
+       fi
    done
    
-   # 5.刷新 KDE Plasma 的组件缓存
+   # 刷新 KDE Plasma 的组件缓存
    kbuildsycoca6 --noincremental
-   echo "🎉 缓存刷新完成，指定的图标已从 KDE 菜单中彻底移除。"
+   echo "[*] 缓存刷新完成，已将指定的图标从 KDE 菜单中移除"
    ```
 
    这里通过 `chmod a-w` 移除写权限，是为了尽量避免 Waydroid 重启后重新覆盖 `.desktop` 文件。如果之后想恢复某个图标，可以先使用如下命令恢复写权限：
@@ -281,8 +283,6 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
    ```
 
    然后删除对应文件中的 `NoDisplay=true`。
-
-   当然，你也可以点击<a href="/downloads/bash-scripts/waydroid_icon_hiding.sh" download>这里</a>进行下载。
 
 3. 保存并退出后，赋予可执行权限：
 
@@ -517,5 +517,5 @@ Waydroid 更适合运行工具类、阅读类、网盘类、聊天类等 Android
 - 是否需要授予存储、通知、定位等 Android 权限。
 - 是否可以换用较旧版本或非 Google Play 渠道版本。
 
-配置完成后，Waydroid 的整体体验已经接近“在 Linux 上运行一个轻量 Android 子系统”。对于偶尔需要 Android APP 的 Linux 桌面用户来说，它是一个相当实用的方案。
+配置完成后，Waydroid 的整体体验已经接近“在 Linux 上运行一个轻量 Android 子系统”。对于偶尔需要 Android 应用的 Linux 桌面用户来说，它是一个相当实用的方案。
 

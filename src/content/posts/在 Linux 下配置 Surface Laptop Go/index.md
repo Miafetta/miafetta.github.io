@@ -1,10 +1,10 @@
 ---
 title: "在 Linux 下配置 Surface Laptop Go"
 published: 2026-04-15
-description: "Surface Laptop Go 装好 Linux 后指纹不能用、屏幕滚动撕裂、休眠唤醒键盘触控板失灵？本文记录了 Arch 系发行版下 Surface Laptop Go 的硬件配置方法。"
+description: "Surface Laptop Go 装好 Linux 后指纹失效、屏幕滚动出现撕裂、休眠唤醒后键盘触控板失灵？本文记录这些硬件适配问题在 Arch 系发行版下的解决方法。"
 image: "./cover.png"
-tags: ["Surface", "Secure Boot"]
-category: "Arch Linux"
+tags: ["Linux", "硬件适配", "Arch Linux", "Surface", "Secure Boot"]
+category: "指南"
 draft: false
 numbering: H2
 ---

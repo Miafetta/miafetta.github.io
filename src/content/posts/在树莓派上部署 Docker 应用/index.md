@@ -1,9 +1,9 @@
 ---
 title: "在树莓派上部署 Docker 应用"
 published: 2026-05-21
-description: "想把树莓派打造成一台轻量级家庭服务器？本文以 Raspberry Pi 4B 为例，整理 WatchTower、SakuraFrp、Syncthing 和 RabbitMQ 等常用 Docker 应用的部署方法，或许这些配置思路也可以迁移到其他 Docker 应用中~"
+description: "想把树莓派变成一台安静又实用的小服务器？本文以 Raspberry Pi 4B 为例，整理 WatchTower、SakuraFrp、Syncthing 和 RabbitMQ 等常用 Docker 应用的部署方法，或许这些配置思路也可以迁移到其他 Docker 应用中~"
 image: "./cover.jpg"
-tags: ["Raspberry Pi", "Docker"]
+tags: ["自托管", "Raspberry Pi", "Docker"]
 category: "指南"
 draft: false
 numbering: H2
@@ -30,7 +30,7 @@ numbering: H2
 
 这样做的好处是目录结构清晰，后续迁移、备份、排查问题都比较方便。（小树莓派也需要收纳美学！）
 
-> 本文默认你已经安装好 Docker 和 Docker Compose。如果尚未安装，可以先参考对应系统的 Docker 安装教程，如：[安装 Docker 及 Docker Compose](https://blog.miafetta.cafe/posts/rabbitmq消息队列入门与实践/#1-安装并配置-docker)。
+> 本文默认你已经安装好 Docker 和 Docker Compose。如果尚未安装，可以先参考对应系统的 Docker 安装教程，如：[安装 Docker 及 Docker Compose](/posts/docker-与-docker-compose入门与实践/#安装-docker-及-docker-compose)。
 
 ## 自动更新：WatchTower
 
@@ -300,7 +300,7 @@ id
 
 ## 消息队列：RabbitMQ
 
-RabbitMQ 是一个由 Erlang 语言开发的 AMQP 的开源实现，常用于应用解耦、异步任务、日志收集、事件分发等场景。具体可以参考 [RabbitMQ：消息队列入门与实践](https://blog.miafetta.cafe/posts/rabbitmq消息队列入门与实践/)。
+RabbitMQ 是一个由 Erlang 语言开发的 AMQP 的开源实现，常用于应用解耦、异步任务、日志收集、事件分发等场景。具体可以参考 [RabbitMQ：消息队列入门与实践](/posts/rabbitmq消息队列入门与实践/)。
 
 在树莓派上部署 RabbitMQ，可以用于本地开发测试、小型自动化系统、IoT 消息中转等场景。虽然树莓派不是高性能服务器，但跑一些轻量消息队列任务还是没问题的——只要别指望它一边跑满队列一边顺手训练大模型。
 

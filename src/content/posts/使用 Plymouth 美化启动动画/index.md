@@ -1,10 +1,10 @@
 ---
 title: "使用 Plymouth 美化启动动画"
 published: 2026-05-13
-description: "受够了开机时满屏滚动的启动日志？本文教你在 Arch Linux/EndeavourOS 上配置 Plymouth、隐藏 systemd-boot 菜单，打造更干净的静默启动体验~"
+description: "受够了开机时满屏滚动的日志？本文介绍如何在 Arch Linux 和 EndeavourOS 上配置 Plymouth、隐藏 systemd-boot 菜单，打造更干净、更简洁的启动体验~"
 image: "./cover.png"
-tags: ["Plymouth", "systemd-boot", "Linux 美化"]
-category: "Arch Linux"
+tags: ["Linux", "Linux 美化", "Arch Linux", "Plymouth", "systemd-boot"]
+category: "指南"
 draft: false
 numbering: H2
 ---

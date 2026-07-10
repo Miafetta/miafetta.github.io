@@ -1,10 +1,10 @@
 ---
-title: "树莓派 Type-C 一线通配置指南"
+title: "树莓派 USB-C 一线通配置指南"
 published: 2026-05-20
-description: "想用一根 Type-C 数据线同时解决树莓派供电和网络连接？本文记录了在 Raspberry Pi 4B 上启用 USB Gadget 模式，并通过虚拟网卡实现与 iPad 或 PC 直连通信的方法。"
+description: "想用一根 USB-C 数据线同时解决树莓派的供电和联网？本文记录 Raspberry Pi 4B 的 USB Gadget 配置过程，并通过虚拟网卡实现与 iPad 或 PC 直连通信的方法。"
 image: "./cover.jpg"
-tags: ["Raspberry Pi", "USB Gadget"]
-category: 指南
+tags: ["网络", "Raspberry Pi", "USB Gadget"]
+category: "指南"
 draft: false
 numbering: H2
 ---

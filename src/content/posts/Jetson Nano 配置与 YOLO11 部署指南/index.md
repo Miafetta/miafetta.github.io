@@ -1,10 +1,10 @@
 ---
-title: "Jetson 配置指南"
+title: "Jetson Nano 配置与 YOLO11 部署指南"
 published: 2025-10-27
-description: "想在 Jetson 上运行 YOLO 模型？本文记录了 NVIDIA Jetson Nano B01 的系统烧录、首次启动、本地化配置、Docker 部署以及 YOLO11 容器安装过程。"
+description: "从系统烧录到运行 YOLO11，本文完整记录了 NVIDIA Jetson Nano B01 的初始设置、本地化配置、Docker 环境搭建和模型容器部署过程。"
 image: "./cover.jpg"
-tags: ["Jetson", "Docker", "YOLO"]
-category: 指南
+tags: ["AI", "Jetson", "YOLO", "Docker"]
+category: "指南"
 draft: false
 numbering: H2
 ---

@@ -1,12 +1,12 @@
 ---
 title: "RabbitMQ：消息队列入门与实践"
 published: 2026-03-04
-description: "想了解 RabbitMQ 是如何实现应用之间的异步通信的吗？本文以 Docker / Ubuntu 环境为例，整理了 RabbitMQ 的核心概念、安装配置、管理方式和 Python 消息收发示例。Everything you need to know about RabbitMQ is here!"
+description: "想了解如何使用 RabbitMQ 实现应用之间的异步通信？本文从消息队列的核心概念讲起，介绍了 RabbitMQ 的安装、管理与配置，并通过 Python 示例完成消息收发。Everything you ought to know about RabbitMQ is here!"
 image: "./cover.png"
-tags: ["RabbitMQ", "Docker"]
-category: 指南
+tags: ["消息队列", "RabbitMQ", "Docker", "Python"]
+category: "学习笔记"
 draft: false
-numbering: none
+numbering: H2
 ---
 
 ## RabbitMQ 简介
@@ -63,139 +63,65 @@ RabbitMQ 的抽象结构如下图。
 
 ## 配置 RabbitMQ 服务器
 
-RabbitMQ Broker 是唯一需要安装 RabbitMQ 服务的设备。无论是生产者还是消费者均无需安装 RabbitMQ。
+RabbitMQ Broker 是唯一需要安装 RabbitMQ 服务的设备。无论是生产者还是消费者，均无需安装 RabbitMQ。
 
 ### 安装并启动 RabbitMQ
 
-RabbitMQ 是使用 Erlang 语言开发的，在安装前必须先安装和配置 Erlang 环境。具体可以查阅：[Installing RabbitMQ | RabbitMQ](https://www.rabbitmq.com/docs/download)。
+RabbitMQ 是使用 Erlang 语言开发的。如果直接在主机环境中安装 RabbitMQ，需要同时安装 Erlang 运行环境；如果使用 Docker 部署，则 Erlang 环境已经包含在 RabbitMQ 官方镜像中，宿主机无需额外安装 Erlang。具体安装方式可以查阅：[Installing RabbitMQ | RabbitMQ](https://www.rabbitmq.com/docs/download)。
 
-由于 Windows 系统下 Erlang 的安装与配置较为繁琐，在此以 Ubuntu 24.04 为例。可以将 RabbitMQ 安装在 Docker 中，也可以直接安装在主机环境中。
+由于 Windows 系统下安装和配置 Erlang 相对繁琐，如果想在主机环境中安装，这里只以 Ubuntu 24.04 为例，其他 Linux 发行版也可参考。
+
+本文提供两种安装方式：
+
+1. 使用 Docker 和 Docker Compose 部署 RabbitMQ；
+2. 直接在 Ubuntu 主机环境中安装 RabbitMQ。
 
 > [!NOTE]
 >
-> 此部分更新于 2026/03/04，RabbitMQ 的最新版本为 4.2.4。
+> 此部分更新于 2026-07-09，RabbitMQ 的最新版本为 4.3.2。
 
-#### 方法一：在 Docker 中安装并启动 RabbbitMQ
+#### 方法一：使用 Docker Compose 在 Docker 中部署并启动 RabbitMQ
 
-##### 1 安装并配置 Docker
+若主机中尚未安装 Docker，需要先安装 Docker。为了避免每次启动容器时都手动编写冗长的 `docker run` 命令，本文使用 Docker Compose 简化 RabbitMQ 容器的管理和部署。Docker 和 Docker Compose 的安装和配置可以参考：[Docker：在 Ubuntu 上安装与配置 Docker Compose](/posts/docker-与-docker-compose入门与实践/)。
 
-若主机中尚未安装 Docker，需要先安装 Docker。同时，为了解决传统模式下每次启动容器时，运行 `docker run` 需要记住大量参数和命令的问题，使用 Docker Compose 简化 Docker 容器的管理和部署。
+以下假设 Docker 和 Docker Compose 已安装完成，并且已将当前用户加入 `docker` 用户组。
 
-###### 1.1 安装  Docker 及 Docker Compose
+##### 准备持久化目录
 
-以下操作需要以 root 用户身份完成，请使用 `sudo -i` 或 `su root` 切换到 root 用户。
-
-首先，运行以下命令，安装一些必要的软件包：
-
-```bash frame="terminal"
-sudo apt update && sudo apt upgrade -y
-sudo apt install curl vim wget gnupg dpkg apt-transport-https lsb-release ca-certificates
-```
-
-然后加入 Docker 的 GPG 公钥和 apt 源：
-
-```bash frame="terminal" wrap
-curl -sSL https://download.docker.com/linux/debian/gpg | gpg --dearmor > /usr/share/keyrings/docker-ce.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-ce.gpg] https://download.docker.com/linux/debian $(lsb_release -sc) stable" > /etc/apt/sources.list.d/docker.list
-```
-
-> [!TIP]
->
-> 如遇到网络问题，可以用 [清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/) 的镜像源：
->
-> ```bash
-> curl -sSL https://download.docker.com/linux/debian/gpg | gpg --dearmor > /usr/share/keyrings/docker-ce.gpg
-> echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-ce.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian $(lsb_release -sc) stable" > /etc/apt/sources.list.d/docker.list
-> ```
-
-之后可以直接安装 Docker 和 Docker Compose 了：
-
-```bash frame="terminal"
-apt update && apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-```
-
-Docker Compose 可以作为 Docker 插件 `docker-compose-plugin` 安装，也能以 `docker-compose` 软件包单独安装，二者区别如下：
-
-|        安装方式         | 兼容性 |     启动命令     |
-| :---------------------: | :----: | :--------------: |
-| `docker-compose-plugin` |  较好  | `docker compose` |
-|    `docker-compose`     |  最好  | `docker-compose` |
-
-这里以 Docker 插件 `docker-compose-plugin` 的形式安装。如遇到兼容性问题，则可以单独安装 Docker Compose。
-
-###### 1.2 验证安装
-
-可以通过以下命令验证 Docker 和 Docker Compose 是否成功安装并已是最新版本。
-
-```bash frame="terminal"
-sudo docker version
-sudo docker compose version
-```
-
-###### 1.3 （可选）使用国内镜像加速 Docker
-
-可以运行如下命令，添加国内镜像，并重启 Docker 服务。
-
-```bash frame="terminal"
-sudo mkdir -p /etc/docker
-
-sudo tee /etc/docker/daemon.json <<-'EOF'
-{
-    "registry-mirrors": [
-        "https://docker.1ms.run",
-        "https://dockercf.jsdelivr.fyi/",
-        "https://docker.m.daocloud.io"
-    ]
-}
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-```
-
-###### 1.4 将当前用户加入 docker 用户组
-
-在使用 docker 命令前，每次都需要添加 `sudo` 前缀。通过将当前用户加入 docker 用户组，可以让当前用户直接运行 docker 命令。
-
-首先创建 docker 用户组。通常在安装 Docker 时，docker 用户组会自动创建，但也可以运行以下命令来创建或确认：
-
-```bash frame="terminal"
-sudo groupadd docker
-```
-
-如果已存在 docker 用户组则会提示：`groupadd：“docker”组已存在`。
-
-然后将当前用户添加到 docker 用户组中。
-
-```bash frame="terminal"
-sudo usermod -aG docker $USER
-
-# 也可以使用下面的命令
-# sudo usermod -aG docker $(whoami)
-```
-
-注销并重新登录当前用户，或使用 `newgrp docker` 刷新 docker 用户组权限后生效。
-
-##### 2 在 Docker 中部署并启动 RabbitMQ
-
-由于容器默认是非持久化的，需要先准备好持久化时所需的目录、文件及其权限，然后将 RabbitMQ 容器挂载在对应目录下。
+由于容器自身的可写层不适合长期保存业务数据，且容器删除、重建或迁移时其中的数据不便保留，因此需要提前准备数据、配置和日志目录，并将其挂载到 RabbitMQ 容器中。
 
 下面以安装在用户目录 `~/Documents/docker/rabbitmq/` 下为例。运行：
 
 ```bash frame="terminal"
+# 创建目录
 mkdir -p ~/Documents/docker/rabbitmq/{data,config,logs}
-cd ~/Document/docker/rabbitmq
+
+# 进入创建好的 rabbitmq 目录
+cd ~/Documents/docker/rabbitmq
+
+# 创建配置文件
 touch ./config/rabbitmq.conf
+
+# 修改目录权限
 sudo chown -R 999:999 ./data ./logs
 ```
+> [!NOTE]
+>
+> 在 RabbitMQ 官方镜像中，默认用户的 `UID/GID` 为 `999:999`。这里需要修改 `data` 和 `logs` 目录的权限，允许容器向其中写入数据和日志。
 
-然后创建 Docker Compose 配置文件：
+##### 创建 Docker Compose 配置文件
+
+在 `~/Documents/docker/rabbitmq/` 目录下创建 `docker-compose.yml` 配置文件：
 
 ```bash frame="terminal"
-tee ~/Documents/docker/rabbitmq/docker-compose.yml << 'EOF'
+cd ~/Documents/docker/rabbitmq
+vim docker-compose.yml
+```
+
+```yaml title="docker-compose.yml" frame="code"
 services:
   rabbitmq:
-     # 镜像名
+    # 镜像名
     image: rabbitmq:4-management
     # 容器名
     container_name: rabbitmq
@@ -233,40 +159,48 @@ networks:
   rabbitmq-network:
     name: rabbitmq-network
     driver: bridge
-EOF
 ```
 
-然后运行如下命令，部署并启动 RabbitMQ：
+##### 启动 RabbitMQ 服务器
+
+运行如下命令，部署并启动 RabbitMQ：
 
 ```bash frame="terminal"
 docker compose up -d
 ```
 
-现在，RabbitMQ 服务器会在系统启动时自动启动。
+由于在 `docker-compose.yml` 中设置了 `restart: unless-stopped`，因此在 Docker 服务启动后，除非 RabbitMQ 容器此前被手动停止，否则该容器会自动启动。
 
 > [!WARNING]
 >
 > RabbitMQ 服务器默认的用户名为 `guest` ，密码也为 `guest`。但默认的 `guest` 用户只允许本地连接，如果需要远程连接和管理 Broker，需要创建一个管理员用户。
 >
-> 在先前的 `docker-compose.yml` 中，已经定义好默认的管理员用户名为 `admin`，密码也为 `admin`，可以直接使用，但请注意，如果要将 RabbitMQ 服务器暴露在公网中，请务必修改用户名和密码。
+> 在先前的 `docker-compose.yml` 中，已经通过 `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 定义默认管理员用户为 `admin / admin`，可以直接使用。**但请注意，如果要将 RabbitMQ 服务器暴露在公网中，请务必修改用户名和密码。**
+>
+> `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 仅在 RabbitMQ 数据目录初始化时生效。如果 `./data` 目录中已经存在旧数据，修改这两个环境变量不会修改已有用户，需要使用 `rabbitmqctl` 手动修改或清空数据目录后重新初始化。
 
-##### 3 通过命令行与 RabbitMQ 服务器交互
+##### **4 通过命令行与 RabbitMQ 服务器交互**
 
-如果想通过命令行与 RabbitMQ 服务器交互，请使用如下命令：
+如果想通过命令行与 RabbitMQ 服务器交互，如使用 `rabbitmqctl` 或 `rabbitmq-plugins` 等命令，请先使用如下命令进入容器：
 
 ```bash frame="terminal"
 docker exec -it rabbitmq bash
 ```
 
-然后，就可以像在主机环境中一样，使用命令管理 RabbitMQ 服务器了。
+进入容器后，就可以像在主机环境中一样，使用命令管理 RabbitMQ 服务器了。
 
 > [!TIP]
 >
 > 由于容器中默认以 root 用户登录，因此若以此方式安装 RabbitMQ，在管理服务器时，命令前无需添加 `sudo`。
 
-#### 方法二：在主机环境中安装并启动 RabbbitMQ
 
-##### 1 安装 RabbitMQ
+#### 方法二：在主机环境中安装并启动 RabbitMQ
+
+相比使用 Docker Compose 部署，直接在主机环境中安装 RabbitMQ 会将 RabbitMQ 及其依赖安装到当前系统中，并通过 systemd 作为系统服务进行管理。这种方式更接近传统服务器部署方式，适合希望直接使用系统服务、配置文件和日志目录管理 RabbitMQ 的场景。
+
+下面以 Ubuntu 24.04 为例，使用 RabbitMQ 官方提供的 apt 源安装 RabbitMQ 及其 Erlang 运行环境。
+
+##### 安装 RabbitMQ
 
 若要安装在主机环境中，可以使用官网 [Installing on Debian and Ubuntu | RabbitMQ](https://www.rabbitmq.com/docs/install-debian#apt-quick-start) 中提供的自动脚本。
 
@@ -305,46 +239,35 @@ sudo apt-get install -y erlang-base \
 sudo apt-get install rabbitmq-server -y --fix-missing
 ```
 
-##### 2 启动 RabbitMQ 服务器
+##### 启动 RabbitMQ 服务器
 
-若选择安装在主机环境内，RabbitMQ 将被安装在 `/usr/sbin/` 目录下。
+若选择安装在主机环境中，RabbitMQ 会作为 systemd 服务安装，服务名通常为 `rabbitmq-server`。
 
-由于该目录中包含系统管理命令，因此普通用户的 `PATH` 环境变量中默认不会包含该目录。要启动 RabbitMQ，或使用 RabbitMQ 安装目录的完整路径，或将 `/usr/sbin/` 目录加入当前用户的 `PATH` 中，或临时切换为 root 用户。
-
-###### 方法一：使用完整路径
-
-每次启动 RabbitMQ 服务器时，加上完整路径：
+可以使用如下命令启动 RabbitMQ 服务器：
 
 ```bash frame="terminal"
-sudo /usr/sbin/rabbitmq-server
+sudo systemctl start rabbitmq-server
 ```
 
-###### 方法二：临时切换为 root 用户
-
-首先运行 `sudo -i` 或 `su root` 命令，临时切换为 root 用户，然后使用如下的命令启动 RabbitMQ 服务器：
+设置开机自启：
 
 ```bash frame="terminal"
-rabbitmq-server
+sudo systemctl enable rabbitmq-server
 ```
 
-###### 方法三：将安装目录加入环境变量（推荐）
-
-运行以下命令，将 `/usr/sbin/` 目录加入当前用户的 `PATH` 中。
+启动和设置开机自启的命令也可以合并为：
 
 ```bash frame="terminal"
-export PATH=$PATH:/usr/sbin
-source ~/.bashrc
+sudo systemctl enable --now rabbitmq-server
 ```
 
-然后，可以使用如下的命令启动 RabbitMQ 服务器：
+可以使用如下命令以查看 RabbitMQ 服务器的运行状态：
 
 ```bash frame="terminal"
-sudo rabbitmq-server
+sudo systemctl status rabbitmq-server
 ```
 
-以下均假设已按照方法三，将 `/usr/sbin/` 目录加入当前用户的 `PATH` 中。
-
-##### 3 创建 RabbitMQ 服务器用户
+##### 创建 RabbitMQ 服务器用户
 
 在开始使用前，需要先创建一个用于访问 RabbitMQ 服务器的用户。
 
@@ -354,7 +277,7 @@ RabbitMQ 服务器默认的用户名为 `guest` ，密码也为 `guest`，但默
 
 ```bash frame="terminal"
 # 如果 RabbitMQ 还未启动，运行以下命令以启动服务
-sudo systemctl start rabbitmq
+sudo systemctl start rabbitmq-server
 
 user_name="admin"		# 新用户名
 user_password="admin"	# 新用户密码
@@ -367,11 +290,44 @@ sudo rabbitmqctl set_permissions -p / "$user_name" ".*" ".*" ".*"
 sudo rabbitmqctl delete_user guest
 ```
 
+#### 关于后续命令的说明
+
+无论是在 Docker 中部署 RabbitMQ，还是直接在主机环境中安装 RabbitMQ，后续的 RabbitMQ 配置、虚拟主机创建、用户管理和队列管理等操作本质上都是相同的，使用的都是 `rabbitmqctl`、`rabbitmq-plugins` 等命令，区别只在于命令的执行环境不同：
+
+- 如果 RabbitMQ 安装在主机环境中，可以直接在主机终端中运行相关命令，需要在命令前添加 `sudo`
+- 如果 RabbitMQ 运行在 Docker 容器中，需要先进入 RabbitMQ 容器，再运行相关命令，不需要添加 `sudo`
+
+例如，在主机环境中查看 RabbitMQ 状态，执行：
+
+```bash frame="terminal"
+sudo rabbitmqctl status
+```
+
+如果 RabbitMQ 运行在 Docker 容器中，则需要先进入容器：
+
+```bash frame="terminal"
+docker exec -it rabbitmq bash
+```
+
+然后在容器内运行：
+
+```bash frame="terminal"
+rabbitmqctl status
+```
+
+或者，也可以不进入容器，直接在主机中执行：
+
+```bash frame="terminal"
+docker exec -it rabbitmq rabbitmqctl status
+```
+
+下文为了行文简洁，默认以主机环境中的命令形式展示。如果你使用 Docker 部署 RabbitMQ，需要先按照上述方式进入容器，再执行去掉 `sudo` 后的对应命令，或使用 `docker exec -it rabbitmq <command>` 直接执行。
+
 ### 配置 RabbitMQ 服务器
 
 如果安装在主机环境中，RabbitMQ 的配置文件路径位于 `/etc/rabbitmq/rabbitmq.conf`。
 
-如果安装在 Docker 中，RabbitMQ 的配置文件位于安装目录中的 `config/rabbitmq.conf`，请在非容器环境（主机环境）下进行修改。
+如果在 Docker 中部署 RabbitMQ，RabbitMQ 的配置文件位于安装目录中的 `config/rabbitmq.conf`，请在非容器环境（主机环境）下进行修改。
 
 关于 RabbitMQ 配置文件的参数，可以参考 [Configuration | RabbitMQ](https://www.rabbitmq.com/docs/configure#config-items)。以下是一些常见的参数。
 
@@ -405,28 +361,31 @@ sudo rabbitmqctl set_permissions -p "$vhost" "$user" ".*" ".*" ".*"	# 为用户�
 常用的管理命令如下。
 
 ```bash frame="terminal"
-sudo rabbitmqctl status				# 查看服务器状态
-sudo rabbitmqctl list_exchanges		# 列出当前所有 exchange
-sudo rabbitmqctl list_queues		# 列出当前所有 queue
-sudo rabbitmqctl list_users			# 列出当前所有用户
+sudo rabbitmqctl status              # 查看服务器状态
+sudo rabbitmqctl list_exchanges      # 列出当前所有 exchange
+sudo rabbitmqctl list_queues         # 列出当前所有 queue
+sudo rabbitmqctl list_users          # 列出当前所有用户
 
-sudo rabbitmqctl stop				# 关闭 RabbitMQ 服务器
+sudo systemctl stop rabbitmq-server  # 关闭 RabbitMQ 服务（主机环境）
 ```
 
-也可以安装插件以通过网页 UI 管理 RabbitMQ 服务器。使用以下命令启用插件。
+RabbitMQ 也提供了管理插件，可以通过网页 UI 管理服务器。
+
+如果使用的是 Docker Compose 部署方式，并且镜像为 `rabbitmq:4-management`，则管理插件已经默认启用，无需额外操作。
+
+如果是在主机环境中安装的 RabbitMQ，可以使用以下命令启用管理插件：
 
 ```bash frame="terminal"
 sudo rabbitmq-plugins enable rabbitmq_management
 ```
 
-然后重启 RabbitMQ 服务器。
+然后重启 RabbitMQ 服务器：
 
 ```bash frame="terminal"
-sudo rabbitmqctl stop
-sudo rabbitmq-server
+sudo systemctl restart rabbitmq-server
 ```
 
-通过访问 `https://<server-ip>:15672`（将 `<server-ip>` 替换为服务器公网 IP 或 `localhost`）并使用具有远程访问权限的管理员账户登录，即可进入 RabbitMQ 管理界面，如图所示。
+通过访问 `http://<server-ip>:15672`（将 `<server-ip>` 替换为服务器公网 IP 或 `localhost`）并使用具有远程访问权限的管理员账户登录，即可进入 RabbitMQ 管理界面，如图所示。
 
 ![RabbitMQ 管理插件-登录界面](./media/RabbitMQ管理插件-登录界面.png)
 
@@ -452,7 +411,25 @@ import pika
 
 > ![抽象结构](./media/抽象结构.png)
 
-为了使问题简化，我们一律只使用默认的虚拟主机 “/”，并且假设生产者、消费者和 RabbitMQ 服务器在同一设备上（即 RabbitMQ 服务器的地址为 `localhost` 或 `127.0.0.1`）。现在，让我们一一来看这三种模式。
+为了使问题简化，下面的示例一律只使用默认的虚拟主机 “/”，并假设生产者、消费者和 RabbitMQ 服务器在同一设备上，即 RabbitMQ 服务器地址为 `localhost` 或 `127.0.0.1`。
+
+如果 RabbitMQ 使用默认的 `guest / guest` 用户，并且程序与 RabbitMQ 服务器运行在同一台主机上，可以直接使用：
+
+```python
+connection_params = pika.ConnectionParameters(host="localhost")
+```
+
+如果前面按照本文的 Docker Compose 或主机环境安装方式创建了 `admin / admin` 用户，则需要显式指定用户名和密码：
+
+```python
+connection_params = pika.ConnectionParameters(
+    host="localhost",
+    port=5672,
+    virtual_host="/",
+    credentials=pika.PlainCredentials("admin", "admin")
+)
+```
+下文代码为了简洁，默认使用 `guest / guest` 场景下的简写形式；如果你使用的是 `admin / admin` 用户，请将连接参数替换为上面的写法。
 
 ### 简单模式
 
@@ -641,9 +618,9 @@ channel.basic_consume(queue='hello',
 
 这个程序片段首先定义了 `callback()` 函数，用于在收到消息后处理消息。`callback()` 函数后的参数列表 `ch`，`method`，`properties` 和 `body` 是固定的，分别代表连接中的 Channel 对象、消息传递时用到的方法、消息的属性和消息体。在这个片段中，`callback()` 函数只是简单地打印消息体的内容。
 
-在定义了 `callback()` 函数后，需要使用 `basic_comsume()` 方法配置消费者（注意此时还没有开始监听队列）。`basic_comsume()` 方法至少接收两个参数，包括需要监听的队列名称 `queue` 和收到消息后消费者的行为 `on_message_callback`。
+在定义了 `callback()` 函数后，需要使用 `basic_consume()` 方法配置消费者（注意此时还没有开始监听队列）。`basic_consume()` 方法至少接收两个参数，包括需要监听的队列名称 `queue` 和收到消息后消费者的行为 `on_message_callback`。
 
-你可能注意到，在 `basic_comsume()` 方法中还有一个参数：`auto_ack`。这个可选参数用于设置消费者是否自动确认消息，默认为 `False`。关于自动 / 手动确认消息的内容在稍后会详细解释。
+你可能注意到，在 `basic_consume()` 方法中还有一个参数：`auto_ack`。这个可选参数用于设置消费者是否自动确认消息，默认为 `False`。关于自动 / 手动确认消息的内容在稍后会详细解释。
 
 ##### Step 4：正式监听队列并接收消息
 
@@ -657,7 +634,7 @@ channel.start_consuming()
 
 ##### 自动 / 手动确认消息
 
-先前，消费者程序示例的 `basic_comsume()` 方法中出现了一个可选参数：`auto_ack`。之前我们提到：
+先前，消费者程序示例的 `basic_consume()` 方法中出现了一个可选参数：`auto_ack`。之前我们提到：
 
 > 当一个 Consumer 接收 Queue 中的一条消息并确认后，该消息才会被销毁。
 
@@ -773,15 +750,13 @@ ch.basic_publish(exchange='',
 
 #### 轮询分发
 
-若直接运行简单模式下消费者程序的代码，RabbitMQ 会采用轮询分发模式，按照消费者连接到 Broker 的先后顺序，依次将消息发送给各个消费者，并且只有在当前消息被确认后，才会向下一个消费者发送下一条消息。
+若直接运行简单模式下消费者程序的代码，RabbitMQ 会采用轮询分发模式，按照消费者连接到 Broker 的先后顺序，依次将消息发送给各个消费者。
 
-例如，假设有两个消费者 `C1` 和 `C2`，且消费者 `C1` 先于消费者 `C2` 连接至 Broker。当 Queue 中存在两条消息 `M1` 和 `M2` 时，`M1` 会先被发送给 `C1`；只有在收到 `C1` 对 `M1` 的确认后，`M2` 才会被发送给 `C2`。
-
-然而，在默认的轮询分发模式下，若一个消费者处理消息的时间过长，会导致所有消费者无法接收消息。
+需要注意的是，默认情况下 RabbitMQ 不会根据消费者的实际处理能力进行严格限制，处理较慢的消费者也可能提前收到多条消息，导致任务分配不够均衡。
 
 #### 公平分发
 
-为了解决轮询分发的问题，RabbitMQ 提供了 `basic_qos()` 方法，允许消费者提前取出一条或多条消息，进而调整分发模式。
+为了解决轮询分发的问题，RabbitMQ 提供了 `basic_qos()` 方法，调整分发模式。
 
 `basic_qos()` 方法的定义如下。
 
@@ -794,17 +769,17 @@ def basic_qos(
 ```
 
 - `prefetch_size` 代表了允许预取消息的总大小，单位为字节。默认值为 `0`，表示不对消息的大小作出限制。
-- `prefetch_count` 代表了预取消息的最大数量，这是最常用的参数。默认值为 `0`，表示不允许预取。
+- `prefetch_count` 代表消费者在未确认消息达到多少条后，RabbitMQ 暂停继续向该消费者投递新消息。这是最常用的参数。默认值为 `0`，表示不限制预取数量。
 - `global_qos` 代表当前参数是对当前连接 Connection 中所有信道 Channel 生效还是仅对本信道生效。默认值为 `False`，表示仅对当前信道生效。
 
-最常用的场景为公平分发模式，即每个消费者一次只处理一条消息。当一个消费者处理完消息后，会立即收到下一条消息。设置公平分发时，只需在消费者程序中正式监听前添加如下代码。
+最常用的场景为公平分发模式，将 `prefetch_count` 设置为 `1`，即每个消费者同一时间最多只处理一条未确认消息。设置公平分发时，只需在消费者程序中正式监听前添加如下代码：
 
 ```python frame="code"
 channel.basic_qos(prefetch_count=1)
 # 等同于 channel.basic_qos(prefetch_size=0, prefetch_count=1, global_=False)
 ```
 
-当然，也可以将 `prefetch_count` 设置为其他值，允许一个消费者程序同时取出多个消息。
+当然，也可以将 `prefetch_count` 设置为其他值。
 
 ### 交换机模式
 
@@ -1013,7 +988,7 @@ import pika
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
-# 声明一个‘logs2’交换机，设置类型为‘direct’
+# 声明一个‘logs’交换机，设置类型为‘direct’
 channel.exchange_declare(exchange='logs',exchange_type='direct')
 
 # 创建一个临时队列
@@ -1082,7 +1057,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
 # 声明一个'logs'交换机，设置类型为'topic'
-channel.exchange_declare(exchange='logs3',exchange_type='topic')
+channel.exchange_declare(exchange='logs',exchange_type='topic')
 
 # 创建一个临时队列
 result = channel.queue_declare("",exclusive=True)
@@ -1105,4 +1080,4 @@ channel.basic_consume(queue=queue_name,
 channel.start_consuming()	# 正式开始监听队列
 ```
 
-自此，RabbitMQ 的内容已全部结束，已经能满足生产中的绝大部分需求。如果需要更多高级用法，请查阅 RabbitMQ 官网中的文档。
+自此，RabbitMQ 的入门与常用使用方式已经介绍完毕，已经可以满足许多基础开发和学习场景。如果需要了解集群、高可用、死信队列、消息确认机制等高级用法，可以继续查阅 RabbitMQ 官方文档。
