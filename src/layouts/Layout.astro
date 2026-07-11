@@ -15,6 +15,7 @@ import {
 	DARK_MODE,
 	DEFAULT_THEME,
 	LIGHT_MODE,
+	MOBILE_BANNER_EXTRA_HEIGHT,
 	PAGE_WIDTH,
 } from "../constants/constants";
 import { defaultFavicons } from "../constants/icon";
@@ -165,6 +166,7 @@ const bannerOffset =
 	bannerOffset,
 	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
 	'banner-height': `${BANNER_HEIGHT}vh`,
+	'mobile-banner-extra-height': `${MOBILE_BANNER_EXTRA_HEIGHT}vh`,
 }}>
 @tailwind base;
 @tailwind components;
@@ -190,6 +192,15 @@ const bannerOffset =
 		@apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
 	}
 	@media (max-width: 767px) {
+		.enable-banner #banner-wrapper,
+		.enable-banner #banner {
+			height: calc(var(--banner-height-home) + var(--mobile-banner-extra-height));
+		}
+
+		.enable-banner #main-panel-wrapper {
+			top: var(--mobile-main-panel-top) !important;
+		}
+
 		.enable-banner #banner img {
 			object-fit: contain;
 			transform: scale(1.4);
