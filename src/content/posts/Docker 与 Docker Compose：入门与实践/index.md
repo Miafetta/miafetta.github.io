@@ -993,8 +993,8 @@ docker compose up -d
 
 ```ansi title="Example Output" wrap=false
 [+] up 2/2
- [92m✔[0m Network demo-compose_default [92mCreated[0m      [94m0.3s[0m
- [92m✔[0m Container demo-compose-nginx [92mStarted[0m      [94m0.8s[0m
+ [38;2;68;214;44m✔[0m Network demo-compose_default [38;2;68;214;44mCreated[0m      [94m0.3s[0m
+ [38;2;68;214;44m✔[0m Container demo-compose-nginx [38;2;68;214;44mCreated[0m      [94m0.8s[0m
 ```
 
 启动完成后，访问：
