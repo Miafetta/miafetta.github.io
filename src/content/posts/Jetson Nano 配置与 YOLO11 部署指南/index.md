@@ -334,7 +334,7 @@ sudo docker run --rm hello-world
 
 终端中输出如下信息，说明 Docker 的安装与配置过程完成。
 
-```shellsession frame="terminal"
+```shellsession title="Example Output" wrap=false
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 198f93fd5094: Pull complete 

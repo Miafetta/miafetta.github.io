@@ -554,7 +554,7 @@ docker run hello-world
 
 如果终端中能够看到类似以下的输出，尤其是 `Downloaded newer image` 和 `Hello from Docker!`，说明 Docker 已经可以正常拉取镜像并运行容器。
 
-```shellsession frame="none" {5,7-8}
+```shellsession title="Example Output" wrap=false {5,7-8}
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 4f55086f7dd0: Pull complete
@@ -625,7 +625,7 @@ docker ps
 
 如果先前创建的示例 Nginx 容器仍在运行，会在输出中看到名为 `my-nginx` 的容器以及对应的端口映射信息，例如：
 
-```shellsession frame="none" wrap=false
+```shellsession title="Example Output" wrap=false
 CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                     NAMES
 5eaf2dc6081e   nginx:alpine   "/docker-entrypoint.…"   1 second ago   Up 3 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   my-nginx
 ```
@@ -853,7 +853,7 @@ COPY ./html /usr/share/nginx/html
 - `FROM nginx:alpine`：以 `nginx:alpine` 作为基础镜像；
 - `COPY ./html /usr/share/nginx/html`：将本地 `html` 目录复制到镜像中的 Nginx 静态文件目录。
 
-Nginx 默认会从 `/usr/share/nginx/html` 目录提供静态页面，因此复制进去的 `index.html` 会替换原先的默认页面。
+Nginx 默认会从 `/usr/share/nginx/html` 目录提供静态页面。上述命令会将本地 html 目录中的内容复制到该目录；其中的 index.html 会覆盖基础镜像自带的默认首页。
 
 #### 构建镜像
 
@@ -868,6 +868,27 @@ docker build -t demo-nginx .
 - `docker build`：根据 Dockerfile 构建镜像；
 - `-t demo-nginx`：给镜像设置名称为 `demo-nginx`；
 - `.`：指定构建上下文为当前目录。
+
+构建过程的输出示例如下所示，实际显示的部分信息可能有所不同：
+
+```shellsession title="Example Output" wrap=false
+[+] Building 0.1s (7/7) FINISHED                                                      docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                  0.0s
+ => => transferring dockerfile: 89B                                                                   0.0s
+ => [internal] load metadata for docker.io/library/nginx:alpine                                       0.0s
+ => [internal] load .dockerignore                                                                     0.0s
+ => => transferring context: 2B                                                                       0.0s
+ => [internal] load build context                                                                     0.0s
+ => => transferring context: 61B                                                                      0.0s
+ => [1/2] FROM docker.io/library/nginx:alpine                                                         0.0s
+ => CACHED [2/2] COPY ./html /usr/share/nginx/html                                                    0.0s
+ => exporting to image                                                                                0.0s
+ => => exporting layers                                                                               0.0s
+ => => writing image sha256:b2c22df9aaf909560ea4c56e1c6dca12ee8c16c3e0fd65d80bddc8bafcb840db          0.0s
+ => => naming to docker.io/library/demo-nginx                                                         0.0s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/vz31bf6excqiebnwqmwit56y8
+```
 
 构建完成后，可以查看本地镜像：
 
@@ -893,7 +914,7 @@ http://localhost:8081
 
 如果页面显示 `Hello Docker!`，说明自定义镜像已经正常运行。
 
-如果启动时提示端口已被占用，可以先检查占用该端口的程序或容器，也可以改用其他主机端口。
+如果启动时提示端口已被占用，可以先检查并停止占用该端口的程序或容器，也可以将 `8081` 改为其他未被占用的主机端口。如果提示容器名称已存在，可以先执行 `docker rm -f demo-nginx` 删除旧容器。
 
 ### 使用 Docker Compose
 
@@ -914,7 +935,7 @@ demo-compose/
 
 其中，`html/index.html` 可以继续使用前面的示例内容：
 
-```html title="html/index.html" frame="code"
+```html title="index.html" frame="code"
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -967,6 +988,14 @@ docker compose up -d
 
 - `docker compose up`：根据 Compose 配置创建并启动服务
 - `-d`：后台运行
+
+构建过程的输出示例如下所示，实际显示的构建耗时可能有所不同：
+
+```ansi title="Example Output" wrap=false
+[+] up 2/2
+ [92m✔[0m Network demo-compose_default [92mCreated[0m      [94m0.3s[0m
+ [92m✔[0m Container demo-compose-nginx [92mStarted[0m      [94m0.8s[0m
+```
 
 启动完成后，访问：
 
