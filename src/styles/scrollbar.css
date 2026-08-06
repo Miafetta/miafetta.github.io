@@ -40,3 +40,4 @@
         --os-handle-bg-active: var(--scrollbar-bg-active-light);
     }
 }
+@reference "./tailwind.css";

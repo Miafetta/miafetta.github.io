@@ -7,6 +7,7 @@ import ConfigCarrier from "@components/ConfigCarrier.astro";
 import { profileConfig, siteConfig } from "@/config";
 import "photoswipe/style.css";
 import "../styles/photoswipe.css";
+import "../styles/tailwind.css";
 import {
 	AUTO_MODE,
 	BANNER_HEIGHT,
@@ -168,8 +169,7 @@ const bannerOffset =
 	'banner-height': `${BANNER_HEIGHT}vh`,
 	'mobile-banner-extra-height': `${MOBILE_BANNER_EXTRA_HEIGHT}vh`,
 }}>
-@tailwind base;
-@tailwind components;
+@reference "../styles/tailwind.css";
 
 @layer components {
 	.enable-banner.is-home #banner-wrapper {
@@ -228,7 +228,6 @@ const bannerOffset =
 	}
 }
 
-@tailwind utilities;
 </style>
 
 <script>
