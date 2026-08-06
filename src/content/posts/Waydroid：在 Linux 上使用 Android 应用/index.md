@@ -9,7 +9,7 @@ draft: false
 numbering: H2
 ---
 
-在 Linux 桌面上运行 Android APP，一直是一个比较微妙的需求：有些软件没有 Linux 客户端，有些网页端功能不完整，还有些应用只能通过 Android 版本获得比较好的体验。相比传统 Android 模拟器，Waydroid 并不是完整虚拟机，而是基于 LXC 容器运行 Android 系统，能够直接使用操作系统内核（而不是模拟一个 Android 内核），因此性能开销更低，也能更自然地融入 Linux 桌面环境。
+在 Linux 桌面上运行 Android 应用，一直是一个比较微妙的需求：有些软件没有 Linux 客户端，有些网页端功能不完整，还有些只能通过 Android 版本获得比较好的体验。相比传统 Android 模拟器，Waydroid 并不是完整虚拟机，而是基于 LXC 容器运行 Android 系统，能够直接使用操作系统内核（而不是模拟一个 Android 内核），因此性能开销更低，也能更自然地融入 Linux 桌面环境。
 
 本文以 Arch Linux / EndeavourOS 为例，记录从安装 Waydroid 到实际使用过程中需要处理的一些常见问题，包括内核支持、网络代理、ARM 应用兼容、Google Play 认证、隐藏多余图标以及多窗口模式配置。
 
@@ -298,7 +298,7 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
 ### （可选）开启多窗口模式
 
-Waydroid 应用默认以全屏模式启动，而多窗口模式能绕过 Android 自带的 SurfaceFlinger（画面合成器），直接让物理机的 Wayland 合成器接管每一个 APP 的窗口渲染，从而可以像使用原生 Linux 应用一样使用 Android APP。
+Waydroid 应用默认以全屏模式启动，而多窗口模式能绕过 Android 自带的 SurfaceFlinger（画面合成器），直接让物理机的 Wayland 合成器接管每一个 APP 的窗口渲染，从而可以像使用原生 Linux 应用一样使用 Android 应用。
 
 运行以下命令开启多窗口模式：
 
@@ -507,7 +507,7 @@ sudo systemctl restart waydroid-container
 
 ## 使用建议
 
-Waydroid 更适合运行工具类、阅读类、网盘类、聊天类等 Android APP。对于依赖硬件加速、设备指纹、厂商服务、反作弊系统或 DRM 校验的应用，兼容性一般较差。
+Waydroid 更适合运行工具类、阅读类、网盘类、聊天类等 Android 应用。对于依赖硬件加速、设备指纹、厂商服务、反作弊系统或 DRM 校验的应用，兼容性一般较差。
 
 如果某个 APP 无法运行，可以优先检查以下几点：
 

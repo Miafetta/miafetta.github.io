@@ -1,7 +1,7 @@
 ---
 title: "Docker 与 Docker Compose：入门与实践"
 published: 2026-07-10
-description: "想用 Docker 更方便地部署和管理应用吗？容器、镜像、Dockerfile 和 Compose 到底是什么关系？本文从基础概念出发，整理了 Docker 与 Docker Compose 在 Linux 和 Windows 下的安装与使用方法。"
+description: "想用 Docker 更方便地部署和管理应用吗？本文从基础概念出发，整理了 Docker 与 Docker Compose 在 Linux 和 Windows 下的安装与使用方法。"
 image: "./cover.png"
 tags: ["容器", "Linux", "Windows", "Docker", "Docker Compose"]
 category: "学习笔记"

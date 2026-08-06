@@ -9,9 +9,9 @@ draft: false
 numbering: H2
 ---
 
-最近入手了一台二手 Surface Laptop Go，作为随身携带的轻便设备使用。不过，对于这台配置并不算新的小电脑来说，预装的 Windows 系统多少显得有些臃肿，于是下定决心给它换上 Linux。
+最近入手了一台二手 Surface Laptop Go，作为随身携带的轻便设备使用。然而，对于这台配置并不算新的小电脑来说，预装的 Windows 系统多少显得有些臃肿，于是下定决心给它换上 Linux。
 
-不过，虽然 Linux 内核已经能较好地支持 Surface Laptop Go 的大部分硬件功能，但仍有一些细节需要额外配置，比如指纹传感器、屏幕撕裂、休眠唤醒后的键盘与触控板响应问题等。本文将记录在 Linux 下配置 Surface Laptop Go 硬件时遇到的问题与解决方法。
+虽然当前的 Linux 内核已经能较好地支持 Surface Laptop Go 的大部分硬件功能，但仍有一些细节需要额外配置，比如指纹传感器、屏幕撕裂、休眠唤醒后的键盘与触控板响应问题等。本文将记录在 Linux 下配置 Surface Laptop Go 硬件时遇到的问题与解决方法。
 
 ## Elan 指纹传感器设置
 
@@ -29,7 +29,7 @@ cd libfprint-elanmoc2-slg3-git
 makepkg -si
 ```
 
-如果原仓库无法访问，也可以使用本人同步的克隆仓库：
+如果原仓库无法访问，也可以使用本人克隆的仓库：
 
 ::github{repo='Miafetta/libfprint'}
 
