@@ -1,7 +1,7 @@
 ---
 title: "RabbitMQ：消息队列入门与实践"
 published: 2026-03-04
-description: "想了解如何使用 RabbitMQ 实现应用之间的异步通信？本文从消息队列的核心概念讲起，介绍了 RabbitMQ 的安装、管理与配置，并通过 Python 示例完成消息收发。Everything you ought to know about RabbitMQ is here!"
+description: "想了解如何使用 RabbitMQ 实现异步通信？本文从消息队列的核心概念讲起，介绍了 RabbitMQ 的安装、管理与配置，并通过 Python 示例完成消息收发。"
 image: "./cover.png"
 tags: ["消息队列", "RabbitMQ", "Docker", "Python"]
 category: "学习笔记"
@@ -192,7 +192,6 @@ docker exec -it rabbitmq bash
 > [!TIP]
 >
 > 由于容器中默认以 root 用户登录，因此若以此方式安装 RabbitMQ，在管理服务器时，命令前无需添加 `sudo`。
-
 
 #### 方法二：在主机环境中安装并启动 RabbitMQ
 
@@ -665,15 +664,14 @@ channel.basic_consume(queue='hello',
 - `basic_ack()` 方法用于消费者确认消息。该方法接收两个可选参数：`delivery_tag` 和 `multiple`。
 
   - `delivery_tag` 参数用于指定消息的投递标签，默认值为 `0`。在同一个信道上，消息的投递标签按照时间顺序单调递增。通常使用 `method.delivery_tag` 获取消费者当前正处理的消息。
-  
+
   - `multiple` 参数用于控制确认范围。默认值为 `False`，表示只确认 `delivery_tag` 指定的单条消息。若设置为 `True`，则会确认所有投递标签小于等于 `delivery_tag` 的尚未确认的消息。
-  
+
 - 除了使用 `basic_ack()` 方法确认消息外，还可以使用 `basic_nack()` 和 `basic_reject()` 拒绝消息。
 
   - `basic_nack()` 方法除了接收 `delivery_tag` 和 `multiple` 两个可选参数外，还接收一个可选参数 `requeue`。`requeue` 参数用于配置被拒绝的消息是否重新回到消息队列 Queue 中。默认值为 `True`，表示重新入队。
 
-  - `basic_reject()` 方法相比 `basic_nack()` 方法只缺少一个可选参数 `multiple`，即接收 `delivery_tag` 和 `requeue`两个可选参数，不批量拒绝消息。
-
+  - `basic_reject()` 方法相比 `basic_nack()` 方法只缺少一个可选参数 `multiple`，即接收 `delivery_tag` 和 `requeue` 两个可选参数，不批量拒绝消息。
 
 ##### 可持久化
 
@@ -913,7 +911,7 @@ channel.basic_consume(queue=queue_name,
 channel.start_consuming()
 ```
 
-###### Step 1：连接至RabbitMQ服务器
+###### Step 1：连接至 RabbitMQ 服务器
 
 ###### Step 2：新建交换机
 

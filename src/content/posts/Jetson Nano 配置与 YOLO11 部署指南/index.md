@@ -15,7 +15,7 @@ numbering: H2
 
 ## 系统烧录
 
-### 下载安装SD卡格式化工具 SD Card Formatter
+### 下载安装 SD 卡格式化工具 SD Card Formatter
 
 SD Card Formatter 是由 SD 协会官方推出的一款专业开源工具。其界面简洁易用，提供稳定可靠的格式化功能，全面支持 FAT32、exFAT 和 NTFS 文件系统。该工具能够高效修复 SD 卡中潜在的错误，保障数据安全，同时优化存储设备的读写性能。
 
@@ -41,7 +41,6 @@ SD Card Formatter 是由 SD 协会官方推出的一款专业开源工具。其�
 
 ![SD Card Formatter的安装(8)](./media/SD-Card-Formatter的安装(8).png)
 
-
 ### 下载安装系统镜像烧录软件 balenaEtcher
 
 BalenaEtcher 是一款免费开源的跨平台镜像烧录工具，专为快速、安全地将操作系统镜像写入 USB 驱动器、SD 卡等可移动设备而设计。该工具拥有直观的三步操作流程，支持 Windows、macOS 和 Linux 三大操作系统，是烧录系统镜像的优选工具。
@@ -55,7 +54,6 @@ BalenaEtcher 是一款免费开源的跨平台镜像烧录工具，专为快速�
 balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下载的 .exe 可执行文件，桌面即会出现一个如图所示的 balenaEtcher 图标窗口，期间软件将自动完成安装与配置，并在准备就绪后直接启动主程序。
 
 ![balenaEtcher的安装](./media/balenaEtcher的安装.png)
-
 
 ### 烧录系统镜像
 
@@ -81,7 +79,6 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
    ![使用SD Card Formatter格式化SD卡(4)](./media/使用SD-Card-Formatter格式化SD卡(4).png)
 
-
    等待格式化完毕后，在弹出的对话框中选择“确定”，如图所示。
 
    ![使用SD Card Formatter格式化SD卡(5)](./media/使用SD-Card-Formatter格式化SD卡(5).png)
@@ -100,7 +97,6 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
    ![使用balenaEtcher将镜像写入SD卡(3)](./media/使用balenaEtcher将镜像写入SD卡(3).png)
 
-
    点击“选择目标磁盘”，选择格式化后的 SD 卡并点击“选定”。
 
    ![使用balenaEtcher将镜像写入SD卡(4)](./media/使用balenaEtcher将镜像写入SD卡(4).png)
@@ -111,7 +107,6 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
    ![使用balenaEtcher将镜像写入SD卡(7)](./media/使用balenaEtcher将镜像写入SD卡(7).png)
 
-
    点击“现在烧录！”，开始写入镜像。
 
    ![使用balenaEtcher将镜像写入SD卡(8)](./media/使用balenaEtcher将镜像写入SD卡(8).png)
@@ -121,7 +116,6 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
    ![使用balenaEtcher将镜像写入SD卡(10)](./media/使用balenaEtcher将镜像写入SD卡(10).png)
 
    ![使用balenaEtcher将镜像写入SD卡(11)](./media/使用balenaEtcher将镜像写入SD卡(11).png)
-
 
    此时 SD 卡已准备就绪。Windows 系统可能会提示无法读取 SD 卡，属于正常现象。
 
@@ -141,7 +135,7 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
 ### 首次启动系统
 
-连接电源后，Jetson Nano会立即启动。首先将显示如图所示的 NIVIDIA 图标，之后经历如图所示的一系列自检等过程，直到启动如图所示的系统设置窗口。
+连接电源后，Jetson Nano 会立即启动。首先将显示如图所示的 NIVIDIA 图标，之后经历如图所示的一系列自检等过程，直到启动如图所示的系统设置窗口。
 
 ![第一次启动系统(1)](./media/第一次启动系统(1).png)
 
@@ -155,7 +149,7 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
 ![第一次启动系统(5)](./media/第一次启动系统(5).png)
 
-在语言设置中，下拉到底部，找到并选择“中文(简体)”，然后点击“继续”。
+在语言设置中，下拉到底部，找到并选择“中文 (简体)”，然后点击“继续”。
 
 ![第一次启动系统(6)](./media/第一次启动系统(6).png)
 

@@ -1,7 +1,7 @@
 ---
 title: "树莓派 USB-C 一线通配置指南"
 published: 2026-05-20
-description: "想用一根 USB-C 数据线同时解决树莓派的供电和联网？本文记录 Raspberry Pi 4B 的 USB Gadget 配置过程，并通过虚拟网卡实现与 iPad 或 PC 直连通信的方法。"
+description: "想用一根 USB-C 数据线同时解决树莓派的供电和联网？本文记录 Raspberry Pi 4B 的 USB Gadget 配置过程，通过虚拟网卡实现与 iPad 或 PC 直连通信。"
 image: "./cover.jpg"
 tags: ["网络", "Raspberry Pi", "USB Gadget"]
 category: "指南"
@@ -108,4 +108,3 @@ ssh pi@10.42.0.1
 ```text frame="none"
 http://10.42.0.1:<端口号>
 ```
-

@@ -1,7 +1,7 @@
 ---
 title: "Waydroid：在 Linux 上使用 Android 应用"
 published: 2026-05-12
-description: "想在 Linux 桌面上运行 Android 应用？本文以 Arch Linux 为例，记录了 Waydroid 从安装配置到应用管理的完整过程，助你获得一个Linux 上的 Android 子系统~"
+description: "想在 Linux 桌面上运行 Android 应用？来看看 Waydroid 吧~"
 image: "./cover.png"
 tags: ["容器", "Linux", "Android", "Arch Linux", "Waydroid"]
 category: "指南"
@@ -222,7 +222,7 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 2. 创建脚本文件（假设路径在 `~/waydroid_icon_hiding.sh`）
 
    你可以点击<a href="/downloads/bash-scripts/waydroid_icon_hiding.sh" download>这里</a>下载脚本。
-   
+
    如果你想自己创建脚本，也可以手动新建文件：
 
    ```bash frame="terminal"
@@ -518,4 +518,3 @@ Waydroid 更适合运行工具类、阅读类、网盘类、聊天类等 Android
 - 是否可以换用较旧版本或非 Google Play 渠道版本。
 
 配置完成后，Waydroid 的整体体验已经接近“在 Linux 上运行一个轻量 Android 子系统”。对于偶尔需要 Android 应用的 Linux 桌面用户来说，它是一个相当实用的方案。
-

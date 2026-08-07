@@ -41,14 +41,23 @@ Scoop 的软件管理逻辑，是先划定一个根目录（通常为 `~/scoop`�
 >
 > 这一部分参考了 Scoop 的 GitHub 页面 [ScoopInstaller/Install: 📥 Next-generation Scoop (un)installer](https://github.com/ScoopInstaller/Install#scoop-uninstaller)。
 
-安装前，请确保当前使用的是 `Windows PowerShell 5.1` 或 `PowerShell 7`，推荐选择 `PowerShell 7`。
+安装前，请确保当前使用的是 `Windows PowerShell 5.1` 或 `PowerShell 7`。
 
 > [!TIP]
 >
-> - `Windows PowerShell 5.1` 是 Windows 自带的系统组件，主要用于兼容既有的 Windows 管理体系；
->   - 如果当前使用的是 Windows 10 或 Windows 11，则无需额外安装；
->   - 使用较旧的 Windows 系统时，可以通过运行 `$PSVersionTable.PSVersion` 检查版本，并根据需要安装 [Windows Management Framework 5.1](https://www.microsoft.com/en-us/download/details.aspx?id=54616)。
-> - `PowerShell 7` 是基于现代 `.NET` 并支持跨平台的新一代 PowerShell，适合日常命令行操作、脚本编写、软件开发和跨平台自动化。它需要单独安装，并且可以与 Windows PowerShell 5.1 并存。详情请参考 [PowerShell](https://aka.ms/powershell)。
+> 可以在当前打开的 PowerShell 中运行 `$PSVersionTable.PSVersion` 查看当前版本。
+>
+> PowerShell 目前有两个容易混淆的版本分支：
+>
+> - `Windows PowerShell 5.1`：Windows 自带的旧版 PowerShell，主要用于兼容现有的 Windows 管理脚本和工具。
+>   - Windows 10 和 Windows 11 通常已经内置 `Windows PowerShell 5.1`，无需额外安装；
+>   - 如果使用的是未预装该版本的旧版 Windows，可根据需要安装 [Windows Management Framework 5.1](https://www.microsoft.com/en-us/download/details.aspx?id=54616)。
+> - `PowerShell 7`：基于现代 .NET 开发的新一代 PowerShell，支持 Windows、Linux 和 macOS，适合日常命令行操作、脚本编写、软件开发和跨平台自动化。它需要单独安装，并且可以与 `Windows PowerShell 5.1` 并存。详情请参考 [PowerShell 文档](https://aka.ms/powershell)。
+>
+> |        名称        |         安装方式         | PowerShell 版本系列 |     启动方式     |
+> | :----------------: | :----------------------: | :-----------------: | :--------------: |
+> | Windows PowerShell | Windows 10 / 11 系统内置 |   PowerShell 5.1    | `powershell.exe` |
+> |     PowerShell     |       需要额外安装       |    PowerShell 7     |    `pwsh.exe`    |
 
 ### （可选）修改安装目录
 
@@ -130,7 +139,7 @@ scoop bucket add extras
 scoop bucket add versions
 ```
 
-除了 `extras`  和 `versions`，常见的 Bucket 还包括：
+除了 `extras` 和 `versions`，常见的 Bucket 还包括：
 
 |                            Bucket                            | 主要内容                                       |
 | :----------------------------------------------------------: | ---------------------------------------------- |

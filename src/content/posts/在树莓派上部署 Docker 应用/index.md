@@ -1,7 +1,7 @@
 ---
 title: "在树莓派上部署 Docker 应用"
 published: 2026-05-21
-description: "想把树莓派变成一台安静又实用的小服务器？本文以 Raspberry Pi 4B 为例，整理 WatchTower、SakuraFrp、Syncthing 和 RabbitMQ 等常用 Docker 应用的部署方法，或许这些配置思路也可以迁移到其他 Docker 应用中~"
+description: "拯救你闲置的树莓派！本文以 Raspberry Pi 4B 为例，整理了 WatchTower、SakuraFrp、Syncthing 和 RabbitMQ 等常用 Docker 应用的部署方法~"
 image: "./cover.jpg"
 tags: ["自托管", "Raspberry Pi", "Docker"]
 category: "指南"
@@ -145,9 +145,9 @@ Bark 是一款极其轻量且保护隐私的消息推送工具。
 
 3. 构造的 URL 格式为： `telegram://<Bot Token>@telegram/?channels=<Chat ID>`
 
-#### 方案 C：微信推送 (Server酱 / PushPlus 等 Webhook 服务)
+#### 方案 C：微信推送 (Server 酱 / PushPlus 等 Webhook 服务)
 
-如果想直接在微信里收到提醒，通常使用 Server酱 或 PushPlus。以 PushPlus 为例：
+如果想直接在微信里收到提醒，通常使用“Server 酱”或“PushPlus”。以 PushPlus 为例：
 
 1. 登录 PushPlus 获取专属推送 Token
 
@@ -195,7 +195,7 @@ cd ~/Docker/sakurafrp
 nano docker-compose.yml
 ```
 
-填入以下内容（注意根据实际情况修改 `NATFRP_TOKEN`  和 `NATFRP_REMOTE`）：
+填入以下内容（注意根据实际情况修改 `NATFRP_TOKEN` 和 `NATFRP_REMOTE`）：
 
 ```yaml title="docker-compose.yml" frame="code"
 services:

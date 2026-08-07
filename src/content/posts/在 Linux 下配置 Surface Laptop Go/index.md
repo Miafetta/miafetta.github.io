@@ -3,7 +3,7 @@ title: "在 Linux 下配置 Surface Laptop Go"
 published: 2026-04-15
 description: "Surface Laptop Go 装好 Linux 后指纹失效、屏幕滚动出现撕裂、休眠唤醒后键盘触控板失灵？本文记录这些硬件适配问题在 Arch 系发行版下的解决方法。"
 image: "./cover.png"
-tags: ["Linux", "硬件适配", "Arch Linux", "Surface", "Secure Boot"]
+tags: ["Linux", "Arch Linux", "Surface", "Secure Boot"]
 category: "指南"
 draft: false
 numbering: H2
@@ -62,7 +62,7 @@ sudo systemctl restart fprintd
 2. **修复 Polkit（图形化界面提权）**
 
    Polkit 负责处理图形界面中的权限请求，例如系统设置、软件管理器、磁盘挂载等操作中弹出的提权认证窗口。配置完成后，这些场景也可以使用指纹完成认证。
-   
+
    编辑 `/etc/pam.d/polkit-1`：
 
    ```diff lang="text" frame="code"
