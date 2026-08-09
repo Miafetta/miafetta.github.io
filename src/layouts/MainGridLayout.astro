@@ -11,7 +11,6 @@ import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-	MOBILE_BANNER_EXTRA_HEIGHT,
 } from "../constants/constants";
 import I18nKey from "../i18n/i18nKey";
 import { formatI18n, i18n } from "../i18n/translation";
@@ -55,9 +54,6 @@ const hasBannerLink = !!siteConfig.banner.credit.url;
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
-const mobileMainPanelTop = siteConfig.banner.enable
-	? `calc(${BANNER_HEIGHT + MOBILE_BANNER_EXTRA_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
-	: "5.5rem";
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
@@ -71,7 +67,7 @@ const mobileMainPanelTop = siteConfig.banner.enable
 </div>
 
 <!-- Banner -->
-{siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
+{siteConfig.banner.enable && <div id="banner-wrapper" class="absolute z-10 w-full overflow-hidden" style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
     <ImageWrapper id="banner" alt={formatI18n(I18nKey.bannerImageAlt, {credit: siteConfig.banner.credit.text})} class:list={["object-cover h-full transition duration-700 opacity-0 scale-105"]}
                   src={siteConfig.banner.src} position={siteConfig.banner.position}
     >
@@ -79,10 +75,10 @@ const mobileMainPanelTop = siteConfig.banner.enable
 </div>}
 
 <!-- Main content -->
-<div id="main-panel-wrapper" class="absolute w-full z-30 pointer-events-none" style={`top: ${mainPanelTop}; --mobile-main-panel-top: ${mobileMainPanelTop}`}>
+<div id="main-panel-wrapper" class="absolute w-full z-30 pointer-events-none" style={`top: ${mainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
-        <div id="main-grid" class="transition duration-700 w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]
+        <div id="main-grid" class="w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]
     mx-auto gap-4 px-0 md:px-4"
         >
             <!-- Banner image credit -->

@@ -153,6 +153,12 @@ if (document.readyState === "loading") {
     setupMarkdownImageLayout();
 }
 
-document.addEventListener("swup:enable", setupMarkdownImageLayout, { once: true });
+const swupWait = window.setInterval(() => {
+    const swup = (window as Window & { swup?: { hooks?: unknown } }).swup;
+    if (swup?.hooks) {
+        window.clearInterval(swupWait);
+        setupMarkdownImageLayout();
+    }
+}, 50);
 window.addEventListener("resize", scheduleMarkdownImageLayout);
 </script>
