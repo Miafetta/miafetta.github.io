@@ -21,7 +21,7 @@ numbering: H2
 
 配置完成后，树莓派侧的虚拟网卡一般为 `usb0`，IP 地址为：
 
-```text frame="none"
+```text
 10.42.0.1
 ```
 
@@ -31,7 +31,7 @@ numbering: H2
 
 修改树莓派启动配置文件 `/boot/firmware/config.txt`，在文件最末尾新起一行，加入：
 
-```text frame="code"
+```ini
 dtoverlay=dwc2
 ```
 
@@ -47,7 +47,7 @@ dtoverlay=dwc2
 
 修改内核启动参数文件 `/boot/firmware/cmdline.txt`（注意此文件只能有一行），然后找到 `rootwait`，在后面加一个空格，输入：
 
-```text frame="code"
+```text
 modules-load=dwc2,g_ether
 ```
 
@@ -62,7 +62,7 @@ modules-load=dwc2,g_ether
 
 在终端执行以下命令，为虚拟网卡（一般是 `usb0`，可以使用 `ip addr` 确认）创建一个共享网络配置：
 
-```bash frame="terminal"
+```bash
 sudo nmcli connection add type ethernet ifname usb0 ipv4.method shared con-name usb_network
 ```
 
@@ -78,14 +78,14 @@ sudo nmcli connection add type ethernet ifname usb0 ipv4.method shared con-name 
 
 依次输入输入以下命令启动虚拟网卡，并将刚才的 `usb_network` 配置绑定在虚拟网卡上：
 
-```bash frame="terminal"
+```bash
 sudo ip link set usb0 up
 sudo nmcli connection up usb_network
 ```
 
 如果没有报错，说明虚拟网卡配置已经生效。可以通过如下命令查看 IP 地址，检验网卡配置：
 
-```bash frame="terminal"
+```bash
 ip addr show usb0
 ```
 
@@ -97,7 +97,7 @@ ip addr show usb0
 
 连接后，对方设备会识别到一张 USB 以太网网卡，并自动通过 DHCP 获取 IP 地址。随后可以直接访问树莓派：
 
-```bash frame="terminal"
+```bash
 ssh pi@10.42.0.1
 ```
 
@@ -105,6 +105,6 @@ ssh pi@10.42.0.1
 
 也可以在浏览器中访问树莓派上运行的 Web 服务，例如：
 
-```text frame="none"
+```text
 http://10.42.0.1:<端口号>
 ```

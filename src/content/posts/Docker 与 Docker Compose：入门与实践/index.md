@@ -176,7 +176,7 @@ Docker Compose 的核心配置文件通常命名为 `compose.yml` 或 `docker-co
 
 一个简单的 Compose 配置文件如下：
 
-```yaml title="compose.yml" frame="code"
+```yaml title="compose.yml"
 services:
   web:
     image: nginx:alpine
@@ -192,7 +192,7 @@ services:
 
 之后，只需要在该配置文件所在目录运行：
 
-```bash frame="terminal"
+```bash
 docker compose up -d
 ```
 
@@ -221,20 +221,20 @@ Docker Compose 就会根据配置文件创建并启动对应的服务。随后�
 
 首先，卸载可能存在的软件包残留：
 
-```bash frame="terminal"
+```bash
 sudo apt remove docker docker-engine docker.io containerd runc 2>/dev/null
 ```
 
 接着更新软件包索引，并安装一些必要依赖：
 
-```bash frame="terminal"
+```bash
 sudo apt update
 sudo apt install -y curl vim wget gnupg dpkg apt-transport-https lsb-release ca-certificates
 ```
 
 然后添加 Docker 官方 GPG 公钥和 Docker 官方 apt 源：
 
-```bash frame="terminal" wrap
+```bash
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-ce.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-ce.gpg] https://download.docker.com/linux/debian $(lsb_release -sc) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
@@ -250,7 +250,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 
 之后可以直接安装 Docker 和 Docker Compose 了：
 
-```bash frame="terminal"
+```bash
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
@@ -272,7 +272,7 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 安装完成后，可以通过以下命令验证 Docker 和 Docker Compose 是否安装成功，并查看当前版本：
 
-```bash frame="terminal"
+```bash
 sudo docker version
 sudo docker compose version
 ```
@@ -289,11 +289,11 @@ sudo docker compose version
 >
 > 如果 `/etc/docker/daemon.json` 已经存在，请将下面的 `registry-mirrors` 字段合并到现有配置中，不要直接覆盖原文件。修改前建议先备份配置：
 >
-> ```bash frame="terminal"
+> ```bash
 > sudo cp /etc/docker/daemon.json /etc/docker/daemon.json.bak
 > ```
 
-```bash frame="terminal"
+```bash
 sudo mkdir -p /etc/docker
 
 sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -322,7 +322,7 @@ sudo systemctl restart docker
 
 安装 Docker 后通常会自动创建 `docker` 用户组。如果没有创建，也可以手动执行：
 
-```bash frame="terminal"
+```bash
 sudo groupadd docker
 ```
 
@@ -330,19 +330,19 @@ sudo groupadd docker
 
 然后将当前用户加入 `docker` 用户组中：
 
-```bash frame="terminal"
+```bash
 sudo usermod -aG docker $USER
 ```
 
 注销并重新登录当前用户，或使用以下命令刷新 `docker` 用户组权限：
 
-```bash frame="terminal"
+```bash
 newgrp docker
 ```
 
 之后可以尝试不加 `sudo` 执行：
 
-```bash frame="terminal"
+```bash
 docker version
 ```
 
@@ -366,13 +366,13 @@ docker version
 
 在较新的 Windows 10 或 Windows 11 中，可以直接以管理员身份打开 PowerShell，执行：
 
-```powershell frame="terminal"
+```powershell
 wsl --install
 ```
 
 该命令会自动启用 WSL 相关组件，并安装默认的 Linux 发行版。如果希望指定安装 Ubuntu，也可以执行：
 
-```powershell frame="terminal"
+```powershell
 wsl --install -d Ubuntu
 ```
 
@@ -382,33 +382,33 @@ wsl --install -d Ubuntu
 >
 > 以管理员身份打开 PowerShell，执行：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 > dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 > ```
 >
 > 然后重启：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > shutdown /r /t 0
 > ```
 >
 > 重启后，继续执行：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > wsl --set-default-version 2
 > wsl --install -d Ubuntu
 > ```
 
 如果已经安装过 WSL，可以执行以下命令更新 WSL：
 
-```powershell frame="terminal"
+```powershell
 wsl --update
 ```
 
 然后可以使用如下命令查看当前 WSL 状态：
 
-```powershell frame="terminal"
+```powershell
 wsl --status
 ```
 
@@ -416,13 +416,13 @@ wsl --status
 
 使用如下命令查看已经安装的 Linux 发行版及其 WSL 版本：
 
-```powershell frame="terminal"
+```powershell
 wsl -l -v
 ```
 
 如果某个发行版仍然使用 WSL 1，可以使用如下命令将其转换为 WSL 2：
 
-```powershell frame="terminal"
+```powershell
 wsl --set-version <distribution-name> 2
 ```
 
@@ -445,7 +445,7 @@ wsl --set-version <distribution-name> 2
 
 安装完成后，可以在 PowerShell、Windows Terminal 或 WSL 终端中执行以下命令，验证 Docker 和 Docker Compose 是否安装成功：
 
-```bash frame="terminal"
+```bash
 docker version
 docker compose version
 ```
@@ -464,21 +464,22 @@ docker compose version
 
 2. 在 Docker Engine 页面中，在 JSON 配置中添加或合并 `registry-mirrors` 配置。注意，修改时应注意保持 JSON 格式正确，不要重复添加同名字段，也不要误删已有的重要配置。示例配置如下：
 
-   ```json
-   {
-     "builder": {
-       "gc": {
-         "defaultKeepStorage": "20GB",
-         "enabled": true
-       }
-     },
-     "experimental": false,
-     "registry-mirrors": [
-       "https://docker.1ms.run",
-       "https://dockercf.jsdelivr.fyi/",
-       "https://docker.m.daocloud.io"
-     ]
-   }
+   ```json del={8} ins={9-14}
+    {
+      "builder": {
+        "gc": {
+          "defaultKeepStorage": "20GB",
+          "enabled": true
+        }
+      },
+        "experimental": false
+        "experimental": false,
+        "registry-mirrors": [
+          "https://docker.1ms.run",
+          "https://dockercf.jsdelivr.fyi/",
+          "https://docker.m.daocloud.io"
+        ]
+    }
    ```
 
 3. 点击 Apply & Restart
@@ -499,13 +500,13 @@ Docker Desktop 官方暂未提供完整的中文界面。如果希望将界面�
 
 首先，先关闭 Docker Desktop 程序，然后在宿主机上克隆仓库到本地：
 
-```powershell frame="terminal"
+```powershell
 git clone https://github.com/asxez/DDCS.git
 ```
 
 然后以管理员权限打开终端，进入项目目录，并安装所需依赖：
 
-```powershell frame="terminal"
+```powershell
 cd DDCS
 pip install -r requirements.txt
 npm install
@@ -513,7 +514,7 @@ npm install
 
 依赖安装完成后，执行汉化脚本：
 
-```powershell frame="terminal"
+```powershell
 python ddcs.py
 ```
 
@@ -537,7 +538,7 @@ Docker Desktop 更新后，汉化内容可能会被覆盖或出现不兼容。�
 
 Docker 官方提供了一个用于测试环境是否可用的镜像 `hello-world`。可以使用以下命令运行这个测试镜像：
 
-```bash frame="terminal"
+```bash
 docker run hello-world
 ```
 
@@ -591,7 +592,7 @@ For more examples and ideas, visit:
 
 接下来以一个更接近实际使用场景的容器 `Nginx` 为例。执行以下命令：
 
-```bash frame="terminal"
+```bash
 docker run -d --name my-nginx -p 8080:80 nginx:alpine
 ```
 
@@ -619,7 +620,7 @@ http://localhost:8080
 
 可以使用 `docker ps` 查看当前正在运行的容器：
 
-```bash frame="terminal"
+```bash
 docker ps
 ```
 
@@ -642,13 +643,13 @@ CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS    
 
 如果想查看所有容器，包括已经停止的容器，可以使用：
 
-```bash frame="terminal"
+```bash
 docker ps -a
 ```
 
 如果只想查看更简洁的容器列表，可以通过 `--format` 自定义输出格式，例如：
 
-```bash frame="terminal"
+```bash
 docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.RunningFor}}\t{{.Status}}\t{{.Names}}"
 ```
 
@@ -656,7 +657,7 @@ docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.RunningFor}}\t{{.Status}}\t
 
 如果经常使用这条命令，也可以将它保存为别名，或封装为一个快捷函数。以 PowerShell 为例，可以在 `$PROFILE` 文件中添加：
 
-```powershell title="Microsoft.PowerShell_profile.ps1" frame="code" wrap
+```powershell title="Microsoft.PowerShell_profile.ps1" showLineNumbers
 function dpa {
     docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.RunningFor}}\t{{.Status}}\t{{.Names}}"
 }
@@ -664,7 +665,7 @@ function dpa {
 
 然后加载配置文件：
 
-```powershell frame="terminal"
+```powershell
 . $PROFILE
 ```
 
@@ -674,19 +675,19 @@ function dpa {
 
 可以使用 `docker logs` 查看容器日志：
 
-```bash frame="terminal"
+```bash
 docker logs <container>
 ```
 
 其中，`<container>` 需要替换为容器名称或容器 ID。例如，查看先前创建的 Nginx 容器日志：
 
-```bash frame="terminal"
+```bash
 docker logs my-nginx
 ```
 
 如果希望持续查看日志输出，可以添加 `-f` 参数,例如：
 
-```bash frame="terminal"
+```bash
 docker logs -f my-nginx
 ```
 
@@ -700,7 +701,7 @@ docker logs -f my-nginx
 
 对于 `nginx:alpine` 这类基于 Alpine 的镜像，通常使用 `sh`：
 
-```bash frame="terminal"
+```bash
 docker exec -it my-nginx sh
 ```
 
@@ -714,19 +715,19 @@ docker exec -it my-nginx sh
 
 进入容器后，可以执行一些 Linux 命令，例如：
 
-```bash frame="terminal"
+```bash
 ls /usr/share/nginx/html
 ```
 
 退出容器终端可以执行：
 
-```bash frame="terminal"
+```bash
 exit
 ```
 
 如果容器内安装了 Bash，也可以使用：
 
-```bash frame="terminal"
+```bash
 docker exec -it <container-name> bash
 ```
 
@@ -738,32 +739,32 @@ docker exec -it <container-name> bash
 
 停止正在运行的容器：
 
-```bash frame="terminal"
+```bash
 docker stop <container-name>
 ```
 
 再次启动已经停止的容器：
 
-```bash frame="terminal"
+```bash
 docker start <container-name>
 ```
 
 删除已经停止的容器：
 
-```bash frame="terminal"
+```bash
 docker rm <container-name>
 ```
 
 如果容器仍在运行，直接删除会失败。可以先停止再删除：
 
-```bash frame="terminal"
+```bash
 docker stop <container-name>
 docker rm <container-name>
 ```
 
 也可以强制删除正在运行的容器：
 
-```bash frame="terminal"
+```bash
 docker rm -f <container-name>
 ```
 
@@ -775,7 +776,7 @@ docker rm -f <container-name>
 
 如果不再需要某个镜像，可以使用 `docker rmi` 删除：
 
-```bash frame="terminal"
+```bash
 docker rmi <image-name>
 ```
 
@@ -783,19 +784,19 @@ docker rmi <image-name>
 
 可以先查看本地镜像：
 
-```bash frame="terminal"
+```bash
 docker images
 ```
 
 然后再删除不需要的镜像：
 
-```bash frame="terminal"
+```bash
 docker rmi <image-name>
 ```
 
 例如：
 
-```bash frame="terminal"
+```bash
 docker rmi nginx:alpine
 ```
 
@@ -817,7 +818,7 @@ docker rmi nginx:alpine
 
 创建项目目录 `demo-nginx`，项目结构如下：
 
-```text frame="code"
+```text
 demo-nginx/
 ├── Dockerfile
 └── html/
@@ -826,7 +827,7 @@ demo-nginx/
 
 其中，`html/index.html` 内容如下：
 
-```html title="index.html" frame="code"
+```html title="index.html"
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -843,7 +844,7 @@ demo-nginx/
 
 在项目根目录下创建 `Dockerfile`：
 
-```dockerfile title="Dockerfile" frame="code"
+```dockerfile title="Dockerfile"
 FROM nginx:alpine
 COPY ./html /usr/share/nginx/html
 ```
@@ -859,7 +860,7 @@ Nginx 默认会从 `/usr/share/nginx/html` 目录提供静态页面。上述命�
 
 在 `demo-nginx` 目录下执行：
 
-```bash frame="terminal"
+```bash
 docker build -t demo-nginx .
 ```
 
@@ -892,7 +893,7 @@ View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux
 
 构建完成后，可以查看本地镜像：
 
-```bash frame="terminal"
+```bash
 docker images
 ```
 
@@ -902,7 +903,7 @@ docker images
 
 使用刚才构建的镜像启动容器：
 
-```bash frame="terminal"
+```bash
 docker run -d --name demo-nginx -p 8081:80 demo-nginx
 ```
 
@@ -926,7 +927,7 @@ http://localhost:8081
 
 创建项目目录 `demo-compose`，结构如下：
 
-```text frame="code"
+```text
 demo-compose/
 ├── compose.yml
 └── html/
@@ -935,7 +936,7 @@ demo-compose/
 
 其中，`html/index.html` 可以继续使用前面的示例内容：
 
-```html title="index.html" frame="code"
+```html title="index.html"
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -952,7 +953,7 @@ demo-compose/
 
 在项目根目录下创建 `compose.yml`，内容如下：
 
-```yaml title="compose.yml" frame="code"
+```yaml title="compose.yml"
 services:
   web:
     image: nginx:alpine
@@ -980,7 +981,7 @@ services:
 
 在 `compose.yml` 所在目录执行：
 
-```bash frame="terminal"
+```bash
 docker compose up -d
 ```
 
@@ -1009,7 +1010,7 @@ http://localhost:8082
 
 可以使用以下命令查看当前 Compose 项目中的服务状态：
 
-```bash frame="terminal"
+```bash
 docker compose ps
 ```
 
@@ -1019,19 +1020,19 @@ docker compose ps
 
 查看当前 Compose 项目的服务日志：
 
-```bash frame="terminal"
+```bash
 docker compose logs
 ```
 
 持续查看日志：
 
-```bash frame="terminal"
+```bash
 docker compose logs -f
 ```
 
 如果只想查看某个服务的日志，可以指定服务名称：
 
-```bash frame="terminal"
+```bash
 docker compose logs -f web
 ```
 
@@ -1039,7 +1040,7 @@ docker compose logs -f web
 
 如果需要进入 Compose 管理的服务容器，可以使用：
 
-```bash frame="terminal"
+```bash
 docker compose exec web sh
 ```
 
@@ -1049,25 +1050,25 @@ docker compose exec web sh
 
 如果只是临时停止服务，可以执行：
 
-```bash frame="terminal"
+```bash
 docker compose stop
 ```
 
 之后可以再次启动：
 
-```bash frame="terminal"
+```bash
 docker compose start
 ```
 
 如果希望停止并删除当前 Compose 项目创建的容器和网络，可以执行：
 
-```bash frame="terminal"
+```bash
 docker compose down
 ```
 
 如果希望同时删除 Compose 创建的卷，可以执行：
 
-```bash frame="terminal"
+```bash
 docker compose down -v
 ```
 

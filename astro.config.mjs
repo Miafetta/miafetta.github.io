@@ -64,6 +64,9 @@ export default defineConfig({
 			defaultProps: {
 				wrap: true,
 				overridesByLang: {
+					"bash,powershell,text": {
+						showLineNumbers: false,
+					},
 					shellsession: {
 						showLineNumbers: false,
 					},

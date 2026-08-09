@@ -15,13 +15,13 @@ numbering: H2
 
 首先，所有 Docker 应用的数据都会统一存放在：
 
-```text frame="none"
+```text
 ~/Docker/<应用名称>/
 ```
 
 例如：
 
-```text frame="none"
+```text
 ~/Docker/watchtower/
 ~/Docker/sakurafrp/
 ~/Docker/syncthing/
@@ -40,7 +40,7 @@ WatchTower 可以监控正在运行的 Docker 容器，并在镜像有新版本�
 
 创建并进入 `watchtower` 目录：
 
-```bash frame="terminal"
+```bash
 mkdir -p ~/Docker/watchtower
 cd ~/Docker/watchtower
 ```
@@ -49,13 +49,13 @@ cd ~/Docker/watchtower
 
 创建 `docker-compose.yml`：
 
-```bash frame="terminal"
+```bash
 nano docker-compose.yml
 ```
 
 填入以下内容，注意将 `推送URL` 替换为自己的通知地址：
 
-```yaml title="docker-compose.yml" frame="code"
+```yaml title="docker-compose.yml"
 services:
   watchtower:
     image: containrrr/watchtower:latest
@@ -65,7 +65,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DOCKER_API_VERSION=1.44
-      - WATCHTOWER_CLEANUP=true			# 更新后自动删除旧镜像，节省存储空间
+      - WATCHTOWER_CLEANUP=true         # 更新后自动删除旧镜像，节省存储空间
       - WATCHTOWER_SCHEDULE=0 0 4 * * * # 使用 Cron 表达式，每天凌晨 4 点检查更新
       - TZ=Asia/Shanghai
       - WATCHTOWER_NOTIFICATIONS=shoutrrr
@@ -89,7 +89,7 @@ WatchTower 默认会尝试更新所有正在运行的容器，但有些服务可
 
 WatchTower 默认使用黑名单排除容器。可以在对应容器的 `docker-compose.yml` 里增加一个特殊的标签，将它排除在自动更新之外：
 
-```yaml frame="code"
+```yaml
 labels:
   - "com.centurylinklabs.watchtower.enable=false"
 ```
@@ -100,13 +100,13 @@ labels:
 
 在 WatchTower 的 `docker-compose.yml` 中 `enviroment` 下添加：
 
-```yaml frame="code"
+```yaml
 WATCHTOWER_LABEL_ENABLE=true
 ```
 
 并且在允许自动更新的容器的 `docker-compose.yml` 里增加标签：
 
-```yaml frame="code"
+```yaml
 labels:
   - "com.centurylinklabs.watchtower.enable=true"
 ```
@@ -117,7 +117,7 @@ Watchtower 内置了一个非常强大的消息推送引擎 Shoutrrr。它几乎
 
 配置时，需要在 `docker-compose.yml` 中新增两个环境变量：
 
-```yaml frame="code"
+```yaml
 enviroment:
   - WATCHTOWER_NOTIFICATIONS=shoutrrr
   - WATCHTOWER_NOTIFICATION_URL=<推送URL>
@@ -161,7 +161,7 @@ Bark 是一款极其轻量且保护隐私的消息推送工具。
 
 如果想立刻测试通知，可以通过以下命令让 WatchTower 立刻强制执行一次检查并发送通知：
 
-```bash frame="terminal" wrap
+```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
   -e WATCHTOWER_NOTIFICATIONS=shoutrrr \
   -e WATCHTOWER_NOTIFICATION_URL="推送URL" \
@@ -182,7 +182,7 @@ SakuraFrp 可以让位于内网中的树莓派被公网访问。它适合用来�
 
 创建并进入 `sakurafrp` 目录：
 
-```bash frame="terminal"
+```bash
 mkdir -p ~/Docker/sakurafrp
 cd ~/Docker/sakurafrp
 ```
@@ -191,13 +191,13 @@ cd ~/Docker/sakurafrp
 
 创建 `docker-compose.yml`：
 
-```bash frame="terminal"
+```bash
 nano docker-compose.yml
 ```
 
 填入以下内容（注意根据实际情况修改 `NATFRP_TOKEN` 和 `NATFRP_REMOTE`）：
 
-```yaml title="docker-compose.yml" frame="code"
+```yaml title="docker-compose.yml"
 services:
   sakurafrp:
     image: natfrp.com/launcher:latest
@@ -205,8 +205,8 @@ services:
     network_mode: host
     restart: always
     environment:
-      - NATFRP_TOKEN=TokenFromSakuraFrp	# 从SakuraFrp控制面板获得的访问密钥
-      - NATFRP_REMOTE=YourPasswordHere	# 远程访问密码（至少8位）
+      - NATFRP_TOKEN=TokenFromSakuraFrp # 从SakuraFrp控制面板获得的访问密钥
+      - NATFRP_REMOTE=YourPasswordHere  # 远程访问密码（至少8位）
       - TZ=Asia/Shanghai
       - LANG=zh_CN.UTF-8
     volumes:
@@ -242,7 +242,7 @@ Syncthing 是一款强大的跨平台点对点文件同步工具。它不依赖�
 
 创建并进入 `syncthing` 目录：
 
-```bash frame="terminal"
+```bash
 mkdir -p ~/Docker/syncthing
 cd ~/Docker/syncthing
 ```
@@ -251,13 +251,13 @@ cd ~/Docker/syncthing
 
 创建 `docker-compose.yml`：
 
-```bash frame="terminal"
+```bash
 nano docker-compose.yml
 ```
 
 填入以下内容：
 
-```yaml title="docker-compose.yml" frame="code"
+```yaml title="docker-compose.yml"
 services:
   syncthing:
     image: linuxserver/syncthing:latest
@@ -288,7 +288,7 @@ services:
 
 如果不确定当前用户的 UID 和 GID，可以运行：
 
-```bash frame="terminal"
+```bash
 id
 ```
 
@@ -310,7 +310,7 @@ RabbitMQ 是一个由 Erlang 语言开发的 AMQP 的开源实现，常用于应
 
 由于映射了单文件 `rabbitmq.conf`，必须在启动前手动创建宿主机目录和空文件，否则 Docker 会错误地将其创建为文件夹：
 
-```bash frame="terminal"
+```bash
 mkdir -p ~/Docker/rabbitmq/{data,config,logs}
 cd ~/Docker/rabbitmq
 touch ./config/rabbitmq.conf
@@ -328,13 +328,13 @@ sudo chown -R 999:999 ./data ./logs
 
 创建 `docker-compose.yml`：
 
-```bash frame="terminal"
+```bash
 nano docker-compose.yml
 ```
 
 然后填入以下内容：
 
-```yaml title="docker-compose.yml" frame="code"
+```yaml title="docker-compose.yml"
 services:
   rabbitmq:
      # 镜像名
@@ -406,61 +406,61 @@ networks:
 
 进入对应应用目录后，例如：
 
-```bash frame="terminal"
+```bash
 cd ~/Docker/syncthing
 ```
 
 启动服务：
 
-```bash frame="terminal"
+```bash
 docker compose up -d
 ```
 
 停止服务：
 
-```bash frame="terminal"
+```bash
 docker compose down
 ```
 
 查看日志：
 
-```bash frame="terminal"
+```bash
 docker compose logs -f
 ```
 
 拉取最新镜像：
 
-```bash frame="terminal"
+```bash
 docker compose pull
 ```
 
 重新创建容器：
 
-```bash frame="terminal"
+```bash
 docker compose up -d
 ```
 
 查看当前运行中的容器：
 
-```bash frame="terminal"
+```bash
 docker ps
 ```
 
 查看所有容器，包括已停止的容器：
 
-```bash frame="terminal"
+```bash
 docker ps -a
 ```
 
 清理未使用的镜像：
 
-```bash frame="terminal"
+```bash
 docker image prune
 ```
 
 如果想清理所有未使用的 Docker 资源：
 
-```bash frame="terminal"
+```bash
 docker system prune
 ```
 
@@ -472,19 +472,19 @@ docker system prune
 
 可以直接备份整个目录：
 
-```bash frame="terminal"
+```bash
 tar -czvf docker-backup.tar.gz ~/Docker
 ```
 
 或者只备份某个服务：
 
-```bash frame="terminal"
+```bash
 tar -czvf syncthing-backup.tar.gz ~/Docker/syncthing
 ```
 
 如果服务正在运行，建议先停止对应容器再备份，尤其是 RabbitMQ 这类有状态服务：
 
-```bash frame="terminal"
+```bash
 cd ~/Docker/rabbitmq
 docker compose down
 tar -czvf rabbitmq-backup.tar.gz ~/Docker/rabbitmq

@@ -73,8 +73,8 @@ RabbitMQ 是使用 Erlang 语言开发的。如果直接在主机环境中安装
 
 本文提供两种安装方式：
 
-1. 使用 Docker 和 Docker Compose 部署 RabbitMQ；
-2. 直接在 Ubuntu 主机环境中安装 RabbitMQ。
+1. [使用 Docker 和 Docker Compose 部署 RabbitMQ](#方法一使用-docker-compose-在-docker-中部署并启动-rabbitmq)；
+2. [直接在 Ubuntu 主机环境中安装 RabbitMQ](#方法二在主机环境中安装并启动-rabbitmq)。
 
 > [!NOTE]
 >
@@ -92,17 +92,18 @@ RabbitMQ 是使用 Erlang 语言开发的。如果直接在主机环境中安装
 
 下面以安装在用户目录 `~/Documents/docker/rabbitmq/` 下为例。运行：
 
-```bash frame="terminal"
-# 创建目录
+```bash {"1. 创建目录":2-3} {"2. 进入创建好的 rabbitmq 目录":5-6} {"3. 创建配置文件":8-9} {"4. 修改目录权限":11-12}
+# 依次执行以下命令
+
 mkdir -p ~/Documents/docker/rabbitmq/{data,config,logs}
 
-# 进入创建好的 rabbitmq 目录
+
 cd ~/Documents/docker/rabbitmq
 
-# 创建配置文件
+
 touch ./config/rabbitmq.conf
 
-# 修改目录权限
+
 sudo chown -R 999:999 ./data ./logs
 ```
 > [!NOTE]
@@ -113,12 +114,12 @@ sudo chown -R 999:999 ./data ./logs
 
 在 `~/Documents/docker/rabbitmq/` 目录下创建 `docker-compose.yml` 配置文件：
 
-```bash frame="terminal"
+```bash
 cd ~/Documents/docker/rabbitmq
 vim docker-compose.yml
 ```
 
-```yaml title="docker-compose.yml" frame="code"
+```yaml title="docker-compose.yml"
 services:
   rabbitmq:
     # 镜像名
@@ -165,7 +166,7 @@ networks:
 
 运行如下命令，部署并启动 RabbitMQ：
 
-```bash frame="terminal"
+```bash
 docker compose up -d
 ```
 
@@ -179,11 +180,11 @@ docker compose up -d
 >
 > `RABBITMQ_DEFAULT_USER` 和 `RABBITMQ_DEFAULT_PASS` 仅在 RabbitMQ 数据目录初始化时生效。如果 `./data` 目录中已经存在旧数据，修改这两个环境变量不会修改已有用户，需要使用 `rabbitmqctl` 手动修改或清空数据目录后重新初始化。
 
-##### **4 通过命令行与 RabbitMQ 服务器交互**
+##### 通过命令行与 RabbitMQ 服务器交互
 
 如果想通过命令行与 RabbitMQ 服务器交互，如使用 `rabbitmqctl` 或 `rabbitmq-plugins` 等命令，请先使用如下命令进入容器：
 
-```bash frame="terminal"
+```bash
 docker exec -it rabbitmq bash
 ```
 
@@ -203,7 +204,7 @@ docker exec -it rabbitmq bash
 
 若要安装在主机环境中，可以使用官网 [Installing on Debian and Ubuntu | RabbitMQ](https://www.rabbitmq.com/docs/install-debian#apt-quick-start) 中提供的自动脚本。
 
-```bash title="install-rabbitmq.sh" frame="code" showLineNumbers
+```sh title="install-rabbitmq.sh"
 #!/bin/sh
 
 sudo apt-get install curl gnupg apt-transport-https -y
@@ -244,25 +245,25 @@ sudo apt-get install rabbitmq-server -y --fix-missing
 
 可以使用如下命令启动 RabbitMQ 服务器：
 
-```bash frame="terminal"
+```bash
 sudo systemctl start rabbitmq-server
 ```
 
 设置开机自启：
 
-```bash frame="terminal"
+```bash
 sudo systemctl enable rabbitmq-server
 ```
 
 启动和设置开机自启的命令也可以合并为：
 
-```bash frame="terminal"
+```bash
 sudo systemctl enable --now rabbitmq-server
 ```
 
 可以使用如下命令以查看 RabbitMQ 服务器的运行状态：
 
-```bash frame="terminal"
+```bash
 sudo systemctl status rabbitmq-server
 ```
 
@@ -274,18 +275,20 @@ RabbitMQ 服务器默认的用户名为 `guest` ，密码也为 `guest`，但默
 
 可以使用如下命令创建用户。
 
-```bash frame="terminal"
+```bash {"1. 创建管理员用户":4-8} {"2. 为用户设置访问权限":10-11} {"3. 删除默认的 guest 用户":13-14}
 # 如果 RabbitMQ 还未启动，运行以下命令以启动服务
 sudo systemctl start rabbitmq-server
 
-user_name="admin"		# 新用户名
-user_password="admin"	# 新用户密码
-sudo rabbitmqctl add_user "$user_name" "$user_password"		# 添加用户
-sudo rabbitmqctl set_user_tags "$user_name" administrator	# 设置用户为管理员
 
-# （可选）为该用户设置访问默认虚拟主机“/”的权限
+user_name="admin"       # 新用户名
+user_password="admin"   # 新用户密码
+sudo rabbitmqctl add_user "$user_name" "$user_password"     # 添加用户
+sudo rabbitmqctl set_user_tags "$user_name" administrator   # 设置用户为管理员
+
+
 sudo rabbitmqctl set_permissions -p / "$user_name" ".*" ".*" ".*"
-# （可选，在生产环境下推荐）删除默认的 guest 用户
+
+
 sudo rabbitmqctl delete_user guest
 ```
 
@@ -298,25 +301,25 @@ sudo rabbitmqctl delete_user guest
 
 例如，在主机环境中查看 RabbitMQ 状态，执行：
 
-```bash frame="terminal"
+```bash
 sudo rabbitmqctl status
 ```
 
 如果 RabbitMQ 运行在 Docker 容器中，则需要先进入容器：
 
-```bash frame="terminal"
+```bash
 docker exec -it rabbitmq bash
 ```
 
 然后在容器内运行：
 
-```bash frame="terminal"
+```bash
 rabbitmqctl status
 ```
 
 或者，也可以不进入容器，直接在主机中执行：
 
-```bash frame="terminal"
+```bash
 docker exec -it rabbitmq rabbitmqctl status
 ```
 
@@ -330,12 +333,12 @@ docker exec -it rabbitmq rabbitmqctl status
 
 关于 RabbitMQ 配置文件的参数，可以参考 [Configuration | RabbitMQ](https://www.rabbitmq.com/docs/configure#config-items)。以下是一些常见的参数。
 
-```ini title="rabbitmq.conf" frame="code" wrap
-listeners.tcp.default = 5672	# 监听端口，默认为 5672
-disk_free_limit.absolute = 50MB	# 磁盘空闲空间限制绝对大小，低于该值时 RabbitMQ 将阻止消息的写入，默认为 50MB
-disk_free_limit.relative = 1.5	# 磁盘空闲空间限制相对于内存的大小
-vm_memory_high_watermark.absolute = 2GB		# Broker 能占用的最大内存绝对大小
-vm_memory_high_watermark.relative = 0.6		# Broker 能占用的最大内存相对大小，默认为 0.6
+```ini title="rabbitmq.conf"
+listeners.tcp.default = 5672      # 监听端口，默认为 5672
+disk_free_limit.absolute = 50MB   # 磁盘空闲空间限制绝对大小，低于该值时 RabbitMQ 将阻止消息的写入，默认 50MB
+disk_free_limit.relative = 1.5    # 磁盘空闲空间限制相对于内存的大小
+vm_memory_high_watermark.absolute = 2GB # Broker 能占用的最大内存绝对大小
+vm_memory_high_watermark.relative = 0.6 # Broker 能占用的最大内存相对大小，默认 0.6
 ```
 
 之前我们提到：
@@ -348,25 +351,24 @@ Queue 的大小其实就是受到 `disk_free_limit`、`vm_memory_high_watermark`
 
 RabbitMQ 的默认虚拟主机为 “/”。也可以使用以下命令自行创建。
 
-```bash frame="terminal"
-vhost="/vhost"		# 新 vhost 名
-user="admin"		# 可以访问该 vhost 的用户名
-sudo rabbitmqctl add_vhost "$vhost"		# 新建 vhost
-sudo rabbitmqctl set_permissions -p "$vhost" "$user" ".*" ".*" ".*"	# 为用户设置可访问该 vhost 
+```bash
+vhost="/vhost"       # 新 vhost 名
+user="admin"         # 可以访问该 vhost 的用户名
+sudo rabbitmqctl add_vhost "$vhost"        # 新建 vhost
+sudo rabbitmqctl set_permissions -p "$vhost" "$user" ".*" ".*" ".*" # 为用户设置可访问该 vhost
 ```
 
 ### 管理 RabbitMQ 服务器
 
 常用的管理命令如下。
 
-```bash frame="terminal"
-sudo rabbitmqctl status              # 查看服务器状态
-sudo rabbitmqctl list_exchanges      # 列出当前所有 exchange
-sudo rabbitmqctl list_queues         # 列出当前所有 queue
-sudo rabbitmqctl list_users          # 列出当前所有用户
-
-sudo systemctl stop rabbitmq-server  # 关闭 RabbitMQ 服务（主机环境）
-```
+| 命令                                  | 操作                           |
+| ------------------------------------- | ------------------------------ |
+| `sudo rabbitmqctl status`             | 查看服务器状态                 |
+| `sudo rabbitmqctl list_exchanges`     | 列出当前所有 exchange          |
+| `sudo rabbitmqctl list_queues`        | 列出当前所有 queue             |
+| `sudo rabbitmqctl list_users`         | 列出当前所有用户               |
+| `sudo systemctl stop rabbitmq-server` | 关闭 RabbitMQ 服务（主机环境） |
 
 RabbitMQ 也提供了管理插件，可以通过网页 UI 管理服务器。
 
@@ -374,13 +376,13 @@ RabbitMQ 也提供了管理插件，可以通过网页 UI 管理服务器。
 
 如果是在主机环境中安装的 RabbitMQ，可以使用以下命令启用管理插件：
 
-```bash frame="terminal"
+```bash
 sudo rabbitmq-plugins enable rabbitmq_management
 ```
 
 然后重启 RabbitMQ 服务器：
 
-```bash frame="terminal"
+```bash
 sudo systemctl restart rabbitmq-server
 ```
 
@@ -398,7 +400,7 @@ RabbitMQ 服务器可以通过任何支持 AMQP 协议的语言连接，只要�
 
 此处以 Python 为例。在生产者和消费者程序的开头，需要先导入 `pika` 库。
 
-```python frame="code"
+```python
 import pika
 ```
 
@@ -458,7 +460,7 @@ connection_params = pika.ConnectionParameters(
 
 简单模式下，一个完整的生产者程序示例如下。
 
-```python title="simple_producer.py" frame="code" showLineNumbers
+```python title="simple_producer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -484,7 +486,7 @@ connection.close()
 
 连接 RabbitMQ 服务器一般使用如下命令。
 
-```python frame="code"
+```python
 # 设置连接参数
 connection_params = pika.ConnectionParameters(host="localhost")
 
@@ -509,7 +511,7 @@ channel = connection.channel()
 
 ##### Step 2：新建队列
 
-```python frame="code"
+```python
 # 将队列名称设置为 'hello'
 queue_name = 'hello'
 
@@ -519,7 +521,7 @@ channel.queue_declare(queue=queue_name)
 
 使用 `queue_declare()` 方法可以新建一个队列，该方法至少传递一个参数 `queue`，即队列名称。除了直接使用 `queue` 参数指定队列名外，也可以将可选参数 `exclusive` 设置为 `True`，RabbitMQ 服务器将自动创建一个不会重名的队列，该队列可以通过 `.method.queue` 获取名称。使用 `exclusive` 参数的代码如下，这与上面给出的代码是等价的。
 
-```python frame="code"
+```python
 # 新建队列，并使用 .method.queue 获取队列名
 queue_created = channel.queue_declare("",exclusive=True)
 queue_name = queue_created.method.queue
@@ -527,7 +529,7 @@ queue_name = queue_created.method.queue
 
 ##### Step 3: 发送消息
 
-```python frame="code"
+```python
 # 将待发送的消息体设置为 'Hello World!'
 message = 'Hello World!'
 
@@ -554,7 +556,7 @@ channel.basic_publish(exchange='',
 
 ##### Step 4: 关闭连接
 
-```python frame="code"
+```python
 connection.close()
 ```
 
@@ -564,7 +566,7 @@ connection.close()
 
 简单模式下，一个完整的消费者程序示例如下。
 
-```python title="simple_consumer.py" frame="code" showLineNumbers
+```python title="simple_consumer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -603,9 +605,9 @@ channel.start_consuming()
 
 在开始监听队列、接收消息前，需要先配置好消费者。需要配置的项目包括需要监听的队列名称，以及收到消息后消费者的行为。
 
-```python frame="code" showLineNumbers
+```python
 # 定义callback函数，用于在收到消息后处理消息
-# ch为channel对象，method为消息传递时用到的方法，properties为消息的属性，body为消息体
+# ch为channel对象，method为消息传递时用到的方法，properties为消息属性，body为消息体
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body)
 
@@ -623,7 +625,7 @@ channel.basic_consume(queue='hello',
 
 ##### Step 4：正式监听队列并接收消息
 
-```python frame="code"
+```python
 channel.start_consuming()
 ```
 
@@ -643,15 +645,15 @@ channel.start_consuming()
 
 当 `auto_ack` 为 `False` 时，消费者需要在 `callback()` 函数中手动确认消息，如下所示。
 
-```python frame="code" showLineNumbers
+```python
 # 定义callback函数，用于在收到消息后处理消息
 def callback(ch, method, properties, body):
-    print(" [x] Received %r" % body)				# 打印消息体
+    print(" [x] Received %r" % body)                # 打印消息体
     ch.basic_ack(delivery_tag=method.delivery_tag)  # 手动确认消息已被处理
 
 # 配置消费者：1.监听'hello2'队列 2.收到消息后执行callback函数
 channel.basic_consume(queue='hello',
-                      auto_ack=False,    # 手动确认消息
+                      auto_ack=False,               # 手动确认消息
                       on_message_callback=callback)
 ```
 
@@ -682,7 +684,7 @@ channel.basic_consume(queue='hello',
 
 首先，在生产者和消费者程序中创建消息队列 Queue 时，设置消息队列为可持久化的，如下所示。
 
-```python frame="code"
+```python
 # 在参数列表中添加 durable=True，以声明一个可持久化的'durable_queue'队列
 channel.queue_declare(queue='durable_queue', durable=True)
 ```
@@ -691,13 +693,15 @@ channel.queue_declare(queue='durable_queue', durable=True)
 
 然后，在生产者发送消息时，设置发送的消息为持久化消息，如下所示。
 
-```python frame="code"
+```python
 # 在参数列表中添加 properties=pika.BasicProperties(delivery_mode=2)
 # 发送持久化消息到'hello'队列
-channel.basic_publish(exchange='',
-                      routing_key='durable_queue',
-                      body='Hello World!',
-                      properties=pika.BasicProperties(delivery_mode=2))  # 标记消息为持久化
+channel.basic_publish(
+    exchange='',
+    routing_key='durable_queue',
+    body='Hello World!',
+    properties=pika.BasicProperties(delivery_mode=2)  # 标记消息为持久化
+)
 ```
 
 `properties` 参数为 `BasicProperties` 对象类型，通常使用 `pika.BasicProperties()` 生成一个 `BasicProperties` 对象。其中，`delivery_mode` 标记消息是否为持久化的，`1` 代表非持久化，`2` 代表持久化。
@@ -713,7 +717,7 @@ RabbitMQ 也支持优先级消息队列。使用优先级消息队列，需要�
 
 首先，在生产者和消费者程序中创建消息队列 Queue 时，添加 `x-max-priority` 的参数，表示最大优先级。
 
-```python frame="code"
+```python
 # 在参数列表中添加 'x-max-priority'，以声明一个'priority_queue'优先级队列
 channel.queue_declare(
     queue='priority_queue',
@@ -727,11 +731,11 @@ channel.queue_declare(
 
 在生产者发送消息时，设置发送的消息为持久化消息，如下所示。
 
-```python frame="code"
+```python
 ch.basic_publish(exchange='',
-            	routing_key='priority_queue',
-            	body='Hello World!',
-            	properties=pika.BasicProperties(priority=5))	# 标记消息的优先级为 5
+                routing_key='priority_queue',
+                body='Hello World!',
+                properties=pika.BasicProperties(priority=5))  # 标记消息的优先级为 5
 ```
 
 `priority` 属性参数的范围在 `0` 到 `x-max-priority` 之间。`priority` 的数值越大，优先级越高。当消息的 `priority` 属性大于消息队列的 `x-max-priority` 时，RabbitMQ 会将该消息的优先级截断为 `x-max-priority` 的最大值。
@@ -758,7 +762,7 @@ ch.basic_publish(exchange='',
 
 `basic_qos()` 方法的定义如下。
 
-```python frame="code"
+```python
 def basic_qos(
     prefetch_size: int = 0,
     prefetch_count: int = 0,
@@ -772,7 +776,7 @@ def basic_qos(
 
 最常用的场景为公平分发模式，将 `prefetch_count` 设置为 `1`，即每个消费者同一时间最多只处理一条未确认消息。设置公平分发时，只需在消费者程序中正式监听前添加如下代码：
 
-```python frame="code"
+```python
 channel.basic_qos(prefetch_count=1)
 # 等同于 channel.basic_qos(prefetch_size=0, prefetch_count=1, global_=False)
 ```
@@ -827,7 +831,7 @@ channel.basic_qos(prefetch_count=1)
 
 发布 / 订阅模式下，一个完整的生产者程序示例如下所示。
 
-```python title="fanout_producer.py" frame="code" showLineNumbers
+```python title="fanout_producer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -847,11 +851,11 @@ channel.basic_publish(exchange = 'logs',
 connection.close()
 ```
 
-###### Step 1：连接至 RabbitMQ 服务器
+Step 1：连接至 RabbitMQ 服务器
 
-###### Step 2：新建交换机
+Step 2：新建交换机
 
-```python frame="code"
+```python
 # 声明一个'logs'交换机
 channel.exchange_declare(exchange = 'logs',
                          exchange_type = 'fanout')
@@ -859,9 +863,9 @@ channel.exchange_declare(exchange = 'logs',
 
 与新建消息队列 Queue 类似，使用 `exchange_declare()` 函数可以新建一个交换机。`exchange_declare()` 函数接收至少两个参数： 交换机名`exchange` 和交换机类型 `exchange_type`。当然，与新建消息队列时类似，也可以使用 `durable` 和 `arguments` 可选参数。
 
-###### Step 3：发布消息
+Step 3：发布消息
 
-```python frame="code"
+```python
 # 发送消息到'logs'交换机
 channel.basic_publish(exchange = 'logs',
                       routing_key = '',
@@ -870,7 +874,7 @@ channel.basic_publish(exchange = 'logs',
 
 **在发布 / 订阅模式下，需要将交换机类型 `exchange_type` 设定为 `fanout`，并在发送消息时将 `exchange` 设置为交换机名称，并将 `routing_key` 留空。** 虽然交换机在类型为 `fanout` 时，会自动忽略消息的 `routing_key`，但仍推荐将消息的 `routing_key` 留空。
 
-###### Step 4：关闭连接
+Step 4：关闭连接
 
 ##### 消费者
 
@@ -881,7 +885,7 @@ channel.basic_publish(exchange = 'logs',
 
 发布 / 订阅模式下，一个完整的消费者程序示例如下所示。
 
-```python title="fanout_consumer.py" frame="code" showLineNumbers
+```python title="fanout_consumer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -911,22 +915,22 @@ channel.basic_consume(queue=queue_name,
 channel.start_consuming()
 ```
 
-###### Step 1：连接至 RabbitMQ 服务器
+Step 1：连接至 RabbitMQ 服务器
 
-###### Step 2：新建交换机
+Step 2：新建交换机
 
-###### Step 3：新建队列
+Step 3：新建队列
 
-###### Step 4：将队列绑定到交换机
+Step 4：将队列绑定到交换机
 
-```python frame="code"
+```python
 # 将队列绑定到交换机
 channel.queue_bind(exchange='logs',queue=queue_name)
 ```
 
 `queue_bind()` 函数用于将消息队列 Queue 与交换机 Exchange 绑定，其定义如下：
 
-```python frame="code"
+```python
 def queue_bind(
     queue,
     exchange,
@@ -939,9 +943,9 @@ def queue_bind(
 
 这里表示将刚才声明的消息队列与 `logs` 交换机绑定。
 
-###### Step 5：配置消费者
+Step 5：配置消费者
 
-###### Step 6：正式监听队列并接收消息
+Step 6：正式监听队列并接收消息
 
 #### 关键字模式
 
@@ -959,7 +963,7 @@ def queue_bind(
 
 ##### 生产者
 
-```python title="direct_producer.py" frame="code" showLineNumbers
+```python title="direct_producer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -974,12 +978,12 @@ channel.basic_publish(exchange='logs',
                       routing_key='info',
                       body='Hello World!')
 
-connection.close()	# 关闭连接
+connection.close()    # 关闭连接
 ```
 
 ##### 消费者
 
-```python title="direct_consumer.py" frame="code" showLineNumbers
+```python title="direct_consumer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -1005,7 +1009,7 @@ channel.basic_consume(queue=queue_name,
                       auto_ack=True,
                       on_message_callback=callback)
 
-channel.start_consuming()	# 正式开始监听队列
+channel.start_consuming()    # 正式开始监听队列
 ```
 
 #### 通配符模式
@@ -1024,7 +1028,7 @@ channel.start_consuming()	# 正式开始监听队列
 
 ##### 生产者
 
-```python title="topic_producer.py" frame="code" showLineNumbers
+```python title="topic_producer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -1042,12 +1046,12 @@ for sender in ['system', 'user']:
                               routing_key=key,
                               body=f"[{sender}]: {level}")
 
-connection.close()	# 关闭连接
+connection.close()    # 关闭连接
 ```
 
 ##### 消费者
 
-```python title="topic_consumer.py" frame="code" showLineNumbers
+```python title="topic_consumer.py"
 import pika
 
 # 连接至RabbitMQ服务器
@@ -1075,7 +1079,7 @@ channel.basic_consume(queue=queue_name,
                       auto_ack=True,
                       on_message_callback=callback)
 
-channel.start_consuming()	# 正式开始监听队列
+channel.start_consuming()    # 正式开始监听队列
 ```
 
 自此，RabbitMQ 的入门与常用使用方式已经介绍完毕，已经可以满足许多基础开发和学习场景。如果需要了解集群、高可用、死信队列、消息确认机制等高级用法，可以继续查阅 RabbitMQ 官方文档。

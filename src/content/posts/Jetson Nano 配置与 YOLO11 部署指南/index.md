@@ -51,7 +51,7 @@ BalenaEtcher 是一款免费开源的跨平台镜像烧录工具，专为快速�
 
 ![从官网上下载balenaEtcher(2)](./media/从官网上下载balenaEtcher(2).png)
 
-balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下载的 .exe 可执行文件，桌面即会出现一个如图所示的 balenaEtcher 图标窗口，期间软件将自动完成安装与配置，并在准备就绪后直接启动主程序。
+balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下载的 `.exe` 可执行文件，桌面即会出现一个如图所示的 balenaEtcher 图标窗口，期间软件将自动完成安装与配置，并在准备就绪后直接启动主程序。
 
 ![balenaEtcher的安装](./media/balenaEtcher的安装.png)
 
@@ -207,19 +207,19 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
 ### 系统本地化设置
 
-1. apt 软件源设置
+1. `apt` 软件源设置
 
-   由于默认 apt 软件源的服务器在国外，下载速度缓慢，于是使用清华大学开源软件镜像站提供的 Ubuntu Ports 软件仓库替换系统默认的 apt 软件源。
+   由于默认 `apt` 软件源的服务器在国外，下载速度缓慢，于是使用清华大学开源软件镜像站提供的 Ubuntu Ports 软件仓库替换系统默认的 `apt` 软件源。
 
-   首先打开 Terminal，将原先的 apt 软件源备份。
+   首先打开 Terminal，将原先的 `apt` 软件源备份。
 
-   ```bash frame="terminal"
+   ```bash
    sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
    ```
 
-   之后使用如下命令，修改 apt 软件源。
+   之后使用如下命令，修改 `apt` 软件源。
 
-   ```bash frame="terminal" wrap
+   ```bash
    sudo tee /etc/apt/sources.list <<-'EOF'
    deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic main restricted universe multiverse
    deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse
@@ -264,13 +264,13 @@ balenaEtcher 的安装过程为无界面式设计。用户只需双击运行下�
 
 首先运行升级所有系统软件包。
 
-```bash frame="terminal"
+```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 由于 Jetson Nano 开发者套件中已默认安装好 Docker，可以通过以下命令验证 Docker 是否成功安装并更新到最新版本。
 
-```bash frame="terminal"
+```bash
 sudo docker version
 ```
 
@@ -278,7 +278,7 @@ sudo docker version
 
 运行如下命令，添加国内镜像，并重启 Docker 服务。
 
-```bash frame="terminal" wrap
+```bash
 sudo mkdir -p /etc/docker
 
 sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -297,23 +297,20 @@ sudo systemctl restart docker
 
 ### 将当前用户加入 docker 用户组
 
-在使用 docker 命令前，每次都需要添加“sudo”前缀。通过将当前用户加入 docker 用户组，可以让当前用户直接运行 docker 命令。
+在使用 `docker` 命令前，每次都需要添加 `sudo` 前缀。通过将当前用户加入 docker 用户组，可以让当前用户直接运行 `docker` 命令。
 
-首先创建 docker 用户组。通常在安装 Docker 时，docker 用户组会自动创建，但也可以运行以下命令来创建或确认：
+首先创建 docker 用户组。通常在安装 Docker 时，会自动创建 docker 用户组，但也可以运行以下命令来创建或确认：
 
-```bash frame="terminal"
+```bash
 sudo groupadd docker
 ```
 
-如果已存在 docker 用户组则会提示：groupadd：“docker”组已存在。
+如果已存在 docker 用户组则会提示：`groupadd：“docker”组已存在`。
 
 然后将当前用户添加到 docker 用户组中。
 
-```bash frame="terminal"
+```bash
 sudo usermod -aG docker $USER
-
-# 也可以使用下面的命令
-# sudo usermod -aG docker $(whoami)
 ```
 
 注销并重新登录当前用户后生效。
@@ -322,13 +319,13 @@ sudo usermod -aG docker $USER
 
 运行如下命令。
 
-```bash frame="terminal"
+```bash
 sudo docker run --rm hello-world
 ```
 
 终端中输出如下信息，说明 Docker 的安装与配置过程完成。
 
-```shellsession title="Example Output" wrap=false
+```shellsession title="Example Output" wrap=false {7-8}
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 198f93fd5094: Pull complete 
@@ -365,29 +362,29 @@ For more examples and ideas, visit:
 
 运行如下命令，编辑或创建 Docker 的配置文件（以下配置文件包含镜像和 NIVIDIA 运行时）。
 
-```bash frame="terminal" wrap
+```bash
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-    "registry-mirrors": [
-        "https://docker.1ms.run",
-        "https://dockercf.jsdelivr.fyi/",
-        "https://docker.m.daocloud.io"
-    ],
-    "runtimes": {
-        "nvidia": {
-            "path": "nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    },
-	"default-runtime": "nvidia"
+   "registry-mirrors": [
+      "https://docker.1ms.run",
+      "https://dockercf.jsdelivr.fyi/",
+      "https://docker.m.daocloud.io"
+   ],
+   "runtimes": {
+      "nvidia": {
+         "path": "nvidia-container-runtime",
+         "runtimeArgs": []
+      }
+   },
+   "default-runtime": "nvidia"
 }
 EOF
 ```
 
 重启 Docker 服务以应用编辑好的配置。
 
-```bash frame="terminal"
+```bash
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
@@ -396,14 +393,14 @@ sudo systemctl restart docker
 
 本项目所使用的 NVIDIA Jetson Nano (B01) 4GB 仅支持 JetPack 4。查阅 [快速入门指南：Ultralytics YOLO11 与 NVIDIA Jetson](https://docs.ultralytics.com/zh/guides/nvidia-jetson/#jetpack-support-based-on-jetson-device) 可以得知，可以直接运行如下命令以安装 YOLO11。
 
-```bash frame="terminal" wrap
+```bash
 t=ultralytics/ultralytics:latest-jetson-jetpack4
 sudo docker pull $t && sudo docker run -it --ipc=host --runtime=nvidia $t
 ```
 
 等待安装完成后，自动进入 Docker 命令行，运行如下命令验证 YOLO 的安装。
 
-```bash frame="terminal" wrap
+```bash
 python3 -c "import torch; print(f'PyTorch CUDA available: {torch.cuda.is_available()}')"
 ```
 

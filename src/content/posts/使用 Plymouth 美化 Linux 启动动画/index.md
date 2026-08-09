@@ -33,7 +33,7 @@ Plymouth 可以在系统启动早期显示图形化启动动画，并遮挡大�
 
 使用如下命令可以安装 Plymouth：
 
-```bash frame="terminal"
+```bash
 yay -S plymouth
 ```
 
@@ -47,13 +47,13 @@ Plymouth 需要被加入 `initramfs`，才能在根文件系统挂载前正常�
 
 新建 `dracut` 配置文件：
 
-```bash frame="terminal"
+```bash
 nano /etc/dracut.conf.d/plymouth.conf
 ```
 
 然后写入：
 
-```text title="plymouth.conf" frame="code"
+```ini title="plymouth.conf"
 add_dracutmodules+=" plymouth "
 ```
 
@@ -63,7 +63,7 @@ add_dracutmodules+=" plymouth "
 
 编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```text frame="none"
+```text
 quiet splash loglevel=3
 ```
 
@@ -79,13 +79,13 @@ quiet splash loglevel=3
 
 使用如下命令可以查看所有可用主题：
 
-```bash frame="terminal"
+```bash
 plymouth-set-default-theme --list
 ```
 
 将动画主题指定为带有 OEM Logo 的极简主题 `bgrt`：
 
-```bash frame="terminal"
+```bash
 sudo plymouth-set-default-theme bgrt
 ```
 
@@ -93,14 +93,14 @@ sudo plymouth-set-default-theme bgrt
 
 如果想立即查看当前主题效果，可以运行：
 
-```bash frame="terminal"
+```bash
 sudo plymouthd
 sudo plymouth --show-splash
 ```
 
 如果想要退出预览，你需要盲打：
 
-```bash frame="terminal"
+```bash
 sudo plymouth --quit
 ```
 
@@ -108,13 +108,13 @@ sudo plymouth --quit
 
 `bgrt` 主题下，屏幕最下方会出现 Arch Linux 水印，可以通过以下命令删除该水印：
 
-```bash frame="terminal" wrap
+```bash
 sudo mv /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark.png.bak
 ```
 
 如果之后想恢复水印：
 
-```bash frame="terminal" wrap
+```bash
 sudo mv /usr/share/plymouth/themes/spinner/watermark.png.bak /usr/share/plymouth/themes/spinner/watermark.png
 ```
 
@@ -124,7 +124,7 @@ sudo mv /usr/share/plymouth/themes/spinner/watermark.png.bak /usr/share/plymouth
 
 如果仍然能看到少量 udev、systemd 或光标输出，可以编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```text frame="none" wrap
+```text
 rd.udev.log_priority=3 vt.global_cursor_default=0 systemd.show_status=false rd.systemd.show_status=false
 ```
 
@@ -141,7 +141,7 @@ rd.udev.log_priority=3 vt.global_cursor_default=0 systemd.show_status=false rd.s
 
 在终端中运行：
 
-```bash frame="terminal"
+```bash
 sudo reinstall-kernels
 ```
 
@@ -149,7 +149,7 @@ sudo reinstall-kernels
 
 如果你的系统没有 `reinstall-kernels` 命令，可以改用 `dracut` 手动生成：
 
-```bash frame="terminal"
+```bash
 sudo dracut --force
 ```
 

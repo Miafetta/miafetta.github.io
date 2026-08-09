@@ -15,7 +15,12 @@ numbering: H2
 
 可以先通过配置全局环境变量解决大部分问题。编辑 `/etc/environment`，添加：
 
-```ini frame="code"
+```ini title="environment" ins={6-8}
+#
+# This file is parsed by pam_env module
+#
+# Syntax: simple "KEY=VAL" pairs on separate lines
+#
 XMODIFIERS=@im=fcitx
 GTK_IM_MODULE=fcitx
 SDL_IM_MODULE=fcitx
@@ -31,19 +36,19 @@ SDL_IM_MODULE=fcitx
 
 对于仍无法使用输入法的应用，转到目录 `/usr/share/applications/`，编辑应用的 `.desktop` 文件，在 `Exec=` 后直接添加：
 
-```bash frame="none" wrap
+```ini
 env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx 
 ```
 
-以微信为例：
+以微信为例，原先可能为：
 
-```ini frame="code" wrap
+```ini
 Exec=/opt/wechat/wechat %U
 ```
 
 修改为：
 
-```ini ins="env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx " frame="code" wrap
+```ini ins="env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx "
 Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 ```
 
@@ -55,13 +60,13 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 
 1. 安装 `ImageMagick`：
 
-   ```bash frame="terminal"
+   ```bash
    yay -S imagemagick
    ```
 
 2. 进入应用图标所在目录，执行以下命令：
 
-   ```bash frame="terminal"
+   ```bash
    magick app_icon.png -gravity center -background transparent -extent 114% app_icon_padded.png
    ```
 
@@ -120,13 +125,13 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 
 4. 将快捷方式复制到目录 `/usr/share/applications/`（注意修改快捷方式名称）：
 
-   ```bash frame="terminal"
+   ```bash
    sudo cp ~/桌面/application.desktop /usr/share/applications/Arknights.desktop
    ```
 
    也可以放到当前用户的应用目录中：
 
-   ```bash frame="terminal"
+   ```bash
    cp ~/桌面/application.desktop ~/.local/share/applications/Arknights.desktop
    ```
 
@@ -134,7 +139,7 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 
 5. 然后编辑复制后的快捷方式，添加或修改 `StartupWMClass`：
 
-   ```ini frame="code"
+   ```ini
    StartupWMClass=Arknights
    ```
 
@@ -142,7 +147,7 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 
 6. 最后修改快捷方式权限（注意修改快捷方式名称）：
 
-   ```bash frame="terminal"
+   ```bash
    sudo chmod +rw+r+r arknights.desktop
    ```
 

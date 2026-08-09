@@ -23,7 +23,7 @@ Surface Laptop Go 自带的指纹传感器来自于 ELAN，型号为 `04f3:0c5a`
 
 ::github{repo='xerootg/libfprint'}
 
-```bash frame="terminal"
+```bash
 git clone https://github.com/xerootg/libfprint-elanmoc2-slg3-git
 cd libfprint-elanmoc2-slg3-git
 makepkg -si
@@ -33,13 +33,13 @@ makepkg -si
 
 ::github{repo='Miafetta/libfprint'}
 
-```text frame="none"
+```text
 https://github.com/Miafetta/libfprint.git
 ```
 
 然后重启 `fprintd` 服务：
 
-```bash frame="terminal"
+```bash
 sudo systemctl restart fprintd
 ```
 
@@ -51,13 +51,18 @@ sudo systemctl restart fprintd
 
    编辑 `/etc/pam.d/sudo`：
 
-   ```diff lang="text" frame="code"
-    #%PAM-1.0
-   +auth        sufficient  pam_fprintd.so max-tries=1 timeout=5
-    auth        include     system-auth
-    account     include     system-auth
-    session     include     system-auth
+   ```ini title="sudo" ins={2}
+   #%PAM-1.0
+   auth        sufficient  pam_fprintd.so max-tries=1 timeout=5
+   auth        include     system-auth
+   account     include     system-auth
+   session     include     system-auth
    ```
+
+   以下参数请根据实际情况修改：
+
+   - `max-tries`：最大尝试次数，这里设置为 `1`，表示最多认证 1 次，认证失败后不再调用指纹识别；
+   - `timeout`：超时时间，单位为秒（s），这里设置为 5 秒。
 
 2. **修复 Polkit（图形化界面提权）**
 
@@ -65,14 +70,16 @@ sudo systemctl restart fprintd
 
    编辑 `/etc/pam.d/polkit-1`：
 
-   ```diff lang="text" frame="code"
-    #%PAM-1.0
-   +auth      sufficient    pam_fprintd.so max-tries=1 timeout=5
-    auth      include       system-auth
-    account   include       system-auth
-    password  include       system-auth
-    session   include       system-auth
+   ```ini title="polkit-1" ins={2}
+   #%PAM-1.0
+   auth      sufficient    pam_fprintd.so max-tries=1 timeout=5
+   auth      include       system-auth
+   account   include       system-auth
+   password  include       system-auth
+   session   include       system-auth
    ```
+
+   同样地，请根据实际情况修改 `max-tries` 和 `timeout` 参数。
 
 需要注意的是，指纹认证只是对日常提权的补充，并不能替代密码。系统登录等场景仍需要输入用户密码。
 
@@ -84,13 +91,13 @@ sudo systemctl restart fprintd
 
 编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```text frame="none"
+```ini
 i915.enable_psr=0
 ```
 
-在终端中运行如下命令以重新生成内核镜像：
+接着在终端中运行如下命令，以重新生成内核镜像：
 
-```bash frame="terminal"
+```bash
 sudo reinstall-kernels
 ```
 
@@ -104,7 +111,7 @@ sudo reinstall-kernels
 
 首先，添加一个脚本来重新加载 `hid-multitouch` 驱动模块，内容如下。
 
-```bash title="reload-hid-multitouch.sh" frame="code"
+```sh title="reload-hid-multitouch.sh"
 #!/bin/sh
 sudo modprobe -r hid-multitouch && sudo modprobe hid-multitouch
 ```
@@ -113,13 +120,13 @@ sudo modprobe -r hid-multitouch && sudo modprobe hid-multitouch
 
 接着，运行以下命令将该脚本标记为可执行文件（注意修改文件路径）。
 
-```bash frame="terminal"
+```bash
 sudo chmod +x /usr/local/bin/reload-hid-multitouch.sh
 ```
 
 然后，在 `/etc/systemd/system/` 中新建一个文件（如 `/etc/systemd/system/reload-hid-multitouch.service`），并且添加以下内容（注意修改 `ExecStart` 的文件路径）。
 
-```ini title="reload-hid-multitouch.service" frame="code"
+```ini title="reload-hid-multitouch.service"
 [Unit]
 Description=Run restart_touch.sh
 #After=suspend.target
@@ -137,7 +144,7 @@ WantedBy=hibernate.target
 
 最后，运行以下命令应用更改：
 
-```bash frame="terminal"
+```bash
 sudo systemctl daemon-reload
 ```
 
@@ -147,13 +154,13 @@ sudo systemctl daemon-reload
 
 1. **安装 `sbctl`**
 
-   ```bash frame="terminal"
+   ```bash
    sudo pacman -S sbctl
    ```
 
 2. **检查主板状态**
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl status
    ```
 
@@ -163,7 +170,7 @@ sudo systemctl daemon-reload
 
    在本地生成一套独一无二的加密密钥对，执行：
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl create-keys
    ```
 
@@ -173,7 +180,7 @@ sudo systemctl daemon-reload
 
    执行烧录命令：
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl enroll-keys -m
    ```
 
@@ -181,25 +188,25 @@ sudo systemctl daemon-reload
 
    在给 Linux 内核和引导程序加上签名前，需要查看待签名文件：
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl verify
    ```
 
    输出示例如下：
 
-   ```shellsession frame="terminal"
+   ```ansi title="Example Output" wrap=false
    > sudo sbctl verify
    Verifying file database and EFI images in /efi...
-   ✗ /efi/EFI/BOOT/BOOTX64.EFI is not signed
-   ✗ /efi/EFI/systemd/systemd-bootx64.efi is not signed
-   ✗ /efi/c23f66cadad7410a9287bdf9eeae522e/6.19.10-arch1-1/linux is not signed
+   [38;2;255;0;0m✗[0m /efi/EFI/BOOT/BOOTX64.EFI is not signed
+   [38;2;255;0;0m✗[0m /efi/EFI/systemd/systemd-bootx64.efi is not signed
+   [38;2;255;0;0m✗[0m /efi/c23f66cadad7410a9287bdf9eeae522e/6.19.10-arch1-1/linux is not signed
    ```
 
 6. **签名**
 
    对于第 5 步的所有文件，依次执行（注意修改文件名）：
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl sign -s /efi/EFI/BOOT/BOOTX64.EFI
    sudo sbctl sign -s /efi/EFI/systemd/systemd-bootx64.efi
    sudo sbctl sign -s /efi/c23f66cadad7410a9287bdf9eeae522e/6.19.10-arch1-1/linux
@@ -211,18 +218,18 @@ sudo systemctl daemon-reload
 
    再做一次复查，运行：
 
-   ```bash frame="terminal"
+   ```bash
    sudo sbctl verify
    ```
 
    此时的输出应当是清一色绿色打勾（`✓ ... is signed`），输出示例如下：
 
-   ```shellsession frame="terminal"
+   ```ansi title="Example Output" wrap=false
    > sudo sbctl verify
    Verifying file database and EFI images in /efi...
-   ✓ /efi/EFI/BOOT/BOOTX64.EFI is signed
-   ✓ /efi/EFI/systemd/systemd-bootx64.efi is signed
-   ✓ /efi/c23f66cadad7410a9287bdf9eeae522e/6.19.10-arch1-1/linux is signed
+   [38;2;68;214;44m✔[0m /efi/EFI/BOOT/BOOTX64.EFI is signed
+   [38;2;68;214;44m✔[0m /efi/EFI/systemd/systemd-bootx64.efi is signed
+   [38;2;68;214;44m✔[0m /efi/c23f66cadad7410a9287bdf9eeae522e/6.19.10-arch1-1/linux is signed
    ```
 
 8. **重启**

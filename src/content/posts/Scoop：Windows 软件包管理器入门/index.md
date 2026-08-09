@@ -65,13 +65,13 @@ Scoop 默认安装到 `C:\Users\<用户名>\scoop`，也可以自行修改安装
 
 注意替换下列命令中的 `<安装目录>` 为实际安装位置，例如 `D:\Applications\Scoop`：
 
-```powershell frame="terminal" wrap
+```powershell
 $env:SCOOP='<安装目录>'
 [Environment]::SetEnvironmentVariable('SCOOP', $env:SCOOP, 'User')
 ```
 
 执行以下命令，如果输出正确路径，则配置正确：
-```powershell frame="terminal"
+```powershell
 $env:SCOOP
 ```
 
@@ -79,14 +79,14 @@ $env:SCOOP
 
 以非管理员模式打开一个 PowerShell 终端，然后运行：
 
-```powershell frame="terminal" wrap
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
 
 看到如下提示，则说明安装成功：
 
-```shellsession frame="terminal"
+```shellsession title="Example Output"
 Scoop was installed successfully!
 Type 'scoop help' for instructions.
 ```
@@ -95,14 +95,14 @@ Type 'scoop help' for instructions.
 >
 > 如果在安装时遇到网络问题，请使用代理，并临时设置当前 PowerShell 会话的代理环境变量，注意将 `<ip>` 和 `<port>` 替换为代理服务器的地址和端口：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > $env:HTTP_PROXY = 'http://<ip>:<port>'
 > $env:HTTPS_PROXY = 'http://<ip>:<port>'
 > ```
 >
 > 安装完成后可以删除临时变量：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > Remove-Item Env:HTTP_PROXY -ErrorAction SilentlyContinue
 > Remove-Item Env:HTTPS_PROXY -ErrorAction SilentlyContinue
 > ```
@@ -123,19 +123,19 @@ Scoop 安装完成后默认仅启用 `main` Bucket，主要收录常用的命令
 
 添加 Bucket 时需要 `git` 的支持，如果还没有安装 `git`，可以使用如下命令安装：
 
-```powershell frame="terminal"
+```powershell
 scoop install git
 ```
 
 对于希望通过 Scoop 安装桌面应用的普通用户，建议添加 `extras`：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket add extras
 ```
 
 如果需要安装软件的旧版本、测试版本或其他可选版本，还可以添加 `versions`：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket add versions
 ```
 
@@ -155,7 +155,7 @@ scoop bucket add versions
 
 添加这些 Bucket 时，只需指定名称。例如：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket add java
 scoop bucket add nerd-fonts
 ```
@@ -174,7 +174,7 @@ Scoop 也支持添加由社区或个人维护的第三方 Bucket，添加时需�
 
 可以使用如下命令添加：
 
-```powershell frame="terminal" wrap
+```powershell
 scoop bucket add dorado https://github.com/chawyehsu/dorado
 ```
 
@@ -198,19 +198,19 @@ scoop bucket add dorado https://github.com/chawyehsu/dorado
 
 在 PowerShell 或命令提示符中运行以下命令，注意将 `<ip>` 和 `<port>` 替换为代理服务器的地址和端口：
 
-```powershell frame="terminal"
+```powershell
 scoop config proxy <ip>:<port>
 ```
 
 例如，某代理软件在本机监听 `7890` 端口，可以配置为：
 
-```powershell frame="terminal"
+```powershell
 scoop config proxy 127.0.0.1:7890
 ```
 
 不再需要代理时，可以将其删除：
 
-```powershell frame="terminal"
+```powershell
 scoop config rm proxy
 ```
 
@@ -224,7 +224,7 @@ scoop config rm proxy
 
 首先，删除需要替换的 `main`、`extras` 和 `versions` Bucket：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket rm main
 scoop bucket rm extras
 scoop bucket rm versions
@@ -232,7 +232,7 @@ scoop bucket rm versions
 
 然后使用原来的名称重新添加相应镜像：
 
-```powershell frame="terminal" wrap
+```powershell
 scoop bucket add main https://mirror.nju.edu.cn/git/scoop-main.git
 scoop bucket add extras https://mirror.nju.edu.cn/git/scoop-extras.git
 scoop bucket add versions https://mirror.nju.edu.cn/git/scoop-versions.git
@@ -240,19 +240,19 @@ scoop bucket add versions https://mirror.nju.edu.cn/git/scoop-versions.git
 
 最后更新 Scoop 和已添加的 Bucket：
 
-```powershell frame="terminal"
+```powershell
 scoop update
 ```
 
 可以通过以下命令检查 Bucket 的名称及地址：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket list
 ```
 
 如果需要恢复为上游仓库，可以删除镜像 Bucket，然后重新添加：
 
-```powershell frame="terminal"
+```powershell
 scoop bucket rm main
 scoop bucket rm extras
 scoop bucket rm versions
@@ -268,19 +268,19 @@ Aria2 是一款支持分段和并发连接的下载工具。在下载服务器�
 
 首先，安装 Aria2：
 
-```powershell frame="terminal"
+```powershell
 scoop install aria2
 ```
 
 然后启用 Aria2 加速：
 
-```powershell frame="terminal"
+```powershell
 scoop config aria2-enabled true
 ```
 
 还可以根据网络状况调整相关参数：
 
-```powershell frame="terminal"
+```powershell
 scoop config aria2-retry-wait 2
 scoop config aria2-split 5
 scoop config aria2-max-connection-per-server 5
@@ -300,7 +300,7 @@ Aria2 并非连接数越多越快。过多的并发连接可能受到服务器�
 
 如果启用后出现兼容性问题，可以将其关闭：
 
-```powershell frame="terminal"
+```powershell
 scoop config aria2-enabled false
 ```
 
@@ -308,25 +308,25 @@ scoop config aria2-enabled false
 
 Scoop 的使用非常简单，命令的基本结构是：
 
-```powershell frame="terminal"
+```powershell
 scoop <操作> [对象]
 ```
 
 其中，“操作”表示需要执行的命令，“对象”通常是软件名称。例如，安装 Git：
 
-```powershell frame="terminal"
+```powershell
 scoop install git
 ```
 
 可以运行以下命令查看 Scoop 提供的全部操作：
 
-```powershell frame="terminal"
+```powershell
 scoop help
 ```
 
 输出如下所示：
 
-```shellsession frame="terminal" wrap=false
+```shellsession title="Example Output" wrap=false
 Usage: scoop <command> [<args>]
 
 Available commands are listed below.
@@ -367,7 +367,7 @@ which      Locate a shim/executable (similar to 'which' on Linux)
 
 如果需要了解某项操作的具体用法，可以在命令后指定操作名称：
 
-```powershell frame="terminal"
+```powershell
 scoop help install
 scoop help update
 ```
@@ -376,25 +376,25 @@ scoop help update
 
 安装软件前，可以先进行搜索，确认软件是否已经被当前添加的 Bucket 收录，并查看其准确名称：
 
-```powershell frame="terminal"
+```powershell
 scoop search <软件名>
 ```
 
 例如：
 
-```powershell frame="terminal"
+```powershell
 scoop search firefox
 ```
 
 查看软件的版本、来源、主页等信息：
 
-```powershell frame="terminal"
+```powershell
 scoop info firefox
 ```
 
 在浏览器中打开软件主页：
 
-```powershell frame="terminal"
+```powershell
 scoop home firefox
 ```
 
@@ -402,25 +402,25 @@ scoop home firefox
 
 使用 `install` 命令安装软件：
 
-```powershell frame="terminal"
+```powershell
 scoop install firefox
 ```
 
 Scoop 支持在一条命令中指定多个软件，并依次进行安装：
 
-```powershell frame="terminal"
+```powershell
 scoop install git 7zip
 ```
 
 Git 用于添加和更新 Bucket。如果准备添加 `extras` 等 Bucket，建议先安装 Git：
 
-```powershell frame="terminal"
+```powershell
 scoop install git
 ```
 
 如果不同 Bucket 中存在同名软件，可以在软件名前指定 Bucket：
 
-```powershell frame="terminal"
+```powershell
 scoop install extras/firefox
 ```
 
@@ -428,13 +428,13 @@ scoop install extras/firefox
 
 使用以下命令查看由 Scoop 管理的软件：
 
-```powershell frame="terminal"
+```powershell
 scoop list
 ```
 
 检查 Scoop、Bucket 和已安装软件是否存在可用更新：
 
-```powershell frame="terminal"
+```powershell
 scoop status
 ```
 
@@ -442,19 +442,19 @@ scoop status
 
 更新 Scoop 本身及已添加的 Bucket：
 
-```powershell frame="terminal"
+```powershell
 scoop update
 ```
 
 更新某个已经安装的软件：
 
-```powershell frame="terminal"
+```powershell
 scoop update firefox
 ```
 
 更新所有已安装的软件：
 
-```powershell frame="terminal"
+```powershell
 scoop update *
 ```
 
@@ -468,19 +468,19 @@ scoop update *
 
 如果希望某个软件暂时保持当前版本，可以使用 `hold` 将其锁定：
 
-```powershell frame="terminal"
+```powershell
 scoop hold <软件名>
 ```
 
 例如：
 
-```powershell frame="terminal"
+```powershell
 scoop hold python
 ```
 
 需要恢复更新时，使用 `unhold`：
 
-```powershell frame="terminal"
+```powershell
 scoop unhold python
 ```
 
@@ -488,13 +488,13 @@ scoop unhold python
 
 使用 `uninstall` 命令卸载软件：
 
-```powershell frame="terminal"
+```powershell
 scoop uninstall firefox
 ```
 
 Scoop 通常会保留软件在 `persist` 目录中的持久化数据，以便重新安装后继续使用。如果需要同时删除这些数据，可以添加 `--purge` 参数：
 
-```powershell frame="terminal"
+```powershell
 scoop uninstall firefox --purge
 ```
 
@@ -504,13 +504,13 @@ scoop uninstall firefox --purge
 
 Scoop 更新软件后，旧版本的程序文件可能仍然保留。可以使用以下命令清理所有软件的旧版本：
 
-```powershell frame="terminal"
+```powershell
 scoop cleanup *
 ```
 
 清理已经下载的软件安装包缓存：
 
-```powershell frame="terminal"
+```powershell
 scoop cache rm *
 ```
 

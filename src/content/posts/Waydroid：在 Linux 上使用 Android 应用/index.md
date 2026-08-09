@@ -19,7 +19,7 @@ numbering: H2
 
 在开始之前，请确保当前使用的显示服务器协议是 `wayland`，而不是 `X11`。使用以下命令查询：
 
-```bash frame="terminal"
+```bash
 echo $XDG_SESSION_TYPE
 ```
 
@@ -37,7 +37,7 @@ Waydroid 不是传统意义上的 Android 模拟器，，而是基于 LXC 的 An
 
 运行如下命令以安装 `linux-zen` 内核及对应头文件：
 
-```bash frame="terminal"
+```bash
 yay -S linux-zen linux-zen-headers
 ```
 
@@ -45,7 +45,7 @@ yay -S linux-zen linux-zen-headers
 
 重启后使用以下命令确认当前内核：
 
-```bash frame="terminal"
+```bash
 uname -r
 ```
 
@@ -55,7 +55,7 @@ uname -r
 
 安装 Waydroid：
 
-```bash frame="terminal"
+```bash
 yay -S waydroid
 ```
 
@@ -72,7 +72,7 @@ Waydroid 会创建名为 `waydroid0` 的虚拟网卡，用于宿主机和 Androi
 
 运行以下命令：
 
-```bash frame="terminal"
+```bash
 sudo firewall-cmd --zone=trusted --add-interface=waydroid0 --permanent
 sudo firewall-cmd --add-masquerade --permanent
 sudo firewall-cmd --reload
@@ -88,7 +88,7 @@ sudo firewall-cmd --reload
 
 因此，在初始化 Waydroid 前，需要先配置默认 DNS（这里是 `8.8.8.8`，也可以自行修改）：
 
-```bash frame="terminal" wrap
+```bash
 sudo mkdir -p /var/lib/waydroid
 echo "persist.waydroid.network.dns_server=8.8.8.8" | sudo tee -a /var/lib/waydroid/waydroid_base.prop
 ```
@@ -99,14 +99,14 @@ echo "persist.waydroid.network.dns_server=8.8.8.8" | sudo tee -a /var/lib/waydro
 
 然后，清理之前的安装残余（如果存在）：
 
-```bash frame="terminal"
+```bash
 sudo rm -rf /usr/share/waydroid-extra/images/
 sudo rm -rf /var/lib/waydroid/*
 ```
 
 现在，进行在线初始化，安装带有 Google 服务的版本（若要安装不带 Google 服务的版本，请将 `GAPPS` 替换为 `VANILLA`）：
 
-```bash frame="terminal"
+```bash
 sudo waydroid init -s GAPPS -f
 ```
 
@@ -118,7 +118,7 @@ sudo waydroid init -s GAPPS -f
 
 然后，查看 `waydroid0` 给物理机分配的 IP 地址：
 
-```bash frame="terminal"
+```bash
 ip -4 addr show waydroid0
 ```
 
@@ -126,14 +126,14 @@ ip -4 addr show waydroid0
 
 然后，启动 Waydroid 容器和会话：
 
-```bash frame="terminal"
+```bash
 sudo systemctl start waydroid-container
 waydroid session start &
 ```
 
 等待一段时间后，控制台会输出 `[xx:xx:xx] Android with user 0 is ready`，然后运行以下命令，配置全局代理（注意需要将 `7890` 替换为 `Clash Verge` 等代理软件的混合代理端口）：
 
-```bash frame="terminal"
+```bash
 sudo waydroid shell settings put global http_proxy 192.168.240.1:7890
 ```
 
@@ -141,7 +141,7 @@ sudo waydroid shell settings put global http_proxy 192.168.240.1:7890
 
 然后，可以运行如下命令测试配置结果：
 
-```bash frame="terminal"
+```bash
 sudo waydroid shell -- sh -c "https_proxy=http://192.168.240.1:10808 curl -I https://www.google.com"
 ```
 
@@ -155,25 +155,26 @@ sudo waydroid shell -- sh -c "https_proxy=http://192.168.240.1:10808 curl -I htt
 
 为了解决这个问题，可以安装 ARM 兼容层。这里使用 `waydroid_script` 安装 Intel Houdini：
 
-```bash frame="terminal"
-# 下载脚本
+```bash {"1. 下载脚本":2-4} {"2. 创建 Python 虚拟环境":6-8} {"3. 在虚拟环境中安装依赖":10-11} {"4. 安装 Intel Houdini":13-14}
+# 依次执行以下命令
+
 git clone https://github.com/casualsnek/waydroid_script
 cd waydroid_script
 
-# 创建Python虚拟环境
+
 python3 -m venv venv
 source venv/bin/activate
 
-# 在虚拟环境中安装依赖
+
 pip install -r requirements.txt
 
-# 安装对Intel兼容性更好的Intel Houdini
+
 sudo venv/bin/python3 main.py install libhoudini
 ```
 
 完成后，运行 `deactivate` 退出虚拟环境，然后重启 Waydroid 会话：
 
-```bash frame="terminal"
+```bash
 waydroid session stop
 waydroid session start &
 ```
@@ -188,7 +189,7 @@ waydroid session start &
 
 运行如下命令获取 Android ID：
 
-```bash frame="terminal" wrap
+```bash
 sudo waydroid shell sqlite3 /data/data/com.google.android.gsf/databases/gservices.db "select * from main where name = 'android_id';"
 ```
 
@@ -196,7 +197,7 @@ sudo waydroid shell sqlite3 /data/data/com.google.android.gsf/databases/gservice
 
 完成后，重启 Waydroid 会话生效：
 
-```bash frame="terminal"
+```bash
 waydroid session stop
 waydroid session start &
 ```
@@ -207,7 +208,7 @@ Waydroid 会将 Android 应用生成对应的 `.desktop` 文件，并显示在 L
 
 如果希望应用菜单更干净，可以通过修改 `.desktop` 文件，为不需要显示的应用添加：
 
-```ini frame="code"
+```ini
 NoDisplay=true
 ```
 
@@ -215,7 +216,7 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
 1. 首先，查询当前已安装的应用列表：
 
-   ```bash frame="terminal"
+   ```bash
    waydroid app list
    ```
 
@@ -225,13 +226,13 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
    如果你想自己创建脚本，也可以手动新建文件：
 
-   ```bash frame="terminal"
+   ```bash
    touch ~/waydroid_icon_hiding.sh
    ```
 
    然后编辑脚本文件，根据自己的需要增删 `hide_apps` 中的包名：
 
-   ```bash title="waydroid_icon_hiding.sh" frame="code" showLineNumbers
+   ```sh title="waydroid_icon_hiding.sh"
    # 需要隐藏的应用包名
    hide_apps=(
        "com.google.android.googlequicksearchbox" # Google
@@ -278,7 +279,7 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
    这里通过 `chmod a-w` 移除写权限，是为了尽量避免 Waydroid 重启后重新覆盖 `.desktop` 文件。如果之后想恢复某个图标，可以先使用如下命令恢复写权限：
 
-   ```bash frame="terminal"
+   ```bash
    chmod u+w ~/.local/share/applications/waydroid.<应用包名>.desktop
    ```
 
@@ -286,13 +287,13 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
 3. 保存并退出后，赋予可执行权限：
 
-   ```bash frame="terminal"
+   ```bash
    sudo chmod +x ~/waydroid_icon_hiding.sh
    ```
 
 4. 然后运行脚本：
 
-   ```bash frame="terminal"
+   ```bash
    ~/waydroid_icon_hiding.sh
    ```
 
@@ -302,20 +303,20 @@ Waydroid 应用默认以全屏模式启动，而多窗口模式能绕过 Android
 
 运行以下命令开启多窗口模式：
 
-```bash frame="terminal"
+```bash
 waydroid prop set persist.waydroid.multi_windows true
 ```
 
 重启 Waydroid 会话后生效：
 
-```bash frame="terminal"
+```bash
 waydroid session stop
 waydroid session start &
 ```
 
 如果想关闭多窗口模式，可以执行：
 
-```bash frame="terminal"
+```bash
 waydroid prop set persist.waydroid.multi_windows false
 ```
 
@@ -334,19 +335,19 @@ Waydroid 由两部分组成：
 
 手动启动容器服务：
 
-```bash frame="terminal"
+```bash
 sudo systemctl start waydroid-container
 ```
 
 启动当前用户会话：
 
-```bash frame="terminal"
+```bash
 waydroid session start &
 ```
 
 如果希望开机后自动启动 Waydroid 容器，可以启用 systemd 服务：
 
-```bash frame="terminal"
+```bash
 sudo systemctl enable --now waydroid-container
 ```
 
@@ -354,7 +355,7 @@ sudo systemctl enable --now waydroid-container
 
 启动完整 Android 界面：
 
-```bash frame="terminal"
+```bash
 waydroid show-full-ui
 ```
 
@@ -364,7 +365,7 @@ waydroid show-full-ui
 
 安装本地 APK 文件时，使用如下命令：
 
-```bash frame="terminal"
+```bash
 waydroid app install /path/to/your/app
 ```
 
@@ -391,7 +392,7 @@ waydroid app install /path/to/your/app
 
 查看 Waydroid 中已安装的应用：
 
-```bash frame="terminal"
+```bash
 waydroid app list
 ```
 
@@ -401,13 +402,13 @@ waydroid app list
 
 如果知道应用包名，可以通过命令启动：
 
-```bash frame="terminal"
+```bash
 waydroid app launch <包名>
 ```
 
 例如：
 
-```bash frame="terminal"
+```bash
 waydroid app launch com.tencent.mm
 ```
 
@@ -417,13 +418,13 @@ waydroid app launch com.tencent.mm
 
 卸载指定应用：
 
-```bash frame="terminal"
+```bash
 waydroid app remove <包名>
 ```
 
 例如：
 
-```bash frame="terminal"
+```bash
 waydroid app remove com.example.app
 ```
 
@@ -433,19 +434,19 @@ waydroid app remove com.example.app
 
 Waydroid 和宿主机之间的文件互通方式比较直接。Waydroid 的用户数据位于：
 
-```text frame="none"
+```text
 ~/.local/share/waydroid/data/
 ```
 
 Android 用户目录对应：
 
-```text frame="none"
+```text
 ~/.local/share/waydroid/data/media/0/
 ```
 
 例如，Android 的下载目录对应于：
 
-```text frame="none"
+```text
 ~/.local/share/waydroid/data/media/0/Download/
 ```
 
@@ -455,20 +456,20 @@ Android 用户目录对应：
 
 如果遇到应用打不开、网络异常、窗口不显示等问题，可以先重启 Waydroid 会话：
 
-```bash frame="terminal"
+```bash
 waydroid session stop
 waydroid session start &
 ```
 
 如果问题仍然存在，可以重启容器服务：
 
-```bash frame="terminal"
+```bash
 sudo systemctl restart waydroid-container
 ```
 
 然后再次启动会话：
 
-```bash frame="terminal"
+```bash
 waydroid session start &
 ```
 
@@ -476,34 +477,17 @@ waydroid session start &
 
 日常使用中的常用命令如下：
 
-```bash frame="terminal"
-# 启动容器服务
-sudo systemctl start waydroid-container
-
-# 启动 Waydroid 用户会话
-waydroid session start &
-
-# 打开完整 Android 界面
-waydroid show-full-ui
-
-# 安装 APK
-waydroid app install /path/to/app.apk
-
-# 查看应用列表
-waydroid app list
-
-# 启动应用
-waydroid app launch 包名
-
-# 卸载应用
-waydroid app remove 包名
-
-# 停止 Waydroid 会话
-waydroid session stop
-
-# 重启容器服务
-sudo systemctl restart waydroid-container
-```
+| 命令                                        | 操作                   |
+| ------------------------------------------- | ---------------------- |
+| `sudo systemctl start waydroid-container`   | 启动容器服务           |
+| `waydroid session start &`                  | 启动 Waydroid 用户会话 |
+| `waydroid show-full-ui`                     | 打开完整 Android 界面  |
+| `waydroid app install /path/to/app.apk`     | 安装 APK               |
+| `waydroid app list`                         | 查看应用列表           |
+| `waydroid app launch 包名`                  | 启动应用               |
+| `waydroid app remove 包名`                  | 卸载应用               |
+| `waydroid session stop`                     | 停止 Waydroid 会话     |
+| `sudo systemctl restart waydroid-container` | 重启容器服务           |
 
 ## 使用建议
 

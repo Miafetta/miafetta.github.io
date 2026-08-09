@@ -36,7 +36,7 @@ Windows Terminal 是 Microsoft 推出的现代终端应用，支持多标签页�
 
 - 在 Windows 10 上，可以通过 [Microsoft Store](https://aka.ms/terminal) 来安装 Windows 终端，或者使用 WinGet：
 
-  ```powershell frame="terminal" wrap
+  ```powershell
   winget install --id Microsoft.WindowsTerminal --exact --source winget
   ```
 
@@ -52,7 +52,7 @@ Windows 10 和 Windows 11 上已经预置了 Windows PowerShell，但是其版�
 >
 > 可以在当前 PowerShell 窗口中运行以下命令，查看正在使用的 PowerShell 版本：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > $PSVersionTable.PSVersion
 > ```
 >
@@ -72,13 +72,13 @@ PowerShell 7 支持多种安装方式。
 
 - 在 Windows 10/11 中，可以通过 [Microsoft Store](https://www.microsoft.com/store/apps/9MZ1SNWT0N5D) 来安装，也可以使用 WinGet：
 
-  ```powershell frame="terminal" wrap
+  ```powershell
   winget install --id Microsoft.PowerShell --exact --source winget
   ```
 
 - 或者，如果已经配置好 Scoop，也可以通过 Scoop 安装：
 
-  ```powershell frame="terminal"
+  ```powershell
   scoop install pwsh
   ```
 
@@ -86,7 +86,7 @@ PowerShell 7 支持多种安装方式。
 
   使用 Scoop 安装 PowerShell 7 后，可能会看到以下提示：
 
-  ```shellsession frame="terminal" wrap
+  ```shellsession title="Example Output" wrap=false
   Notes
   -----
   Since Scoop uses pwsh.exe internally, to update PowerShell Core itself,
@@ -104,22 +104,21 @@ PowerShell 7 支持多种安装方式。
 
   首先，Scoop 本身使用 `pwsh.exe` 执行部分操作，因此更新 PowerShell 7 时，不要在 PowerShell 7 中直接运行更新命令，而应在 Windows PowerShell 5.1 中运行：
 
-  ```powershell frame="terminal"
+  ```powershell
   scoop update pwsh
   ```
 
   或者在 PowerShell 7、CMD 或其他 Shell 中直接运行：
 
-  ```powershell frame="terminal" wrap
+  ```powershell
   powershell.exe -Command "scoop update pwsh"
   ```
 
   其次，可以通过 Scoop 提供的注册表文件，在右键菜单中添加 PowerShell 7 的快捷入口，注意替换 `drive:\path\to\scoop` 为 Scoop 的实际安装地址：
 
-  ```powershell frame="terminal" wrap
+  ```powershell
   # 在资源管理器背景右键菜单中添加 PowerShell
   reg import "drive:\path\to\scoop\apps\pwsh\current\install-explorer-context.reg"
-
   # 在文件和文件夹右键菜单中添加 PowerShell
   reg import "drive:\path\to\scoop\apps\pwsh\current\install-file-context.reg"
   ```
@@ -128,13 +127,13 @@ PowerShell 7 支持多种安装方式。
 
 安装完成后，可以运行：
 
-```powershell frame="terminal"
+```powershell
 pwsh
 ```
 
 然后检查版本：
 
-```powershell frame="terminal"
+```powershell
 $PSVersionTable.PSVersion
 ```
 
@@ -170,13 +169,13 @@ Oh My Posh 是一个跨平台的命令提示符美化工具，支持 PowerShell�
 
 - 在 Windows 10/11 中，可以使用 WinGet 安装 Oh My Posh：
 
-  ```powershell frame="terminal" wrap
+  ```powershell
   winget install --id JanDeDobbeleer.OhMyPosh --exact --source winget
   ```
 
 - 如果已经配置好 Scoop，也可以通过 Scoop 安装：
 
-  ```powershell frame="terminal"
+  ```powershell
   scoop install oh-my-posh
   ```
 
@@ -184,7 +183,7 @@ Oh My Posh 是一个跨平台的命令提示符美化工具，支持 PowerShell�
 
 以上安装方式选择其中一种即可，不要通过多个包管理器重复安装。安装完成后，请重新打开终端窗口，以刷新环境变量，然后运行：
 
-```powershell frame="terminal"
+```powershell
 oh-my-posh version
 ```
 
@@ -214,7 +213,7 @@ Oh My Posh 负责生成 PowerShell 提示符，但提示符中的 Git 分支、�
 
 对于 `Meslo LGM NF`，可以直接通过 Oh My Posh 安装：
 
-```powershell frame="terminal"
+```powershell
 oh-my-posh font install Meslo
 ```
 
@@ -230,7 +229,7 @@ oh-my-posh font install Meslo
 
 打开 Windows Terminal，然后按下快捷键 `Ctrl + Shift + ,` 打开配置文件 `settings.json`，找到如下所示的 `profiles.defaults`：
 
-```json title="settings.json" {5} frame="code"
+```json title="settings.json" {5}
 {
     ...
     "profiles":
@@ -247,39 +246,39 @@ oh-my-posh font install Meslo
 
 然后在 `profiles.defaults` 中添加以下内容并保存：
 
-```diff lang="json" title="settings.json" frame="code"
- {
-     ...
-     "profiles":
-     {
--        "defaults": {},
-+        "defaults":
-+        {
-+            "font":
-+            {
-+                "face": "<font-family-name>"
-+            }
-+        },
-         "list":
-         [
-             ...
-         ]
-     }
-     ...
- }
+```json title="settings.json" del={5} ins={6-12}
+{
+    ...
+    "profiles":
+    {
+        "defaults": {},
+        "defaults":
+        {
+            "font":
+            {
+                "face": "<font-family-name>"
+            }
+        },
+        "list":
+        [
+            ...
+        ]
+    }
+    ...
+}
 ```
 
 注意将 `<font-family-name>` 修改为想要使用的字体家族名（而不是字体名），例如：
 
 - 使用 Oh My Posh 官方推荐中的 `Meslo LGM NF`：
 
-  ```json frame="code"
+  ```json
   "face": "MesloLGM Nerd Font"
   ```
 
 - 使用 `Maple Mono NF CN Italic`：
 
-  ```json frame="code"
+  ```json
   "face": "Maple Mono NF CN"
   ```
 
@@ -295,7 +294,7 @@ Oh My Posh 提供了许多内置主题，你可以在 [Themes | Oh My Posh](http
 
 找到喜欢的主题后，可以先在当前 PowerShell 会话中临时加载，例如 `powerlevel10k_rainbow`：
 
-```powershell frame="terminal" wrap
+```powershell
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\powerlevel10k_rainbow.omp.json" | Invoke-Expression
 ```
 
@@ -305,13 +304,13 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\powerlevel10k_rainbow.omp.j
 
 下载完成后，可以将主题文件复制到 Oh My Posh 的主题目录中：
 
-```powershell frame="terminal" wrap
+```powershell
 Copy-Item "$HOME\Downloads\tokyo-night-moon.omp.json" "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json"
 ```
 
 然后临时加载：
 
-```powershell frame="terminal" wrap
+```powershell
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" | Invoke-Expression
 ```
 
@@ -321,7 +320,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" 
 
 如果 `$PROFILE` 文件不存在，需要先执行以下命令创建：
 
-```powershell frame="terminal"
+```powershell
 if (-not (Test-Path $PROFILE)) {
     New-Item -Path $PROFILE -Type File -Force
 }
@@ -331,13 +330,13 @@ if (-not (Test-Path $PROFILE)) {
 
 然后使用记事本打开：
 
-```powershell frame="terminal"
+```powershell
 notepad $PROFILE
 ```
 
 接着在文件末尾加上 Oh My Posh 的初始化命令，例如：
 
-```powershell title="Microsoft.PowerShell_profile.ps1" frame="code" wrap
+```powershell title="Microsoft.PowerShell_profile.ps1" showLineNumbers
 oh-my-posh init pwsh --config "drive:\path\to\your-theme.omp.json" | Invoke-Expression
 ```
 
@@ -345,7 +344,7 @@ oh-my-posh init pwsh --config "drive:\path\to\your-theme.omp.json" | Invoke-Expr
 
 如果主题文件已经复制到 Oh My Posh 的主题目录中，可以使用：
 
-```powershell title="Microsoft.PowerShell_profile.ps1" frame="code" wrap
+```powershell title="Microsoft.PowerShell_profile.ps1" showLineNumbers
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" | Invoke-Expression
 ```
 
@@ -353,7 +352,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" 
 
 保存后，重新加载 `$PROFILE`：
 
-```powershell frame="terminal"
+```powershell
 . $PROFILE
 ```
 
@@ -361,13 +360,13 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" 
 >
 > 如果执行 `. $PROFILE` 时提示“在此系统上禁止运行脚本”，可以先查看当前的 PowerShell 执行策略：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > Get-ExecutionPolicy
 > ```
 >
 > 如果确认需要允许运行本地配置脚本，可以将当前用户范围的执行策略设置为 RemoteSigned：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 > ```
 >
@@ -375,7 +374,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" 
 >
 > 设置完成后，重新执行：
 >
-> ```powershell frame="terminal"
+> ```powershell
 > . $PROFILE
 > ```
 
@@ -388,7 +387,7 @@ PowerShell 支持安装多种模块，进一步改善日常使用体验。这里
 
 安装 Terminal-Icons 和 CommandNotFound：
 
-```powershell frame="terminal"
+```powershell
 Install-Module Terminal-Icons -Repository PSGallery
 Install-Module Microsoft.WinGet.CommandNotFound -Repository PSGallery
 ```
@@ -397,14 +396,14 @@ Install-Module Microsoft.WinGet.CommandNotFound -Repository PSGallery
 
 安装完成后，在 `$PROFILE` 的开头加入：
 
-```powershell title="Microsoft.PowerShell_profile.ps1" frame="code" wrap
+```powershell title="Microsoft.PowerShell_profile.ps1" showLineNumbers
 Import-Module Terminal-Icons
 Import-Module Microsoft.WinGet.CommandNotFound
 ```
 
 最终的 `$PROFILE` 可以写成：
 
-```powershell title="Microsoft.PowerShell_profile.ps1" frame="code" wrap
+```powershell title="Microsoft.PowerShell_profile.ps1" showLineNumbers
 Import-Module Terminal-Icons
 Import-Module Microsoft.WinGet.CommandNotFound
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" | Invoke-Expression
@@ -412,13 +411,13 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\tokyo-night-moon.omp.json" 
 
 保存后重新加载配置文件：
 
-```powershell frame="terminal"
+```powershell
 . $PROFILE
 ```
 
 可以运行以下命令进行测试：
 
-```powershell frame="terminal"
+```powershell
 Get-ChildItem
 ```
 
@@ -434,7 +433,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 打开 Windows Terminal，按下 `Ctrl + Shift + ,` 打开 `settings.json`，在文件顶部可以看到类似以下内容：
 
-```json title="settings.json" {3} frame="code"
+```json title="settings.json" {3}
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
@@ -444,17 +443,17 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 在 `"$schema"` 行的下一行，加入下面的内容，注意修改缩进：
 
-```diff lang="json" title="settings.json" frame="code"
- {
-     "$help": "https://aka.ms/terminal-documentation",
-     "$schema": "https://aka.ms/terminal-profiles-schema",
-+    "copyOnSelect": true,
-+    "defaultInputScope": "alphanumericHalfWidth",
-+    "experimental.scrollToChangeOpacity": false,
-+    "experimental.scrollToZoom": false,
-+    "warning.confirmCloseAllTabs": false
-     ...
- }
+```json title="settings.json" ins={4-8}
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "copyOnSelect": true,
+    "defaultInputScope": "alphanumericHalfWidth",
+    "experimental.scrollToChangeOpacity": false,
+    "experimental.scrollToZoom": false,
+    "warning.confirmCloseAllTabs": false,
+    ...
+}
 ```
 
 各项设置的作用如下：
@@ -475,7 +474,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 打开 Windows Terminal，然后按下 `Ctrl + Shift + ,` 打开 `settings.json`，找到 `schemes`：
 
-```json title="settings.json" {3} frame="code"
+```json title="settings.json" {3}
 {
     ...
     "schemes": [],
@@ -485,45 +484,45 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 将其修改为以下内容：
 
-```diff lang="json" title="settings.json" frame="code"
- {
-     ...
--    "schemes": [],
-+    "schemes":
-+    [
-+        {
-+            "name": "Tokyo Night Moon",
-+            "background": "#222436",
-+            "selectionBackground": "#2D3F76",
-+            "black": "#1B1D2B",
-+            "blue": "#82AAFF",
-+            "brightBlack": "#444A73",
-+            "brightBlue": "#9AB8FF",
-+            "brightCyan": "#B2EBFF",
-+            "brightGreen": "#C7FB6D",
-+            "brightPurple": "#CAABFF",
-+            "brightRed": "#FF8D94",
-+            "brightWhite": "#C8D3F5",
-+            "brightYellow": "#FFD8AB",
-+            "cursorColor": "#C8D3F5",
-+            "cyan": "#86E1FC",
-+            "foreground": "#C8D3F5",
-+            "green": "#C3E88D",
-+            "purple": "#C099FF",
-+            "red": "#FF757F",
-+            "white": "#828BB8",
-+            "yellow": "#FFC777"
-+        }
-+    ],
-     ...
- }
+```json title="settings.json" del={3} ins={4-29}
+{
+    ...
+    "schemes": [],
+    "schemes":
+    [
+        {
+            "name": "Tokyo Night Moon",
+            "background": "#222436",
+            "selectionBackground": "#2D3F76",
+            "black": "#1B1D2B",
+            "blue": "#82AAFF",
+            "brightBlack": "#444A73",
+            "brightBlue": "#9AB8FF",
+            "brightCyan": "#B2EBFF",
+            "brightGreen": "#C7FB6D",
+            "brightPurple": "#CAABFF",
+            "brightRed": "#FF8D94",
+            "brightWhite": "#C8D3F5",
+            "brightYellow": "#FFD8AB",
+            "cursorColor": "#C8D3F5",
+            "cyan": "#86E1FC",
+            "foreground": "#C8D3F5",
+            "green": "#C3E88D",
+            "purple": "#C099FF",
+            "red": "#FF757F",
+            "white": "#828BB8",
+            "yellow": "#FFC777"
+        }
+    ],
+    ...
+}
 ```
 
 这段配置添加了一个名为 `Tokyo Night Moon` 的配色方案，配合[预览和选择主题](#预览和选择主题)中提到的 `tokyo-night-moon` 主题效果更佳。
 
 接着找到如下所示的 `profiles.defaults`：
 
-```json title="settings.json" {5-11} frame="code"
+```json title="settings.json" {5-11}
 {
     ...
     "profiles":
@@ -543,24 +542,24 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 然后在 `profiles.defaults` 中添加以下字段并保存：
 
-```diff lang="json" title="settings.json" frame="code"
- {
-     ...
-     "profiles":
-     {
-         "defaults":
-         {
-+            "adjustIndistinguishableColors": "never",
-+            "colorScheme": "Tokyo Night Moon",
-             "font":
-             {
-                 "face": "<font-family-name>"
-             }
-         },
-         ...
-     }
-     ...
- }
+```json title="settings.json" ins={7-8}
+{
+    ...
+    "profiles":
+    {
+        "defaults":
+        {
+            "adjustIndistinguishableColors": "never",
+            "colorScheme": "Tokyo Night Moon",
+            "font":
+            {
+                "face": "<font-family-name>"
+            }
+        },
+        ...
+    }
+    ...
+}
 ```
 
 设置说明：
@@ -574,27 +573,27 @@ Windows Terminal 支持亚克力材质，可以在保留背景颜色的同时加
 
 继续在 `profiles.defaults` 中添加：
 
-```diff lang="json" title="settings.json" frame="code"
- {
-     ...
-     "profiles":
-     {
-         "defaults":
-         {
-             "adjustIndistinguishableColors": "never",
-             "colorScheme": "Tokyo Night Moon",
-             "font":
-             {
-                 "face": "<font-family-name>"
--            }
-+            },
-+            "useAcrylic": true,
-+            "opacity": 65
-         },
-         ...
-     }
-     ...
- }
+```json title="settings.json" del={12} ins={13-15}
+{
+    ...
+    "profiles":
+    {
+        "defaults":
+        {
+            "adjustIndistinguishableColors": "never",
+            "colorScheme": "Tokyo Night Moon",
+            "font":
+            {
+                "face": "<font-family-name>"
+            }
+            },
+            "useAcrylic": true,
+            "opacity": 65
+        },
+        ...
+    }
+    ...
+}
 ```
 
 设置说明：
@@ -608,7 +607,7 @@ Windows Terminal 支持亚克力材质，可以在保留背景颜色的同时加
 
 在启动 Windows Terminal 时，默认打开的 PowerShell 可能会输出类似下面的启动信息：
 
-```shellsession frame="terminal"
+```shellsession title="Example Output"
 PowerShell 7.6.4
 Loading personal and system profiles took 660ms.
 ```
@@ -621,7 +620,7 @@ Loading personal and system profiles took 660ms.
 
 3. 在右侧找到“命令行”，在原有路径后添加 `-NoLogo` 参数，例如：
 
-   ```text ins="-NoLogo" frame="none" wrap
+   ```text ins=" -NoLogo"
    "C:\Program Files\PowerShell\7\pwsh.exe" -NoLogo
    ```
 
@@ -635,7 +634,7 @@ Windows Terminal 和 VS Code 集成终端是两个不同的终端程序。虽然
 
 在 VS Code 中按下 `Ctrl + Shift + P` 打开命令面板，然后搜索并运行：
 
-```text frame="none"
+```text
 Terminal: Select Default Profile
 ```
 
@@ -643,7 +642,7 @@ Terminal: Select Default Profile
 
 也可以按下 `Ctrl + ,` 打开设置，搜索：
 
-```text frame="none"
+```text
 terminal.integrated.defaultProfile.windows
 ```
 
@@ -653,19 +652,19 @@ terminal.integrated.defaultProfile.windows
 
 按下快捷键 `Ctrl + ,` 打开设置，然后搜索：
 
-```text frame="none"
+```text
 terminal.integrated.fontFamily
 ```
 
 填入之前安装的 Nerd Font 字体家族名，例如：
 
-```text frame="none"
+```text
 Maple Mono NF CN
 ```
 
 或者：
 
-```text frame="none"
+```text
 MesloLGM Nerd Font
 ```
 
@@ -680,5 +679,5 @@ MesloLGM Nerd Font
 
 ## 参考资料
 
-- HanzonoSerenya's Cafe：[✨️美化你的 Windows 终端 | Oh My Posh 安装教程](https://blog.hananya.cafe/archives/ohmyposh-tutorial)
 - Oh My Posh 官方文档：[Windows | Oh My Posh](https://ohmyposh.dev/docs/installation/windows)
+- HanzonoSerenya's Cafe：[✨️美化你的 Windows 终端 | Oh My Posh 安装教程](https://blog.hananya.cafe/archives/ohmyposh-tutorial)
