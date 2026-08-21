@@ -38,7 +38,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "7.1.6",
     "astro-expressive-code": "^0.44.1",
-    "astro-icon": "^1.1.5",
+    "astro-icon": "^1.2.0",
     "hastscript": "^9.0.1",
     "katex": "^0.18.1",
     "markdown-it": "^15.0.0",
@@ -69,10 +69,10 @@
     "@biomejs/biome": "2.5.7",
     "@rollup/plugin-yaml": "^5.0.0",
     "@types/hast": "^3.0.5",
-    "@types/markdown-it": "^14.1.2",
+    "@types/markdown-it": "^14.2.0",
     "@types/mdast": "^4.0.4",
     "@types/sanitize-html": "^2.16.1",
-    "postcss-import": "^16.1.1",
+    "postcss-import": "^16.2.0",
     "postcss-nesting": "^14.0.1"
   },
   "packageManager": "pnpm@10.34.5"
