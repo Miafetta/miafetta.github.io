@@ -86,7 +86,7 @@ PowerShell 7 支持多种安装方式。
 
   使用 Scoop 安装 PowerShell 7 后，可能会看到以下提示：
 
-  ```shellsession title="Example Output" wrap=false
+  ```text title="Output" frame="terminal"
   Notes
   -----
   Since Scoop uses pwsh.exe internally, to update PowerShell Core itself,
@@ -116,10 +116,12 @@ PowerShell 7 支持多种安装方式。
 
   其次，可以通过 Scoop 提供的注册表文件，在右键菜单中添加 PowerShell 7 的快捷入口，注意替换 `drive:\path\to\scoop` 为 Scoop 的实际安装地址：
 
-  ```powershell
-  # 在资源管理器背景右键菜单中添加 PowerShell
+  ```powershell {"1. 添加背景右键菜单":2-3} {"2. 添加文件和文件夹右键菜单":5-6}
+  # 依次执行以下命令
+
   reg import "drive:\path\to\scoop\apps\pwsh\current\install-explorer-context.reg"
-  # 在文件和文件夹右键菜单中添加 PowerShell
+
+
   reg import "drive:\path\to\scoop\apps\pwsh\current\install-file-context.reg"
   ```
 
@@ -229,7 +231,7 @@ oh-my-posh font install Meslo
 
 打开 Windows Terminal，然后按下快捷键 `Ctrl + Shift + ,` 打开配置文件 `settings.json`，找到如下所示的 `profiles.defaults`：
 
-```json title="settings.json" {5}
+```jsonc title="settings.json" {5}
 {
     ...
     "profiles":
@@ -246,7 +248,7 @@ oh-my-posh font install Meslo
 
 然后在 `profiles.defaults` 中添加以下内容并保存：
 
-```json title="settings.json" del={5} ins={6-12}
+```jsonc title="settings.json" del={5} ins={6-12}
 {
     ...
     "profiles":
@@ -272,13 +274,13 @@ oh-my-posh font install Meslo
 
 - 使用 Oh My Posh 官方推荐中的 `Meslo LGM NF`：
 
-  ```json
+  ```jsonc showLineNumbers=false
   "face": "MesloLGM Nerd Font"
   ```
 
 - 使用 `Maple Mono NF CN Italic`：
 
-  ```json
+  ```jsonc showLineNumbers=false
   "face": "Maple Mono NF CN"
   ```
 
@@ -433,7 +435,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 打开 Windows Terminal，按下 `Ctrl + Shift + ,` 打开 `settings.json`，在文件顶部可以看到类似以下内容：
 
-```json title="settings.json" {3}
+```jsonc title="settings.json" {3}
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
@@ -443,7 +445,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 在 `"$schema"` 行的下一行，加入下面的内容，注意修改缩进：
 
-```json title="settings.json" ins={4-8}
+```jsonc title="settings.json" ins={4-8}
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
@@ -474,7 +476,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 打开 Windows Terminal，然后按下 `Ctrl + Shift + ,` 打开 `settings.json`，找到 `schemes`：
 
-```json title="settings.json" {3}
+```jsonc title="settings.json" {3}
 {
     ...
     "schemes": [],
@@ -484,7 +486,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 将其修改为以下内容：
 
-```json title="settings.json" del={3} ins={4-29}
+```jsonc title="settings.json" del={3} ins={4-29}
 {
     ...
     "schemes": [],
@@ -522,7 +524,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 接着找到如下所示的 `profiles.defaults`：
 
-```json title="settings.json" {5-11}
+```jsonc title="settings.json" {5-11}
 {
     ...
     "profiles":
@@ -542,7 +544,7 @@ Oh My Posh 只负责提示符的内容和样式，终端的外观和交互行为
 
 然后在 `profiles.defaults` 中添加以下字段并保存：
 
-```json title="settings.json" ins={7-8}
+```jsonc title="settings.json" ins={7-8}
 {
     ...
     "profiles":
@@ -573,7 +575,7 @@ Windows Terminal 支持亚克力材质，可以在保留背景颜色的同时加
 
 继续在 `profiles.defaults` 中添加：
 
-```json title="settings.json" del={12} ins={13-15}
+```jsonc title="settings.json" del={12} ins={13-15}
 {
     ...
     "profiles":
@@ -607,7 +609,7 @@ Windows Terminal 支持亚克力材质，可以在保留背景颜色的同时加
 
 在启动 Windows Terminal 时，默认打开的 PowerShell 可能会输出类似下面的启动信息：
 
-```shellsession title="Example Output"
+```text title="Output" frame="terminal"
 PowerShell 7.6.4
 Loading personal and system profiles took 660ms.
 ```

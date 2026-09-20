@@ -15,7 +15,7 @@ numbering: H2
 
 可以先通过配置全局环境变量解决大部分问题。编辑 `/etc/environment`，添加：
 
-```ini title="environment" ins={6-8}
+```dotenv title="environment" ins={6-8}
 #
 # This file is parsed by pam_env module
 #
@@ -36,19 +36,19 @@ SDL_IM_MODULE=fcitx
 
 对于仍无法使用输入法的应用，转到目录 `/usr/share/applications/`，编辑应用的 `.desktop` 文件，在 `Exec=` 后直接添加：
 
-```ini
+```text
 env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx 
 ```
 
 以微信为例，原先可能为：
 
-```ini
+```ini showLineNumbers=false
 Exec=/opt/wechat/wechat %U
 ```
 
 修改为：
 
-```ini ins="env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx "
+```ini ins="env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx " showLineNumbers=false
 Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 ```
 
@@ -139,7 +139,7 @@ Exec=env XMODIFIERS=@im=fcitx QT_IM_MODULE=fcitx /opt/wechat/wechat %U
 
 5. 然后编辑复制后的快捷方式，添加或修改 `StartupWMClass`：
 
-   ```ini
+   ```ini title="Arknights.desktop"
    StartupWMClass=Arknights
    ```
 

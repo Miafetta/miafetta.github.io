@@ -51,7 +51,7 @@ sudo systemctl restart fprintd
 
    编辑 `/etc/pam.d/sudo`：
 
-   ```ini title="sudo" ins={2}
+   ```text title="sudo" ins={2} showLineNumbers
    #%PAM-1.0
    auth        sufficient  pam_fprintd.so max-tries=1 timeout=5
    auth        include     system-auth
@@ -70,7 +70,7 @@ sudo systemctl restart fprintd
 
    编辑 `/etc/pam.d/polkit-1`：
 
-   ```ini title="polkit-1" ins={2}
+   ```text title="polkit-1" ins={2} showLineNumbers
    #%PAM-1.0
    auth      sufficient    pam_fprintd.so max-tries=1 timeout=5
    auth      include       system-auth
@@ -91,7 +91,7 @@ sudo systemctl restart fprintd
 
 编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```ini
+```text title="/etc/kernel/cmdline" showLineNumbers
 i915.enable_psr=0
 ```
 
@@ -194,7 +194,7 @@ sudo systemctl daemon-reload
 
    输出示例如下：
 
-   ```ansi title="Example Output" wrap=false
+   ```ansi title="Terminal session" showLineNumbers=false
    > sudo sbctl verify
    Verifying file database and EFI images in /efi...
    [38;2;255;0;0m✗[0m /efi/EFI/BOOT/BOOTX64.EFI is not signed
@@ -224,7 +224,7 @@ sudo systemctl daemon-reload
 
    此时的输出应当是清一色绿色打勾（`✓ ... is signed`），输出示例如下：
 
-   ```ansi title="Example Output" wrap=false
+   ```ansi title="Terminal session" showLineNumbers=false
    > sudo sbctl verify
    Verifying file database and EFI images in /efi...
    [38;2;68;214;44m✔[0m /efi/EFI/BOOT/BOOTX64.EFI is signed

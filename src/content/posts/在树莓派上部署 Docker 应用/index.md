@@ -34,6 +34,12 @@ numbering: H2
 
 ## 自动更新：WatchTower
 
+> 对于更新版本的 Docker，现在更推荐使用的是 [Dockcheck](https://github.com/mag37/dockcheck) 来管理容器的更新。
+>
+> ::github{repo="mag37/dockcheck"}
+>
+> 安装和配置详情可见：[使用 Dockcheck 自动更新容器](/posts/使用-dockcheck-自动更新容器/)。
+
 WatchTower 可以监控正在运行的 Docker 容器，并在镜像有新版本时自动拉取更新。对于树莓派这种“放在角落里长期运行”的设备来说，WatchTower 非常适合用来减少日常维护成本。
 
 ### 创建配置目录
@@ -89,7 +95,7 @@ WatchTower 默认会尝试更新所有正在运行的容器，但有些服务可
 
 WatchTower 默认使用黑名单排除容器。可以在对应容器的 `docker-compose.yml` 里增加一个特殊的标签，将它排除在自动更新之外：
 
-```yaml
+```yaml title="docker-compose.yml"
 labels:
   - "com.centurylinklabs.watchtower.enable=false"
 ```
@@ -100,13 +106,13 @@ labels:
 
 在 WatchTower 的 `docker-compose.yml` 中 `enviroment` 下添加：
 
-```yaml
+```yaml title="docker-compose.yml"
 WATCHTOWER_LABEL_ENABLE=true
 ```
 
 并且在允许自动更新的容器的 `docker-compose.yml` 里增加标签：
 
-```yaml
+```yaml title="docker-compose.yml"
 labels:
   - "com.centurylinklabs.watchtower.enable=true"
 ```
@@ -117,7 +123,7 @@ Watchtower 内置了一个非常强大的消息推送引擎 Shoutrrr。它几乎
 
 配置时，需要在 `docker-compose.yml` 中新增两个环境变量：
 
-```yaml
+```yaml title="docker-compose.yml"
 enviroment:
   - WATCHTOWER_NOTIFICATIONS=shoutrrr
   - WATCHTOWER_NOTIFICATION_URL=<推送URL>

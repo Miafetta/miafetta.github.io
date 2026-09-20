@@ -82,7 +82,7 @@ RabbitMQ 是使用 Erlang 语言开发的。如果直接在主机环境中安装
 
 #### 方法一：使用 Docker Compose 在 Docker 中部署并启动 RabbitMQ
 
-若主机中尚未安装 Docker，需要先安装 Docker。为了避免每次启动容器时都手动编写冗长的 `docker run` 命令，本文使用 Docker Compose 简化 RabbitMQ 容器的管理和部署。Docker 和 Docker Compose 的安装和配置可以参考：[Docker：在 Ubuntu 上安装与配置 Docker Compose](/posts/docker-与-docker-compose入门与实践/)。
+若主机中尚未安装 Docker，需要先安装 Docker。为了避免每次启动容器时都手动编写冗长的 `docker run` 命令，本文使用 Docker Compose 简化 RabbitMQ 容器的管理和部署。Docker 和 Docker Compose 的安装和配置可以参考：[Docker 与 Docker Compose：入门与实践](/posts/docker-与-docker-compose入门与实践/#安装和配置-docker)。
 
 以下假设 Docker 和 Docker Compose 已安装完成，并且已将当前用户加入 `docker` 用户组。
 
@@ -400,7 +400,7 @@ RabbitMQ 服务器可以通过任何支持 AMQP 协议的语言连接，只要�
 
 此处以 Python 为例。在生产者和消费者程序的开头，需要先导入 `pika` 库。
 
-```python
+```python showLineNumbers=false
 import pika
 ```
 
@@ -416,7 +416,7 @@ import pika
 
 如果 RabbitMQ 使用默认的 `guest / guest` 用户，并且程序与 RabbitMQ 服务器运行在同一台主机上，可以直接使用：
 
-```python
+```python showLineNumbers=false
 connection_params = pika.ConnectionParameters(host="localhost")
 ```
 
@@ -521,7 +521,7 @@ channel.queue_declare(queue=queue_name)
 
 使用 `queue_declare()` 方法可以新建一个队列，该方法至少传递一个参数 `queue`，即队列名称。除了直接使用 `queue` 参数指定队列名外，也可以将可选参数 `exclusive` 设置为 `True`，RabbitMQ 服务器将自动创建一个不会重名的队列，该队列可以通过 `.method.queue` 获取名称。使用 `exclusive` 参数的代码如下，这与上面给出的代码是等价的。
 
-```python
+```python showLineNumbers=false
 # 新建队列，并使用 .method.queue 获取队列名
 queue_created = channel.queue_declare("",exclusive=True)
 queue_name = queue_created.method.queue
@@ -556,7 +556,7 @@ channel.basic_publish(exchange='',
 
 ##### Step 4: 关闭连接
 
-```python
+```python showLineNumbers=false
 connection.close()
 ```
 
@@ -625,7 +625,7 @@ channel.basic_consume(queue='hello',
 
 ##### Step 4：正式监听队列并接收消息
 
-```python
+```python showLineNumbers=false
 channel.start_consuming()
 ```
 
@@ -684,7 +684,7 @@ channel.basic_consume(queue='hello',
 
 首先，在生产者和消费者程序中创建消息队列 Queue 时，设置消息队列为可持久化的，如下所示。
 
-```python
+```python showLineNumbers=false
 # 在参数列表中添加 durable=True，以声明一个可持久化的'durable_queue'队列
 channel.queue_declare(queue='durable_queue', durable=True)
 ```
@@ -776,7 +776,7 @@ def basic_qos(
 
 最常用的场景为公平分发模式，将 `prefetch_count` 设置为 `1`，即每个消费者同一时间最多只处理一条未确认消息。设置公平分发时，只需在消费者程序中正式监听前添加如下代码：
 
-```python
+```python showLineNumbers=false
 channel.basic_qos(prefetch_count=1)
 # 等同于 channel.basic_qos(prefetch_size=0, prefetch_count=1, global_=False)
 ```
@@ -855,7 +855,7 @@ Step 1：连接至 RabbitMQ 服务器
 
 Step 2：新建交换机
 
-```python
+```python showLineNumbers=false
 # 声明一个'logs'交换机
 channel.exchange_declare(exchange = 'logs',
                          exchange_type = 'fanout')
@@ -923,7 +923,7 @@ Step 3：新建队列
 
 Step 4：将队列绑定到交换机
 
-```python
+```python showLineNumbers=false
 # 将队列绑定到交换机
 channel.queue_bind(exchange='logs',queue=queue_name)
 ```

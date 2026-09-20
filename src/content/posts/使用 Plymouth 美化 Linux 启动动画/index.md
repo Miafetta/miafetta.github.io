@@ -53,7 +53,7 @@ nano /etc/dracut.conf.d/plymouth.conf
 
 然后写入：
 
-```ini title="plymouth.conf"
+```bash title="plymouth.conf" frame="code" showLineNumbers
 add_dracutmodules+=" plymouth "
 ```
 
@@ -63,7 +63,7 @@ add_dracutmodules+=" plymouth "
 
 编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```text
+```text title="/etc/kernel/cmdline" showLineNumbers
 quiet splash loglevel=3
 ```
 
@@ -124,7 +124,7 @@ sudo mv /usr/share/plymouth/themes/spinner/watermark.png.bak /usr/share/plymouth
 
 如果仍然能看到少量 udev、systemd 或光标输出，可以编辑内核参数文件 `/etc/kernel/cmdline`，在最后面加上一个空格，然后添加：
 
-```text
+```text title="/etc/kernel/cmdline" showLineNumbers
 rd.udev.log_priority=3 vt.global_cursor_default=0 systemd.show_status=false rd.systemd.show_status=false
 ```
 
