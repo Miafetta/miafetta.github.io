@@ -555,7 +555,7 @@ docker run hello-world
 
 如果终端中能够看到类似以下的输出，尤其是 `Downloaded newer image` 和 `Hello from Docker!`，说明 Docker 已经可以正常拉取镜像并运行容器。
 
-```shellsession title="Example Output" wrap=false {5,7-8}
+```text title="Output" {5,7-8} frame="terminal"
 Unable to find image 'hello-world:latest' locally
 latest: Pulling from library/hello-world
 4f55086f7dd0: Pull complete
@@ -626,7 +626,7 @@ docker ps
 
 如果先前创建的示例 Nginx 容器仍在运行，会在输出中看到名为 `my-nginx` 的容器以及对应的端口映射信息，例如：
 
-```shellsession title="Example Output" wrap=false
+```text title="Output" wrap=false frame="terminal"
 CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS         PORTS                                     NAMES
 5eaf2dc6081e   nginx:alpine   "/docker-entrypoint.…"   1 second ago   Up 3 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   my-nginx
 ```
@@ -818,7 +818,7 @@ docker rmi nginx:alpine
 
 创建项目目录 `demo-nginx`，项目结构如下：
 
-```text
+```text wrap=false
 demo-nginx/
 ├── Dockerfile
 └── html/
@@ -872,7 +872,7 @@ docker build -t demo-nginx .
 
 构建过程的输出示例如下所示，实际显示的部分信息可能有所不同：
 
-```shellsession title="Example Output" wrap=false
+```text title="Output" wrap=false frame="terminal"
 [+] Building 0.1s (7/7) FINISHED                                                      docker:desktop-linux
  => [internal] load build definition from Dockerfile                                                  0.0s
  => => transferring dockerfile: 89B                                                                   0.0s
@@ -927,7 +927,7 @@ http://localhost:8081
 
 创建项目目录 `demo-compose`，结构如下：
 
-```text
+```text wrap=false
 demo-compose/
 ├── compose.yml
 └── html/
@@ -992,7 +992,7 @@ docker compose up -d
 
 构建过程的输出示例如下所示，实际显示的构建耗时可能有所不同：
 
-```ansi title="Example Output" wrap=false
+```ansi title="Output" wrap=false showLineNumbers=false
 [+] up 2/2
  [38;2;68;214;44m✔[0m Network demo-compose_default [38;2;68;214;44mCreated[0m      [94m0.3s[0m
  [38;2;68;214;44m✔[0m Container demo-compose-nginx [38;2;68;214;44mCreated[0m      [94m0.8s[0m

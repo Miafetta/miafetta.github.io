@@ -86,7 +86,7 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 看到如下提示，则说明安装成功：
 
-```shellsession title="Example Output"
+```text title="Output" frame="terminal"
 Scoop was installed successfully!
 Type 'scoop help' for instructions.
 ```
@@ -326,7 +326,7 @@ scoop help
 
 输出如下所示：
 
-```shellsession title="Example Output" wrap=false
+```text title="Output" wrap=false frame="terminal"
 Usage: scoop <command> [<args>]
 
 Available commands are listed below.

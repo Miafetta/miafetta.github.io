@@ -208,7 +208,7 @@ Waydroid 会将 Android 应用生成对应的 `.desktop` 文件，并显示在 L
 
 如果希望应用菜单更干净，可以通过修改 `.desktop` 文件，为不需要显示的应用添加：
 
-```ini
+```ini showLineNumbers=false
 NoDisplay=true
 ```
 
@@ -232,7 +232,7 @@ Waydroid 的应用快捷方式通常位于 `~/.local/share/applications/` 并以
 
    然后编辑脚本文件，根据自己的需要增删 `hide_apps` 中的包名：
 
-   ```sh title="waydroid_icon_hiding.sh"
+   ```bash title="waydroid_icon_hiding.sh" showLineNumbers
    # 需要隐藏的应用包名
    hide_apps=(
        "com.google.android.googlequicksearchbox" # Google

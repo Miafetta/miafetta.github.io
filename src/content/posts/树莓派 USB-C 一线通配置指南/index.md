@@ -31,7 +31,7 @@ numbering: H2
 
 修改树莓派启动配置文件 `/boot/firmware/config.txt`，在文件最末尾新起一行，加入：
 
-```ini
+```ini title="/boot/firmware/config.txt"
 dtoverlay=dwc2
 ```
 
@@ -47,7 +47,7 @@ dtoverlay=dwc2
 
 修改内核启动参数文件 `/boot/firmware/cmdline.txt`（注意此文件只能有一行），然后找到 `rootwait`，在后面加一个空格，输入：
 
-```text
+```text title="/boot/firmware/cmdline.txt" showLineNumbers
 modules-load=dwc2,g_ether
 ```
 
