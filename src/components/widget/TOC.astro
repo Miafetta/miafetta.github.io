@@ -92,6 +92,8 @@ class TableOfContents extends HTMLElement {
     tocEntries: HTMLAnchorElement[] = [];
     active: boolean[] = [];
     activeIndicator: HTMLElement | null = null;
+    initFrame = 0;
+    updateFrame = 0;
 
     constructor() {
         super();
@@ -107,7 +109,7 @@ class TableOfContents extends HTMLElement {
             if (idx != undefined)
                 this.active[idx] = entry.isIntersecting;
 
-            if (entry.isIntersecting && this.anchorNavTarget == entry.target.firstChild)
+            if (entry.isIntersecting && this.anchorNavTarget == entry.target.firstElementChild)
                 this.anchorNavTarget = null;
         });
 
@@ -167,16 +169,15 @@ class TableOfContents extends HTMLElement {
         this.tocEl.scrollTo({
             top,
             left: 0,
-            behavior: "smooth",
+            behavior: "auto",
         });
     };
 
     update = () => {
-        requestAnimationFrame(() => {
+        cancelAnimationFrame(this.updateFrame);
+        this.updateFrame = requestAnimationFrame(() => {
             this.toggleActiveHeading();
-            // requestAnimationFrame(() => {
             this.scrollToActiveHeading();
-            // });
         });
     };
 
@@ -219,7 +220,7 @@ class TableOfContents extends HTMLElement {
             const heading = this.headings[idx];
             this.anchorNavTarget = heading;
             event.preventDefault();
-            heading.scrollIntoView({ behavior: "smooth", block: "start" });
+            heading.scrollIntoView({ behavior: "auto", block: "start" });
             window.history.pushState(null, "", anchor.hash);
         } else {
             this.anchorNavTarget = null;
@@ -231,15 +232,8 @@ class TableOfContents extends HTMLElement {
     };
 
     connectedCallback() {
-        // wait for the onload animation to finish, which makes the `getBoundingClientRect` return correct values
-        const element = document.querySelector('.prose');
-        if (element) {
-            element.addEventListener('animationend', () => {
-                this.init();
-            }, { once: true });
-        } else {
-            console.debug('Animation element not found');
-        }
+        // Wait for inserted markup, not an animation that may be disabled or already finished.
+        this.initFrame = requestAnimationFrame(() => this.init());
     };
 
     init() {
@@ -284,11 +278,10 @@ class TableOfContents extends HTMLElement {
     };
 
     disconnectedCallback() {
-        this.sections.forEach((section) =>
-            this.observer.unobserve(section)
-        );
+        cancelAnimationFrame(this.initFrame);
+        cancelAnimationFrame(this.updateFrame);
         this.observer.disconnect();
-        this.tocEl?.removeEventListener("click", this.handleAnchorClick);
+        this.tocEl?.removeEventListener("click", this.handleAnchorClick, { capture: true });
     };
 }
 
@@ -296,37 +289,4 @@ if (!customElements.get("table-of-contents")) {
     customElements.define("table-of-contents", TableOfContents);
 }
 
-const tocSmoothScrollWindow = window as Window & {
-    __tocSmoothScrollController?: AbortController;
-};
-tocSmoothScrollWindow.__tocSmoothScrollController?.abort();
-tocSmoothScrollWindow.__tocSmoothScrollController = new AbortController();
-
-document.addEventListener("click", (event) => {
-    const anchor = event
-        .composedPath()
-        .find((element) =>
-            element instanceof HTMLAnchorElement &&
-            element.closest("table-of-contents")
-        );
-
-    if (!(anchor instanceof HTMLAnchorElement)) return;
-
-    if (event instanceof MouseEvent &&
-        (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-    ) {
-        return;
-    }
-
-    const id = decodeURIComponent(anchor.hash?.substring(1));
-    const heading = document.getElementById(id);
-    if (!heading) return;
-
-    event.preventDefault();
-    heading.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.pushState(null, "", anchor.hash);
-}, {
-    capture: true,
-    signal: tocSmoothScrollWindow.__tocSmoothScrollController.signal,
-});
 </script>

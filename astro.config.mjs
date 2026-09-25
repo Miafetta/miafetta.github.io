@@ -38,7 +38,7 @@ export default defineConfig({
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
 			containers: ["main", "#sidebar-current-meta"],
-			smoothScrolling: true,
+			smoothScrolling: false, // Use native CSS scrolling instead of a JS animation loop.
 			cache: true,
 			preload: true,
 			accessibility: true,
