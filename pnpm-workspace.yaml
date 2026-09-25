@@ -3,6 +3,11 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
 
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+
 overrides:
   esbuild: 0.28.1
   serialize-javascript: 7.0.7
