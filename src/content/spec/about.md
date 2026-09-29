@@ -50,4 +50,4 @@ numbering: none
 
 - 背景：[能天使](https://www.pixiv.net/artworks/143016603) by [鬼针草](https://www.pixiv.net/users/6049901)
 
-- 头像：[《エロマンガ先生》](https://mzh.moegirl.org.cn/埃罗芒阿老师) Blu-ray & DVD Vol.6 #12「エロマンガフェスティバル」04:34
+- 头像：[《エロマンガ先生》](https://mzh.moegirl.org.cn/埃罗芒阿老师) Blu-ray & DVD Vol.6 #12「エロマンガフェスティバル」04\:34
