@@ -1,0 +1,17 @@
+diff --git a/index.js b/index.js
+index 56c26025074cbcf218e3ec4d810662da93f8024e..f186c1da694496ebfdc7f2464a0cddfa20572454 100644
+--- a/index.js
++++ b/index.js
+@@ -395,6 +395,12 @@ module.exports = class CachePolicy {
+     evaluateRequest(req) {
+         this._assertRequestHasHeaders(req);
+ 
++        // CVE-2026-93748: max-stale must not override security restrictions in maxAge().
++        if (!this.storable() || this._rescc['no-cache'] || this._resHeaders.vary === '*' ||
++            (this._isShared && this._resHeaders['set-cookie'] && !this._rescc.public && !this._rescc.immutable)) {
++            return this._evaluateRequestMissResult(req);
++        }
++
+         // In all circumstances, a cache MUST NOT ignore the must-revalidate directive
+         if (this._rescc['must-revalidate']) {
+             return this._evaluateRequestMissResult(req);
