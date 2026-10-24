@@ -13,18 +13,20 @@ numbering: H2
 
 在开始之前，请确认：
 
-- 已安装并启动 Docker，同时能够使用 `docker compose`
+- 已安装并启动 Docker，同时能够使用 `docker compose` 命令
 - Dockcheck 的运行用户能够直接执行 `docker` 命令，无需使用 `sudo`
 - 所有需要自动更新的容器均由 Docker Compose 管理（通过 `docker run` 创建的容器即使拉取了新镜像，也无法由 Dockcheck 自动重新创建）
-- 主机能够访问所使用的镜像仓库；如果启用 Dockcheck 自更新，还需要能够访问 GitHub
-- 不要同时运行其他自动更新工具，例如 Watchtower，以免多个程序同时拉取或重建同一容器。
+- 主机能够访问所使用的镜像仓库和 GitHub
+- 不要同时运行其他自动更新工具，例如 Watchtower，以免多个程序同时拉取或重建同一容器
+
+本文以使用 systemd 的 Debian／Ubuntu 系统为例。
 
 ## 安装 Dockcheck
 
 首先安装 Dockcheck 所需的基础依赖：
 
 ```bash
-sudo apt update 
+sudo apt update
 sudo apt install -y git curl jq findutils ca-certificates
 ```
 
@@ -53,7 +55,7 @@ nano dockcheck.config
 |    `AutoMode`    |  `true`  | 启用无人值守自动更新                     |
 | `AutoSelfUpdate` |  `true`  | 允许 Dockcheck 自动更新自身              |
 | `BackupForDays`  |    7     | 更新前备份当前镜像，并保留 7 天          |
-|    `DaysOld`     |    1     | 仅自动安装发布时间至少达到 1 天的镜像    |
+|    `DaysOld`     |    1     | 仅自动安装创建时间已满 1 天的镜像        |
 |    `Exclude`     | 按需配置 | 完全排除指定容器，不检查也不更新         |
 | `ExcludeUpdate`  | 按需配置 | 检查指定容器是否存在更新，但不自动安装   |
 |    `MaxAsync`    |    2     | 检查更新时最多并发 2 个子进程            |
@@ -62,17 +64,11 @@ nano dockcheck.config
 
 其他选项保持为默认或按需修改。
 
-随后以只检查模式运行一次 Dockcheck：
-
-```bash
-./dockcheck.sh -n
-```
-
-首次运行时，如果系统中尚未安装 `regctl`，Dockcheck 会提示选择安装方式。在 `amd64` 或 `arm64` 环境中，可以选择 `s`，由 Dockcheck 下载对应架构的静态二进制文件。
-
 ## 创建通知配置
 
-此处以使用钉钉机器人 Webhook 为例。
+以下提供[钉钉](#使用钉钉机器人)和[飞书](#使用飞书机器人)两种通知配置，选择其中一种完成即可。
+
+### 使用钉钉机器人
 
 先在钉钉群中新建钉钉机器人，安全模式使用“自定义关键词”，关键词设置为 `Dockcheck`，获取到钉钉 Webhook 地址。
 
@@ -200,6 +196,7 @@ EOF_POLICY
 
 dingtalk_send_markdown() {
     local title="$1" content="$2" payload response errcode errmsg
+    content="$(markdown_hardbreak "$content")"
 
     if [[ -z "${DINGTALK_WEBHOOK:-}" ]]; then
         printf '❌ 未配置 DINGTALK_WEBHOOK，无法发送钉钉通知。\n' >&2
@@ -249,7 +246,7 @@ send_dingtalk_daily_check() {
 
     content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 #### ✅ 检查完成
@@ -274,7 +271,7 @@ send_dingtalk_runtime_error() {
 
     content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 #### ❌ 运行异常
@@ -361,7 +358,7 @@ trigger_dingtalk_notification() {
 
         content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 #### 📦 发现可用更新
@@ -388,7 +385,7 @@ ${policy}
 
         content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 ${body}
@@ -406,7 +403,7 @@ ${body}
 
         content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 #### 🔔 通知组件有可用更新
@@ -425,7 +422,7 @@ ${update_list}
 
         content="### ${title}
 
-🖥️ 主机：${hostname}  
+🖥️ 主机：${hostname}
 🕒 时间：${now}
 
 ${body}
@@ -487,14 +484,14 @@ install_dingtalk_runtime_monitor() {
 install_dingtalk_runtime_monitor
 ```
 
-脚本定义的模板如下所示：
+容器更新通知的内容示例如下：
 
 ```md
 ### 🐳 Dockcheck · 容器更新
 
 🖥️ 主机：nyapasu-pi
 
-🕒 时间：2026-09-19 19:15:59
+🕒 时间：2026-09-19 19:15:00
 
 #### 📦 发现可用更新
 
@@ -512,32 +509,406 @@ install_dingtalk_runtime_monitor
 🤖 由 **Dockcheck** 自动发送
 ```
 
+完成后，可以跳转到[测试通知与检查更新](#测试通知与检查更新)。
+
+### 使用飞书机器人
+
+在目标飞书群中添加自定义机器人，在安全设置中启用“自定义关键词”，填写 `Dockcheck`，然后复制机器人的 Webhook 地址。
+
+然后编辑 `dockcheck.config`，找到如下行：
+
+```bash frame="code" title="dockcheck.config" showLineNumbers
+# NOTIFY_CHANNELS="apprise bark discord DSM file generic gotify HA matrix ntfy pushbullet pushover slack smtp telegram"
+```
+
+取消注释，改为如下内容（修改 `<Feishu Webhook URL>` 处为刚才获取到的飞书机器人 Webhook 地址）：
+
+```bash frame="code" title="dockcheck.config" showLineNumbers
+NOTIFY_CHANNELS="feishu"
+
+FEISHU_WEBHOOK="<Feishu Webhook URL>"
+FEISHU_KEYWORD="Dockcheck"
+
+FEISHU_ALLOWEMPTY=true # 无更新时也调用通知模板，发送每日检查结果
+```
+
+由于 Dockcheck 未内置飞书通知模板，还需要额外添加通知模板。
+
+在项目目录下，创建 `notify_feishu.sh`：
+
+```bash
+nano notify_feishu.sh
+```
+
+然后写入：
+
+```bash title="notify_feishu.sh" showLineNumbers
+#!/usr/bin/env bash
+# Dockcheck -> Feishu (Lark) Webhook, Card 2.0
+# Based on the user's notify_dingtalk.sh workflow.
+# Place next to dockcheck.sh. Loaded by notify_templates/notify_v2.sh.
+#
+# Required dockcheck.config settings:
+#   Notify=true
+#   NOTIFY_CHANNELS="feishu"
+#   FEISHU_WEBHOOK="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxxxx"
+#   FEISHU_ALLOWEMPTY=true
+# Optional:
+#   FEISHU_KEYWORD="Dockcheck"
+#
+# Requires: bash, curl, jq. Use keyword "Dockcheck" in bot security settings.
+
+export FEISHU_EVENT_SENT="${FEISHU_EVENT_SENT:-false}"
+FEISHU_DAILY_PENDING="${FEISHU_DAILY_PENDING:-false}"
+export FEISHU_RUNTIME_LOG="${FEISHU_RUNTIME_LOG:-}"
+export FEISHU_RUNTIME_TEE_INSTALLED="${FEISHU_RUNTIME_TEE_INSTALLED:-false}"
+
+feishu_format_csv_code() {
+    local input="$1" output="" item
+    local -a items=()
+    IFS=',' read -ra items <<< "$input"
+    for item in "${items[@]}"; do
+        item="${item#"${item%%[![:space:]]*}"}"
+        item="${item%"${item##*[![:space:]]}"}"
+        [[ -z "$item" ]] && continue
+        [[ -n "$output" ]] && output+=", "
+        output+="\`${item}\`"
+    done
+    printf '%s' "$output"
+}
+
+feishu_format_update_list() {
+    local raw="$1" output="" item
+    while IFS= read -r item; do
+        [[ -z "$item" ]] && continue
+        item="${item#"${item%%[![:space:]]*}"}"
+        item="${item%"${item##*[![:space:]]}"}"
+        [[ -z "$item" ]] && continue
+        [[ -n "$output" ]] && output+=$'\n'
+        output+="- \`${item}\`"
+    done < <(printf '%b\n' "$raw")
+    printf '%s' "$output"
+}
+
+feishu_update_policy() {
+    local auto_mode exclude_text="无" exclude_update_text="无"
+    if [[ "${AutoMode:-false}" == "true" ]]; then
+        auto_mode="✅ 已启用"
+    else
+        auto_mode="⏸️ 未启用"
+    fi
+    [[ -n "${Exclude:-}" ]] && exclude_text="$(feishu_format_csv_code "$Exclude")"
+    [[ -n "${ExcludeUpdate:-}" ]] && exclude_update_text="$(feishu_format_csv_code "$ExcludeUpdate")"
+
+    cat <<EOF_POLICY
+**自动更新：** ${auto_mode}
+**镜像冷却期：** ${DaysOld:-0} 天
+**旧镜像备份：** ${BackupForDays:-未启用} 天
+**完全排除：** ${exclude_text}
+**仅检查不更新：** ${exclude_update_text}
+EOF_POLICY
+}
+
+# Usage: feishu_send_card "Title" "Section title 1" "Section body 1" ["Section title 2" "Section body 2" ...]
+# All dynamic text is JSON-escaped by jq (including quotes, backslashes and newlines).
+feishu_send_card() {
+    local title="$1"
+    shift
+    local hostname="${FromHost:-$(hostname)}" now meta payload response status message
+    now="$(date '+%Y-%m-%d %H:%M:%S')"
+    printf -v meta '**🖥️ 主机：** %s\n**🕒 时间：** %s' "$hostname" "$now"
+
+    if ! command -v jq >/dev/null 2>&1; then
+        printf '❌ 飞书通知发送失败：请先安装 jq（sudo apt install jq）。\n' >&2
+        NotifyError=true
+        return 1
+    fi
+
+    if (( $# % 2 != 0 )); then
+        printf '❌ 飞书通知发送失败：标题与正文参数数量不匹配。\n' >&2
+        NotifyError=true
+        return 1
+    fi
+
+    payload="$(jq -cn \
+        --arg title "$title" \
+        --arg meta "$meta" \
+        --arg footer "🤖 由 **${FEISHU_KEYWORD:-Dockcheck}** 自动发送" \
+        '
+        ($ARGS.positional) as $parts |
+        {
+          msg_type: "interactive",
+          card: {
+            schema: "2.0",
+            config: {update_multi: true, width_mode: "default"},
+            header: {template: "blue", title: {tag: "plain_text", content: $title}},
+            body: {
+              direction: "vertical",
+              padding: "12px 12px 12px 12px",
+              elements: (
+                [{tag: "markdown", content: $meta}] +
+                (reduce range(0; ($parts | length); 2) as $i (
+                    [];
+                    . + [
+                      {tag: "hr"},
+                      {tag: "markdown", content: ("**" + $parts[$i] + "**"), text_size: "heading-3"},
+                      {tag: "markdown", content: $parts[$i+1]}
+                    ]
+                )) +
+                [{tag: "hr"}, {tag: "markdown", content: $footer, text_size: "notation"}]
+              )
+            }
+          }
+        }
+        ' --args "$@")" || {
+            printf '❌ 飞书通知发送失败：JSON 构造异常。\n' >&2
+            NotifyError=true
+            return 1
+        }
+
+    # For local previews/tests without posting to Feishu.
+    if [[ "${FEISHU_DRY_RUN:-false}" == "true" ]]; then
+        printf '%s\n' "$payload"
+        return 0
+    fi
+
+    if [[ -z "${FEISHU_WEBHOOK:-}" ]]; then
+        printf '❌ 未设置 FEISHU_WEBHOOK，无法发送飞书通知。\n' >&2
+        NotifyError=true
+        return 1
+    fi
+
+    response="$(curl -fsS \
+        --connect-timeout 10 --max-time 30 \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        --data-binary "$payload" \
+        "$FEISHU_WEBHOOK")" || {
+        printf '❌ 飞书 Webhook 请求失败。\n' >&2
+        NotifyError=true
+        return 1
+    }
+
+    # Feishu webhook can respond with either code:0 or legacy StatusCode:0.
+    status="$(jq -r 'if .code != null then .code elif .StatusCode != null then .StatusCode else -1 end' <<< "$response" 2>/dev/null)" || status="-1"
+    if [[ "$status" != "0" ]]; then
+        message="$(jq -r '.msg // .StatusMessage // "unknown error"' <<< "$response" 2>/dev/null)"
+        printf '❌ 飞书通知发送失败：%s (code=%s)\n' "$message" "$status" >&2
+        printf '飞书返回：%s\n' "$response" >&2
+        NotifyError=true
+        return 1
+    fi
+
+    printf '✅ 飞书通知发送成功：%s\n' "$title"
+}
+
+feishu_daily_check() {
+    feishu_send_card '🗓️ Dockcheck · 每日检查' \
+        '✅ 检查完成' '所有容器镜像均已是最新版本。' \
+        '⚙️ 更新策略' "$(feishu_update_policy)"
+}
+
+feishu_runtime_error() {
+    local issues="$1"
+    FEISHU_EVENT_SENT=true
+    export FEISHU_EVENT_SENT
+    feishu_send_card '🔔 Dockcheck · 系统通知' \
+        '❌ 运行异常' "$issues" \
+        '🔎 排查命令' '`journalctl -u dockcheck.service -n 100 --no-pager`'
+}
+
+feishu_collect_runtime_issues() {
+    local exit_code="${1:-0}" item line
+    local -a issue_list=()
+    local -A seen=()
+
+    feishu_add_issue() {
+        local issue="$1"
+        [[ -z "$issue" ]] && return 0
+        if [[ -z "${seen[$issue]+x}" ]]; then
+            seen["$issue"]=1
+            issue_list+=("$issue")
+        fi
+    }
+
+    [[ "$exit_code" -ne 0 ]] && feishu_add_issue "脚本异常退出：退出码 \`${exit_code}\`"
+
+    if declare -p GotErrors >/dev/null 2>&1; then
+        for item in "${GotErrors[@]}"; do
+            [[ -n "$item" ]] && feishu_add_issue "镜像检查失败：\`${item}\`"
+        done
+    fi
+    if declare -p FailedUpdates >/dev/null 2>&1; then
+        for item in "${FailedUpdates[@]}"; do
+            [[ -n "$item" ]] && feishu_add_issue "镜像拉取失败：\`${item}\`"
+        done
+    fi
+
+    if [[ -n "${FEISHU_RUNTIME_LOG:-}" && -f "${FEISHU_RUNTIME_LOG}" ]]; then
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            feishu_add_issue "日志：\`${line}\`"
+            [[ "${#issue_list[@]}" -ge 20 ]] && break
+        done < <(
+            grep -E \
+                'ERROR: Failed to curl latest Dockcheck\.sh release version|ERROR: Failed to curl updated Dockcheck\.sh script|ERROR: Failed to curl binary dependency|Git error, manually pull/clone|Error pulling update for .*Skipping|Failed to recreate .*skipping|Path error - skipping|Docker error, exiting|does not have permissions to the docker socket|No docker compose binary available|No docker binaries available, exiting|Required dependency .* missing|is not working .* exiting|Error response from daemon:|Attempted to send notification to channel|Could not source .*notification function|飞书.*失败' \
+                "$FEISHU_RUNTIME_LOG" 2>/dev/null | tail -n 20 | sed 's/\r$//'
+        )
+    fi
+
+    for item in "${issue_list[@]}"; do
+        printf -- '- %s\n' "$item"
+    done
+}
+
+# Called by dockcheck notify_v2.sh as trigger_feishu_notification.
+trigger_feishu_notification() {
+    local title body list
+
+    # Container updates. If empty, report the daily check only at process exit.
+    if [[ "${MessageTitle:-}" == *"updates "*"available."* ]]; then
+        list="$(feishu_format_update_list "${UpdToString:-}")"
+        if [[ -z "$list" ]]; then
+            FEISHU_DAILY_PENDING=true
+            return 0
+        fi
+
+        FEISHU_EVENT_SENT=true
+        export FEISHU_EVENT_SENT
+        feishu_send_card '🐳 Dockcheck · 容器更新' \
+            '📦 发现可用更新' "$list" \
+            '⚙️ 更新策略' "$(feishu_update_policy)"
+
+    # Dockcheck script version update, including -N test notification.
+    elif [[ "${MessageTitle:-}" == *"New version of dockcheck available."* ]]; then
+        body="${MessageBody:-无详细信息}"
+        body="${body//dockcheck on ${FromHost:-$(hostname)} has update available/}"
+        body="${body//Installed version:/**当前版本：**}"
+        body="${body//Latest version:/**最新版本：**}"
+        body="${body//Changenotes:/**更新说明：**}"
+        body="${body//TEST of notifications triggered./通知功能测试。}"
+        FEISHU_EVENT_SENT=true
+        export FEISHU_EVENT_SENT
+        feishu_send_card '🔧 Dockcheck · 程序更新' '⬆️ Dockcheck 有可用更新' "$body"
+
+    elif [[ "${MessageTitle:-}" == *"New version of notify templates available."* ]]; then
+        list="$(feishu_format_update_list "${UpdToString:-}")"
+        [[ -z "$list" ]] && return 0
+        FEISHU_EVENT_SENT=true
+        export FEISHU_EVENT_SENT
+        feishu_send_card '🔧 Dockcheck · 程序更新' '🔔 通知组件有可用更新' "$list"
+
+    else
+        body="${MessageBody:-无详细信息}"
+        FEISHU_EVENT_SENT=true
+        export FEISHU_EVENT_SENT
+        feishu_send_card '🔔 Dockcheck · 系统通知' '📋 通知详情' "$body"
+    fi
+}
+
+feishu_exit_handler() {
+    local exit_code="${1:-0}" issues="" notify_rc=0
+    trap - EXIT
+    issues="$(feishu_collect_runtime_issues "$exit_code")"
+
+    if [[ -n "$issues" ]]; then
+        feishu_runtime_error "$issues" || notify_rc=$?
+    elif [[ "${FEISHU_DAILY_PENDING:-false}" == "true" \
+         && "${FEISHU_EVENT_SENT:-false}" != "true" ]]; then
+        feishu_daily_check || notify_rc=$?
+    fi
+
+    if [[ -n "${FEISHU_RUNTIME_LOG:-}" && -f "${FEISHU_RUNTIME_LOG}" ]]; then
+        rm -f "$FEISHU_RUNTIME_LOG" 2>/dev/null || true
+    fi
+
+    if [[ "$exit_code" -ne 0 ]]; then
+        exit "$exit_code"
+    elif [[ "$notify_rc" -ne 0 ]]; then
+        exit "$notify_rc"
+    fi
+    exit 0
+}
+
+feishu_install_runtime_monitor() {
+    if [[ -z "${FEISHU_RUNTIME_LOG:-}" ]]; then
+        FEISHU_RUNTIME_LOG="${TMPDIR:-/tmp}/dockcheck-feishu-runtime-$$.log"
+        export FEISHU_RUNTIME_LOG
+        : > "$FEISHU_RUNTIME_LOG" 2>/dev/null || {
+            printf '⚠️ 无法创建 Dockcheck 飞书日志：%s\n' "$FEISHU_RUNTIME_LOG" >&2
+            FEISHU_RUNTIME_LOG=""
+            export FEISHU_RUNTIME_LOG
+        }
+    fi
+
+    if [[ -n "${FEISHU_RUNTIME_LOG:-}" \
+          && "${FEISHU_RUNTIME_TEE_INSTALLED:-false}" != "true" ]]; then
+        export FEISHU_RUNTIME_TEE_INSTALLED=true
+        exec > >(tee -a "$FEISHU_RUNTIME_LOG") 2>&1
+    fi
+
+    # Dockcheck may re-source this file after self-updating with exec.
+    trap 'feishu_exit_handler "$?"' EXIT
+}
+
+feishu_install_runtime_monitor
+```
+
+脚本通过飞书 Card 2.0 发送通知。容器更新通知包含主机、时间、更新列表和当前更新策略，内容示例如下：
+
+```markdown
+### 🐳 Dockcheck · 容器更新
+
+**🖥️ 主机：** nyapasu-pi
+**🕒 时间：** 2026-10-24 04:06:16
+
+---
+
+#### 📦 发现可用更新
+
+- `rabbitmq`
+- `sakurafrp`
+
+---
+
+#### ⚙️ 更新策略
+
+**自动更新：** ✅ 已启用
+**镜像冷却期：** 1 天
+**旧镜像备份：** 7 天
+**完全排除：** `hikari-api`
+**仅检查不更新：** `rabbitmq`
+
+---
+
+🤖 由 **Dockcheck** 自动发送
+```
+
+### 测试通知与检查更新
+
+以上脚本的通知类型包括：
+
 |         通知类型         | 情况                                |
 | :----------------------: | :---------------------------------- |
 | `🗓️ Dockcheck · 每日检查` | 容器、Dockcheck、通知模板都没有更新 |
-| `🐳 Dockcheck · 容器更新` | 有容器更新                          |
+| `🐳 Dockcheck · 容器更新` | 发现容器更新                        |
 | `🔧 Dockcheck · 程序更新` | Dockcheck 本体或通知模板有更新      |
-| `🔔 Dockcheck · 系统通知` | 其他需要通知的异常/事件             |
+| `🔔 Dockcheck · 系统通知` | 运行异常或其他通知事件              |
 
-接着授予脚本可执行权限：
-
-```bash
-chmod +x notify_dingtalk.sh
-```
-
-然后测试更新通知：
+在通知脚本创建完成后，测试更新通知：
 
 ```bash
 ./dockcheck.sh -N
 ```
 
-如果钉钉能收到消息，继续执行如下命令，仅检查镜像而不更新：
+> 首次运行时，如果系统中尚未安装 `regctl`，Dockcheck 会提示选择安装方式。在 `amd64` 或 `arm64` 环境中，可以选择 `s`，由 Dockcheck 下载对应架构的静态二进制文件。
+
+如果机器人能收到消息，继续执行如下命令，仅检查镜像而不更新：
 
 ```bash
 ./dockcheck.sh -n
 ```
 
-最后就可以正式运行服务了：
+随后手动运行一次 Dockcheck：
 
 ```bash
 ./dockcheck.sh
@@ -575,7 +946,7 @@ ExecStart=<Path-To-Dockcheck>/dockcheck.sh
 
 - `Type=oneshot` 表示该服务仅在被触发时执行一次，Dockcheck 运行结束后服务即退出。
 - `User` 指定 Dockcheck 的运行用户。该用户必须具有访问 Docker daemon 的权限。
-- `WorkingDirectory` 指定 Dockcheck 的工作目录，以便脚本能够读取同目录下的 `dockcheck.config` 和自定义通知模板。
+- `WorkingDirectory` 指定 Dockcheck 运行时的工作目录。
 
 随后创建对应的 `systemd` Timer，用于定时触发上述 Service：
 
@@ -620,4 +991,4 @@ systemctl list-timers dockcheck.timer
 
 需要注意的是，`dockcheck.service` 无需设置为开机自启，而由 `dockcheck.timer` 在设定时间自动触发。
 
-至此，Dockcheck 将按照设定的时间定期检查容器镜像。检测到符合更新条件的新镜像后，Dockcheck 会先发送更新提醒，再按照 `dockcheck.config` 中的策略自动拉取镜像并重新创建相应的 Compose 服务；如果更新过程中出现异常，则会发送系统通知。
+至此，Dockcheck 将按照设定的时间定期检查容器镜像。检测到符合更新条件的新镜像后，Dockcheck 会先发送更新提醒，再按照 `dockcheck.config` 中的策略自动拉取镜像并重新创建相应的 Compose 服务；如果更新过程中出现异常，则会报告识别到的检查、拉取和重建异常，具体执行结果可通过 `journalctl` 查看。
