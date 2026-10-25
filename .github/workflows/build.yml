@@ -46,6 +46,9 @@ jobs:
       - name: Check cache policy safety
         run: pnpm test:security
 
+      - name: Run regression checks
+        run: pnpm test
+
   build:
     strategy:
       matrix:
@@ -69,5 +72,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Astro Build
-        run: pnpm astro build
+      - name: Build site and search index
+        run: pnpm build

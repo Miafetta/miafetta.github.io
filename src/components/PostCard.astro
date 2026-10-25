@@ -11,29 +11,12 @@ import PostMetadata from "./PostMeta.astro";
 interface Props {
 	class?: string;
 	entry: CollectionEntry<"posts">;
-	title: string;
 	url: string;
-	published: Date;
-	updated?: Date;
-	tags: string[];
-	category: string | null;
-	image: string;
-	description: string;
-	draft: boolean;
 	style: string;
 }
-const {
-	entry,
-	title,
-	url,
-	published,
-	updated,
-	tags,
-	category,
-	image,
-	description,
-	style,
-} = Astro.props;
+const { entry, url, style } = Astro.props;
+const { title, published, updated, tags, category, image, description } =
+	entry.data;
 const className = Astro.props.class;
 
 const hasCover = image !== undefined && image !== null && image !== "";

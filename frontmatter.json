@@ -3,6 +3,13 @@
   "frontMatter.framework.id": "astro",
   "frontMatter.preview.host": "http://localhost:4321",
   "frontMatter.content.publicFolder": "public",
+  "frontMatter.content.placeholders": [
+    {
+      "id": "postPreviewPath",
+      "script": "scripts/frontmatter-preview.mjs",
+      "command": "node"
+    }
+  ],
   "frontMatter.content.pageFolders": [
     {
       "title": "posts",
@@ -13,7 +20,8 @@
     {
       "name": "default",
       "pageBundle": true,
-      "previewPath": "'blog'",
+      "previewPath": "{{postPreviewPath}}",
+      "trailingSlash": true,
       "filePrefix": null,
       "clearEmpty": true,
       "fields": [
@@ -58,7 +66,7 @@
         },
         {
           "title": "language",
-          "name": "language",
+          "name": "lang",
           "type": "string"
         },
         {

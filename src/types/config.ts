@@ -89,6 +89,7 @@ export type LIGHT_DARK_MODE =
 	| typeof DARK_MODE
 	| typeof AUTO_MODE;
 
+// Legacy type kept pending confirmation; active posts use CollectionEntry<"posts"> from astro:content.
 export type BlogPostData = {
 	body: string;
 	title: string;

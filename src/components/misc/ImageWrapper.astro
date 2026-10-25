@@ -34,20 +34,21 @@ const isLocal = !(
 );
 const isPublic = src.startsWith("/");
 
-// TODO temporary workaround for images dynamic import
-// https://github.com/withastro/astro/issues/3373
 let img: ImageMetadata | undefined;
 if (isLocal) {
-	const files = import.meta.glob<ImageMetadata>("../../**", {
-		import: "default",
-	});
-	let normalizedPath = path
+	const files = import.meta.glob<ImageMetadata>(
+		"../../**/*.{avif,gif,jpeg,jpg,png,svg,webp}",
+		{
+			import: "default",
+		},
+	);
+	const normalizedPath = path
 		.normalize(path.join("../../", basePath, src))
 		.replace(/\\/g, "/");
 	const file = files[normalizedPath];
 	if (!file) {
-		console.error(
-			`\n[ERROR] Image file not found: ${normalizedPath.replace("../../", "src/")}`,
+		throw new Error(
+			`Image file not found: ${normalizedPath.replace("../../", "src/")}`,
 		);
 	}
 	img = await file();

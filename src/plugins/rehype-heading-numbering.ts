@@ -13,24 +13,19 @@ export type HeadingNumberingMode = (typeof headingNumberingModes)[number];
 
 export const defaultHeadingNumbering: HeadingNumberingMode = "H2";
 
-const normalizedModeMap: Record<string, HeadingNumberingMode> = {
-	h1: "H1",
-	h2: "H2",
-	roman: "Roman",
-	chinese: "Chinese",
-	none: "none",
-};
+export function parseHeadingNumbering(value: unknown) {
+	return typeof value === "string"
+		? headingNumberingModes.find(
+				(mode) => mode.toLowerCase() === value.trim().toLowerCase(),
+			)
+		: undefined;
+}
 
 export function normalizeHeadingNumbering(
 	value: unknown,
 	fallback: HeadingNumberingMode = defaultHeadingNumbering,
 ): HeadingNumberingMode {
-	if (typeof value !== "string") {
-		return fallback;
-	}
-
-	const normalized = normalizedModeMap[value.trim().toLowerCase()];
-	return normalized ?? fallback;
+	return parseHeadingNumbering(value) ?? fallback;
 }
 
 export function createHeadingNumberer(

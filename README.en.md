@@ -1,12 +1,12 @@
 # 🍥 Miafetta's Cafe
 
-![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen)
-![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.x-orange)
+![Node.js >= 22.23.4](https://img.shields.io/badge/node.js-%3E%3D22.23.4-brightgreen)
+![pnpm 12.6.0](https://img.shields.io/badge/pnpm-12.6.0-blue)
+![Astro](https://img.shields.io/badge/Astro-7.x-orange)
 
 A personal static blog built with [Astro](https://astro.build), based on [Fuwari](https://github.com/saicaca/fuwari).
 
-[**🖥️ Live Site (GitHub Pages)**](https://miafetta.github.io)
+[**🖥️ Live Site (GitHub Pages)**](https://blog.miafetta.cafe)
 
 🌏 README in
 [**中文**](./README.md)
@@ -28,6 +28,8 @@ A personal static blog built with [Astro](https://astro.build), based on [Fuwari
 
 ## 🚀 Getting Started
 
+Use Node.js 22.23.4 or 24.22.1 (matching CI) and pnpm 12.6.0 as specified by `packageManager`.
+
 1. Install dependencies:
    ```sh
    pnpm install
@@ -37,7 +39,7 @@ A personal static blog built with [Astro](https://astro.build), based on [Fuwari
    pnpm dev
    ```
 3. Edit the config file `src/config.ts` to customize the site.
-4. Run `pnpm new-post <filename>` to create a new post and edit it in `src/content/posts/`.
+4. Run `pnpm new-post "Post name"` and edit `src/content/posts/Post name/index.md`. Put images alongside it or in its `media/` subdirectory. The `.md` suffix is optional; MDX and nested post directories are not loaded.
 5. Build the site before deployment:
    ```sh
    pnpm build
@@ -46,6 +48,30 @@ A personal static blog built with [Astro](https://astro.build), based on [Fuwari
 ## ⚙️ Site Configuration
 
 Most site options can be edited in `src/config.ts`, including the title, profile, banner, favicon, table of contents and phone status card.
+
+`siteConfig.favicon` explicitly lists the separate favicons in `public/favicon/` (SVG and 16/32 pixel PNGs). After changing `src/assets/images/avatar.jpg`, run `pnpm icons` to regenerate these favicons and the 16, 32, 48, 180, 192 and 512 pixel rounded avatar icons in `src/icons/`. Local astro-icon SVGs can also be placed in `src/icons/`.
+
+The Front Matter editor uses the `lang` field. Its preview uses `scripts/frontmatter-preview.mjs` to generate the same post URL as Astro from the post directory. Start `pnpm dev` before previewing.
+
+### Directory Responsibilities
+
+| Directory | Purpose |
+|:----------|:--------|
+| `src/pages/` | Page routes, RSS and robots.txt output |
+| `src/layouts/` | Page frames; `Layout.astro` explicitly imports global styles |
+| `src/components/` | UI components; `PostList` arranges cards and `PostCard` displays one post summary |
+| `src/content/posts/` | Posts and their images, one directory per post with an `index.md` entry |
+| `src/content/spec/` | Markdown for standalone pages such as About and Resume |
+| `src/assets/`, `src/icons/` | Source images and generated avatar icons |
+| `src/styles/` | Theme variables, global styles and Markdown extensions |
+| `src/scripts/` | Browser scripts for layout, image sizing and the lightbox |
+| `src/plugins/` | Markdown and Expressive Code build plugins |
+| `src/utils/`, `src/types/`, `src/constants/`, `src/i18n/` | Utilities, types, constants and translations |
+| `public/` | Favicons, downloads and site verification files served at their original paths |
+| `scripts/` | Local tools, icon generation and regression checks; never executed in the browser |
+| `patches/` | Dependency patches applied by pnpm |
+
+`GlobalStyles.astro` and the legacy `BlogPostData` type remain reserved. Layouts explicitly import global styles; active posts use `CollectionEntry<"posts">` from `astro:content`. `.astro/`, `dist/` and `node_modules/` are ignored local output directories.
 
 ### Phone Status Card
 
@@ -110,11 +136,13 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm install`             | Installs dependencies                            |
 | `pnpm dev`                 | Starts local dev server at `localhost:4321`      |
 | `pnpm build`               | Build the production site to `./dist/`           |
+| `pnpm test`                | Check post creation, preview URLs, numbering and TOC regressions |
+| `pnpm icons`               | Regenerate site icons from the avatar           |
 | `pnpm preview`             | Preview the build locally, before deploying      |
 | `pnpm astro check`         | Run Astro checks for errors in the code          |
 | `pnpm biome ci ./src`      | Run formatting and lint checks with Biome        |
 | `pnpm format`              | Format the source code using Biome               |
-| `pnpm new-post <filename>` | Create a new post                                |
+| `pnpm new-post "Post name"` | Create a post directory with `index.md`          |
 | `pnpm astro ...`           | Run CLI commands like `astro add`, `astro check` |
 | `pnpm astro --help`        | Get help using the Astro CLI                     |
 
@@ -122,7 +150,7 @@ All commands are run from the root of the project, from a terminal:
 
 This site is configured for GitHub Pages:
 
-- `site`: `https://miafetta.github.io`
+- `site`: `https://blog.miafetta.cafe`
 - `base`: `/`
 - Deployment workflow: `.github/workflows/deploy.yml`
 

@@ -1,60 +1,38 @@
-/* This is a script to create a new post markdown file with front-matter */
+import fs from "node:fs";
+import path from "node:path";
 
-import fs from "fs"
-import path from "path"
+const args = process.argv.slice(2);
+const name = (args[0] ?? "").trim().replace(/[/\\]index\.md$/i, "").replace(/\.md$/i, "");
 
-function getDate() {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, "0")
-  const day = String(today.getDate()).padStart(2, "0")
-
-  return `${year}-${month}-${day}`
+// The content loader accepts exactly one post directory containing index.md.
+if (args.length !== 1 || !name || /[<>:"/\\|?*\x00-\x1f]/.test(name) ||
+    /[. ]$/.test(name) || /\.mdx$/i.test(name) ||
+    /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)) {
+    console.error("Usage: pnpm new-post <post-name> (one directory name; Markdown only)");
+    process.exit(1);
 }
 
-const args = process.argv.slice(2)
-
-if (args.length === 0) {
-  console.error(`Error: No filename argument provided
-Usage: npm run new-post -- <filename>`)
-  process.exit(1) // Terminate the script and return error code 1
-}
-
-let fileName = args[0]
-
-// Add .md extension if not present
-const fileExtensionRegex = /\.(md|mdx)$/i
-if (!fileExtensionRegex.test(fileName)) {
-  fileName += ".md"
-}
-
-const targetDir = "./src/content/posts/"
-const fullPath = path.join(targetDir, fileName)
-
-if (fs.existsSync(fullPath)) {
-  console.error(`Error: File ${fullPath} already exists `)
-  process.exit(1)
-}
-
-// recursive mode creates multi-level directories
-const dirPath = path.dirname(fullPath)
-if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true })
-}
-
+const today = new Date();
+const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+const fullPath = path.join("src", "content", "posts", name, "index.md");
 const content = `---
-title: ${args[0]}
-published: ${getDate()}
+title: ${JSON.stringify(name)}
+published: ${date}
 description: ''
 image: ''
 tags: []
 category: ''
-draft: false 
+draft: false
 lang: ''
 numbering: H2
 ---
-`
+`;
 
-fs.writeFileSync(path.join(targetDir, fileName), content)
-
-console.log(`Post ${fullPath} created`)
+try {
+    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    fs.writeFileSync(fullPath, content, { flag: "wx" });
+    console.log(`Post ${fullPath} created`);
+} catch (error) {
+    console.error(`Could not create post: ${error.message}`);
+    process.exitCode = 1;
+}

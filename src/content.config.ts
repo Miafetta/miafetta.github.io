@@ -1,24 +1,15 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import {
+	headingNumberingModes,
+	parseHeadingNumbering,
+} from "./plugins/rehype-heading-numbering";
 
 const createHeadingNumberingSchema = (defaultMode: "H2" | "none") =>
 	z.preprocess(
-		(value) => {
-			if (typeof value !== "string") {
-				return value;
-			}
-
-			const mode = value.trim().toLowerCase();
-			if (mode === "h1") return "H1";
-			if (mode === "h2") return "H2";
-			if (mode === "roman") return "Roman";
-			if (mode === "chinese") return "Chinese";
-			if (mode === "none") return "none";
-
-			return value;
-		},
-		z.enum(["H1", "H2", "Roman", "Chinese", "none"]).default(defaultMode),
+		(value) => parseHeadingNumbering(value) ?? value,
+		z.enum(headingNumberingModes).default(defaultMode),
 	);
 
 const headingNumberingSchema = createHeadingNumberingSchema("H2");

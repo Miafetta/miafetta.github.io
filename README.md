@@ -1,12 +1,12 @@
 # 🍥 Miafetta's Cafe
 
-![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen)
-![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
-![Astro](https://img.shields.io/badge/Astro-5.x-orange)
+![Node.js >= 22.23.4](https://img.shields.io/badge/node.js-%3E%3D22.23.4-brightgreen)
+![pnpm 12.6.0](https://img.shields.io/badge/pnpm-12.6.0-blue)
+![Astro](https://img.shields.io/badge/Astro-7.x-orange)
 
 基于 [Astro](https://astro.build) 和 [Fuwari](https://github.com/saicaca/fuwari) 修改的个人静态博客。
 
-[**🖥️ 在线预览（GitHub Pages）**](https://miafetta.github.io)
+[**🖥️ 在线预览（GitHub Pages）**](https://blog.miafetta.cafe)
 
 🌏 README in
 [**English**](./README.en.md)
@@ -28,6 +28,8 @@
 
 ## 🚀 使用方法
 
+使用 Node.js 22.23.4 或 24.22.1（与 CI 一致），以及 `packageManager` 指定的 pnpm 12.6.0。
+
 1. 安装依赖：
    ```sh
    pnpm install
@@ -37,7 +39,7 @@
    pnpm dev
    ```
 3. 通过配置文件 `src/config.ts` 自定义站点。
-4. 执行 `pnpm new-post <filename>` 创建新文章，并在 `src/content/posts/` 目录中编辑。
+4. 执行 `pnpm new-post "文章名"`，在 `src/content/posts/文章名/index.md` 中编辑文章，并将图片放在同目录或其 `media/` 子目录。支持省略或附带 `.md`；目前不加载 MDX 或多层文章目录。
 5. 部署前构建站点：
    ```sh
    pnpm build
@@ -46,6 +48,30 @@
 ## ⚙️ 站点配置
 
 大部分站点选项都可以在 `src/config.ts` 中修改，包括标题、个人信息、横幅图片、favicon、文内目录和手机状态卡片。
+
+`siteConfig.favicon` 显式配置 `public/favicon/` 中的独立 favicon（SVG、16 和 32 像素 PNG）。更换 `src/assets/images/avatar.jpg` 后运行 `pnpm icons`，会重新生成这些 favicon，以及 `src/icons/` 中的 16、32、48、180、192、512 像素圆角头像图标。`src/icons/` 也可放置供 astro-icon 使用的本地 SVG。
+
+Front Matter 编辑器使用 `lang` 字段；预览通过 `scripts/frontmatter-preview.mjs` 按文章目录生成与 Astro 一致的 URL。使用前先运行 `pnpm dev`。
+
+### 目录职责
+
+| 目录 | 用途 |
+|:-----|:-----|
+| `src/pages/` | 页面路由，以及 RSS、robots.txt 输出 |
+| `src/layouts/` | 页面框架；`Layout.astro` 显式引入全局样式 |
+| `src/components/` | 页面组件；`PostList` 排列文章卡片，`PostCard` 展示单篇摘要 |
+| `src/content/posts/` | 文章及其图片；每篇文章一个目录，以 `index.md` 为入口 |
+| `src/content/spec/` | 关于本站、简历等独立页面的 Markdown 内容 |
+| `src/assets/`、`src/icons/` | 源图片与生成的头像图标 |
+| `src/styles/` | 主题变量、全局样式与 Markdown 扩展样式 |
+| `src/scripts/` | 浏览器端布局、图片布局与灯箱脚本 |
+| `src/plugins/` | Markdown 和 Expressive Code 构建插件 |
+| `src/utils/`、`src/types/`、`src/constants/`、`src/i18n/` | 工具函数、类型、常量与翻译 |
+| `public/` | 按原路径发布的 favicon、下载素材及站点验证文件 |
+| `scripts/` | 本地开发工具、图标生成和回归检查；不在浏览器执行 |
+| `patches/` | pnpm 应用的依赖补丁 |
+
+`GlobalStyles.astro` 和旧 `BlogPostData` 类型暂作预留；当前全局样式由布局显式引入，文章类型以 `astro:content` 的 `CollectionEntry<"posts">` 为准。`.astro/`、`dist/`、`node_modules/` 是已忽略的本地生成目录。
 
 ### 手机状态卡片
 
@@ -110,11 +136,13 @@ numbering: H2 # H1, H2, Roman, Chinese, none
 | `pnpm install`             | 安装依赖                          |
 | `pnpm dev`                 | 在 `localhost:4321` 启动开发服务器 |
 | `pnpm build`               | 构建生产站点到 `./dist/`          |
+| `pnpm test`                | 检查文章创建、预览路径、标题编号和 TOC 回归 |
+| `pnpm icons`               | 从头像重新生成站点图标             |
 | `pnpm preview`             | 本地预览已构建的网站              |
 | `pnpm astro check`         | 检查 Astro 代码错误               |
 | `pnpm biome ci ./src`      | 使用 Biome 执行格式和 lint 检查   |
 | `pnpm format`              | 使用 Biome 格式化源码             |
-| `pnpm new-post <filename>` | 创建新文章                        |
+| `pnpm new-post "文章名"`   | 创建文章目录及 `index.md`          |
 | `pnpm astro ...`           | 执行 `astro add`、`astro check` 等 |
 | `pnpm astro --help`        | 显示 Astro CLI 帮助               |
 
@@ -122,7 +150,7 @@ numbering: H2 # H1, H2, Roman, Chinese, none
 
 本站已配置为部署到 GitHub Pages：
 
-- `site`: `https://miafetta.github.io`
+- `site`: `https://blog.miafetta.cafe`
 - `base`: `/`
 - 部署工作流：`.github/workflows/deploy.yml`
 
