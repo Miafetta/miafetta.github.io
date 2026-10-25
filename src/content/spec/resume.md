@@ -56,6 +56,7 @@ I am a junior undergraduate student in **Computer Science and Technology** at **
 
 - Freshmen Year: 30 of 193 total
 - Sophomore Year: 27 of 187 total
+- Junior Year: 15 of 191 total
 
 ### Core Courses
 
@@ -89,5 +90,3 @@ I am a junior undergraduate student in **Computer Science and Technology** at **
 ## Contact
 
 Email: <2943812220@qq.com> (recommended) / <shen_kerui@163.com> / <shen_kerui@stu.xjtu.edu.cn>
-
-For the Chinese version of my resume, click <a href="/downloads/resume/resume-chinese-version.pdf" download>HERE</a>.
