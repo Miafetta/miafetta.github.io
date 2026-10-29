@@ -3,6 +3,11 @@ allowBuilds:
   esbuild: true
   sharp: true
 
+auditConfig:
+  ignoreGhsas:
+    # shortcut: accept the build-time deepmerge advisory until a fix is available.
+    - GHSA-gcqx-w48m-w2h4
+
 overrides:
   esbuild: 0.28.1
   serialize-javascript: 7.1.3
