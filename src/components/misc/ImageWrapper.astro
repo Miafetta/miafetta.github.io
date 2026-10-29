@@ -1,6 +1,4 @@
 ---
-import path from "node:path";
-
 interface Props {
 	id?: string;
 	src: string;
@@ -13,7 +11,7 @@ interface Props {
 }
 
 import { Image } from "astro:assets";
-import { url } from "../../utils/url-utils";
+import { resolveImage } from "../../utils/image-utils";
 
 const {
 	id,
@@ -26,33 +24,7 @@ const {
 } = Astro.props;
 const className = Astro.props.class;
 
-const isLocal = !(
-	src.startsWith("/") ||
-	src.startsWith("http") ||
-	src.startsWith("https") ||
-	src.startsWith("data:")
-);
-const isPublic = src.startsWith("/");
-
-let img: ImageMetadata | undefined;
-if (isLocal) {
-	const files = import.meta.glob<ImageMetadata>(
-		"../../**/*.{avif,gif,jpeg,jpg,png,svg,webp}",
-		{
-			import: "default",
-		},
-	);
-	const normalizedPath = path
-		.normalize(path.join("../../", basePath, src))
-		.replace(/\\/g, "/");
-	const file = files[normalizedPath];
-	if (!file) {
-		throw new Error(
-			`Image file not found: ${normalizedPath.replace("../../", "src/")}`,
-		);
-	}
-	img = await file();
-}
+const img = await resolveImage(src, basePath);
 
 const imageClass = "w-full h-full object-cover";
 const imageStyle = `object-position: ${position}`;
@@ -67,6 +39,6 @@ const responsiveImageProps = {
 ---
 <div id={id} class:list={[className, 'overflow-hidden relative']}>
     <div class="transition absolute inset-0 dark:bg-black/10 bg-opacity-50 pointer-events-none"></div>
-    {isLocal && img && <Image src={img} {...responsiveImageProps}/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class={imageClass} style={imageStyle}/>}
+    {typeof img !== "string" && <Image src={img} {...responsiveImageProps}/>}
+    {typeof img === "string" && <img src={img} alt={alt || ""} class={imageClass} style={imageStyle}/>}
 </div>

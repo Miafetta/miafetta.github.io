@@ -22,6 +22,7 @@ interface Props {
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
+	image?: string;
 	headings?: MarkdownHeading[];
 	numbering?: string;
 	showToc?: boolean;
@@ -35,6 +36,7 @@ const {
 	description,
 	lang,
 	setOGTypeArticle,
+	image,
 	headings = [],
 	numbering,
 	showToc = false,
@@ -56,7 +58,7 @@ const mainPanelTop = siteConfig.banner.enable
 	: "5.5rem";
 ---
 
-<Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
+<Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} image={image}>
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>

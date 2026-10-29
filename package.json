@@ -8,7 +8,7 @@
     "check": "astro check",
     "test": "node scripts/check-new-post.mjs && node scripts/check-heading-numbering.mjs && node scripts/check-toc.mjs",
     "test:security": "node scripts/check-http-cache-semantics.mjs",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site dist && node scripts/check-seo.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "tsc --noEmit",
