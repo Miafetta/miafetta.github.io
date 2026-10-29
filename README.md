@@ -1,7 +1,7 @@
 # 🍥 Miafetta's Cafe
 
 ![Node.js >= 22.23.4](https://img.shields.io/badge/node.js-%3E%3D22.23.4-brightgreen)
-![pnpm 12.6.0](https://img.shields.io/badge/pnpm-12.6.0-blue)
+![pnpm 12.16.1](https://img.shields.io/badge/pnpm-12.16.1-blue)
 ![Astro](https://img.shields.io/badge/Astro-7.x-orange)
 
 基于 [Astro](https://astro.build) 和 [Fuwari](https://github.com/saicaca/fuwari) 修改的个人静态博客。
@@ -28,7 +28,7 @@
 
 ## 🚀 使用方法
 
-使用 Node.js 22.23.4 或 24.22.1（与 CI 一致），以及 `packageManager` 指定的 pnpm 12.6.0。
+使用 Node.js 22.23.4 或 24.22.1（与 CI 一致），以及 `packageManager` 指定的 pnpm 12.16.1。
 
 1. 安装依赖：
    ```sh

@@ -1,7 +1,7 @@
 # 🍥 Miafetta's Cafe
 
 ![Node.js >= 22.23.4](https://img.shields.io/badge/node.js-%3E%3D22.23.4-brightgreen)
-![pnpm 12.6.0](https://img.shields.io/badge/pnpm-12.6.0-blue)
+![pnpm 12.16.1](https://img.shields.io/badge/pnpm-12.16.1-blue)
 ![Astro](https://img.shields.io/badge/Astro-7.x-orange)
 
 A personal static blog built with [Astro](https://astro.build), based on [Fuwari](https://github.com/saicaca/fuwari).
@@ -28,7 +28,7 @@ A personal static blog built with [Astro](https://astro.build), based on [Fuwari
 
 ## 🚀 Getting Started
 
-Use Node.js 22.23.4 or 24.22.1 (matching CI) and pnpm 12.6.0 as specified by `packageManager`.
+Use Node.js 22.23.4 or 24.22.1 (matching CI) and pnpm 12.16.1 as specified by `packageManager`.
 
 1. Install dependencies:
    ```sh
