@@ -141,17 +141,17 @@ scoop bucket add versions
 
 除了 `extras` 和 `versions`，常见的 Bucket 还包括：
 
-|                            Bucket                            | 主要内容                                       |
-| :----------------------------------------------------------: | ---------------------------------------------- |
-|       [`main`](https://github.com/ScoopInstaller/Main)       | 默认仓库，主要收录常用的命令行工具和开发工具   |
-|     [`extras`](https://github.com/ScoopInstaller/Extras)     | 不符合 `main` 收录标准的应用，包括大量桌面软件 |
-|   [`versions`](https://github.com/ScoopInstaller/Versions)   | 软件的旧版本、测试版本及其他可选版本           |
-|       [`java`](https://github.com/ScoopInstaller/Java)       | Java 开发工具包、运行环境及相关工具            |
-|        [`php`](https://github.com/ScoopInstaller/PHP)        | 不同版本的 PHP 及相关工具                      |
-|      [`games`](https://github.com/ScoopInstaller/Games)      | 免费、开源游戏及游戏相关工具                   |
-| [`nerd-fonts`](https://github.com/ScoopInstaller/Nerd-Fonts) | Nerd Fonts 字体                                |
-|    [`nirsoft`](https://github.com/ScoopInstaller/Nirsoft)    | NirSoft 提供的 Windows 实用工具                |
-| [`nonportable`](https://github.com/ScoopInstaller/Nonportable) | 非便携式软件，安装时可能需要管理员权限         |
+|                               Bucket                               | 主要内容                                       |
+| :----------------------------------------------------------------: | ---------------------------------------------- |
+|       [`main`](https://github.com/ScoopInstaller/Main)             | 默认仓库，主要收录常用的命令行工具和开发工具   |
+|     [`extras`](https://github.com/ScoopInstaller/Extras)           | 不符合 `main` 收录标准的应用，包括大量桌面软件 |
+|   [`versions`](https://github.com/ScoopInstaller/Versions)         | 软件的旧版本、测试版本及其他可选版本           |
+|       [`java`](https://github.com/ScoopInstaller/Java)             | Java 开发工具包、运行环境及相关工具            |
+|        [`php`](https://github.com/ScoopInstaller/PHP)              | 不同版本的 PHP 及相关工具                      |
+|      [`games`](https://github.com/ScoopInstaller/Games)            | 免费、开源游戏及游戏相关工具                   |
+| [`nerd-fonts`](https://github.com/matthewjberger/scoop-nerd-fonts) | Nerd Fonts 字体                                |
+|    [`nirsoft`](https://github.com/ScoopInstaller/Nirsoft)          | NirSoft 提供的 Windows 实用工具                |
+| [`nonportable`](https://github.com/ScoopInstaller/Nonportable)     | 非便携式软件，安装时可能需要管理员权限         |
 
 添加这些 Bucket 时，只需指定名称。例如：
 
