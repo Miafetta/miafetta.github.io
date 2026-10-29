@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
-    "test": "node scripts/check-new-post.mjs && node scripts/check-heading-numbering.mjs && node scripts/check-toc.mjs",
+    "test": "node scripts/check-new-post.mjs && node scripts/check-heading-numbering.mjs && node scripts/check-toc.mjs && node scripts/check-indexnow.mjs",
     "test:security": "node scripts/check-http-cache-semantics.mjs",
     "build": "astro build && pagefind --site dist && node scripts/check-seo.mjs",
     "preview": "astro preview",

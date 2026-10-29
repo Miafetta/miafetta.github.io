@@ -156,6 +156,15 @@ numbering: H2 # H1, H2, Roman, Chinese, none
 
 推送到 `main` 分支后会自动触发检查和部署。
 
+部署和 Cloudflare 缓存清理成功后，工作流会通过 [IndexNow](https://www.indexnow.org/) 批量通知 Bing 等支持该协议的搜索引擎，无需配置额外的 GitHub Secret。`public/indexnow-key.txt` 是随站点公开发布的所有权验证文件。
+
+- 首次接入或手动运行部署工作流时，提交 Sitemap 中的全部公开页面。
+- 后续推送按 `github.event.before` 到当前提交的差异选择 URL：文章正文或同目录图片变更会提交对应文章、首页和归档页；删除、转为草稿或改名时也通知旧 URL。草稿内容不会提交。
+- 修改关于页、简历内容时提交对应页面；修改共享页面源码、Astro 配置或 favicon 时提交全部公开页面。仅修改文档或工具脚本不会重复提交。
+- IndexNow 提交失败会在部署日志中显示，不影响已完成的 Pages 部署。失败后可重新运行该次 Actions 运行，重新提交同一批 URL（包括已删除的 URL）；请求成功仅表示收到通知，不保证立即收录或显示图片。Google 继续通过 Sitemap 和 Search Console 发现更新。
+
+本地先执行 `pnpm build`，再运行 `node scripts/indexnow.mjs prepare`，可预览全量提交内容，不发送请求。设置 `INDEXNOW_BEFORE` 为此前提交的完整 SHA 可预览增量内容。
+
 ## 🔗 相关项目
 
 ```text

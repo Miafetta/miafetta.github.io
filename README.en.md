@@ -156,6 +156,15 @@ This site is configured for GitHub Pages:
 
 Push to the `main` branch to trigger checks and deployment.
 
+After deployment and the Cloudflare cache purge succeed, the workflow notifies Bing and other participating search engines through [IndexNow](https://www.indexnow.org/). No additional GitHub Secret is needed; `public/indexnow-key.txt` is a publicly served ownership verification file.
+
+- The first integration and manual workflow runs submit all public URLs from the sitemap.
+- Later pushes compare `github.event.before` with the current commit. Changes to an article or its local images submit that article, the homepage and archive. Deletions, moves to draft and renames also notify the old URL. Draft content is excluded.
+- About and resume content changes submit their respective pages. Shared page source, Astro configuration or favicon changes submit all public pages. Documentation-only or tool-script changes do not trigger submissions.
+- Submission failures remain visible in deployment logs without failing the completed Pages deployment. Rerun the same Actions run to resubmit the same batch, including deleted URLs. Acceptance does not guarantee indexing or image display. Google continues to use the sitemap and Search Console.
+
+To preview the full payload without sending a request, run `pnpm build` followed by `node scripts/indexnow.mjs prepare`. Set `INDEXNOW_BEFORE` to a previous full commit SHA to preview an incremental payload.
+
 ## 🔗 Related Projects
 
 ```text
