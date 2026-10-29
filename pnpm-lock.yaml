@@ -251,8 +251,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       katex:
-        specifier: ^0.18.10
-        version: 0.18.10
+        specifier: ^0.19.1
+        version: 0.19.1
       markdown-it:
         specifier: ^15.0.3
         version: 15.0.3
@@ -3527,6 +3527,10 @@ packages:
 
   katex@0.18.10:
     resolution: {integrity: sha512-/B6p9eY9DX7aHBfpkHdpirDTZ5QH9xTwL9y837PWuzuv41O5jFdqNQwVQEQsimY0/iVNkwBY4+4hMfhQ7d4Dbw==}
+    hasBin: true
+
+  katex@0.19.1:
+    resolution: {integrity: sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA==}
     hasBin: true
 
   kleur@4.1.5:
@@ -9113,6 +9117,10 @@ snapshots:
       graceful-fs: 4.2.11
 
   katex@0.18.10:
+    dependencies:
+      commander: 15.0.0
+
+  katex@0.19.1:
     dependencies:
       commander: 15.0.0
 
