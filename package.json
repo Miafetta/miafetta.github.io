@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
-    "test": "node scripts/check-new-post.mjs && node scripts/check-heading-numbering.mjs && node scripts/check-toc.mjs && node scripts/check-indexnow.mjs",
+    "test": "node scripts/check-new-post.mjs && node scripts/check-heading-numbering.mjs && node scripts/check-toc.mjs && node scripts/check-indexnow.mjs && node scripts/check-math.mjs",
     "test:security": "node scripts/check-http-cache-semantics.mjs",
     "build": "astro build && pagefind --site dist && node scripts/check-seo.mjs",
     "preview": "astro preview",
@@ -77,7 +77,7 @@
     "postcss-import": "^16.2.0",
     "postcss-nesting": "^14.0.3"
   },
-  "packageManager": "pnpm@12.16.1",
+  "packageManager": "pnpm@12.18.0",
   "engines": {
     "node": ">=22.23.4"
   }
