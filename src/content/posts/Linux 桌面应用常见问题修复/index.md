@@ -1,10 +1,14 @@
 ---
 title: "Linux 桌面应用常见问题修复"
 published: 2026-05-07
-description: "无法唤起输入法、图标大小不统一，启动的应用图标还有些模糊？本文整理 Arch Linux 和 KDE 桌面环境下这些常见问题的修复方法，专治各种桌面应用~"
+updated: 2026-09-20
+description: "无法唤起输入法、应用图标大小不一，用 Lutris 启动的应用图标还有些模糊？本文整理 Arch Linux 和 KDE 桌面环境下这几个常见问题的修复方法~"
 image: "./cover.png"
-tags: ["Linux", "Linux 美化", "Arch Linux", "KDE"]
-category: "指南"
+coverCredit:
+  text: "梅原生（せい） / 🤍🩵"
+  url: "https://www.pixiv.net/artworks/128359728"
+tags: ["Linux", "Arch Linux", "KDE"]
+category: "问题修复"
 draft: false
 numbering: H2
 ---

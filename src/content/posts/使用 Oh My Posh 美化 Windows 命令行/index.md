@@ -1,9 +1,13 @@
 ---
 title: "使用 Oh My Posh 美化 Windows 命令行"
 published: 2026-08-07
+updated: 2026-09-20
 description: "觉得 Windows 默认终端过于单调？本文介绍如何安装 Oh My Posh，配置 Nerd Font、提示符主题和 Windows Terminal，打造美观且实用的命令行环境。"
 image: "./cover.jpg"
-tags: ["命令行美化", "Windows", "PowerShell", "Windows Terminal", "Oh My Posh"]
+coverCredit:
+  text: "紺屋 / Sense"
+  url: "https://www.pixiv.net/artworks/132952842"
+tags: ["美化", "Windows", "Oh My Posh", "PowerShell", "Windows Terminal"]
 category: "指南"
 draft: false
 numbering: H2

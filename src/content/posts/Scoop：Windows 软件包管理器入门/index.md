@@ -1,10 +1,14 @@
 ---
-title: "Scoop：Windows 命令行软件包管理器"
+title: "Scoop：Windows 软件包管理器入门"
 published: 2026-08-06
-description: "厌倦了四处寻找安装包和反复点击安装向导？不如试试 Scoop 吧！"
+updated: 2026-10-29
+description: "厌倦了四处寻找安装包？本文介绍 Scoop 的安装、配置与常用命令。"
 image: "./cover.jpg"
+coverCredit:
+  text: "あつまる / 「仕事絵」 藍月なくる生誕祭2023"
+  url: "https://www.pixiv.net/artworks/109361261"
 tags: ["软件包管理", "Windows", "Scoop", "PowerShell"]
-category: "指南"
+category: "学习笔记"
 draft: false
 numbering: H2
 ---

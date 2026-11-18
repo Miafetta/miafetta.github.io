@@ -1,9 +1,13 @@
 ---
 title: "使用 Dockcheck 自动更新容器"
 published: 2026-09-20
-description: "容器越来越多，逐个检查镜像更新既麻烦又容易遗漏？本文介绍如何安装和配置 Dockcheck 来定期检查和自动更新 Docker Compose 镜像。"
+updated: 2026-11-17
+description: "容器越来越多，逐个检查镜像更新既麻烦又容易遗漏？本文介绍如何用 Dockcheck 定期检查、自动更新容器，并通过钉钉或飞书推送通知。"
 image: "./cover.png"
-tags: ["自托管", "容器", "Docker", "Dockcheck"]
+coverCredit:
+  text: "朔月八雲 / 夏色"
+  url: "https://www.pixiv.net/artworks/147516973"
+tags: ["容器", "自托管", "Dockcheck", "Docker"]
 category: "指南"
 draft: false
 numbering: H2
@@ -15,8 +19,8 @@ numbering: H2
 
 在开始之前，请确认：
 
-- 已安装并启动 Docker，同时能够使用 `docker compose` 命令
-- Dockcheck 的运行用户能够直接执行 `docker` 命令，无需使用 `sudo`
+- 已安装并启动 Docker，同时能够使用 `docker compose` 命令（参考：[安装 Docker 及 Docker Compose](/posts/docker-与-docker-compose入门与实践/#安装-docker-及-docker-compose)）
+- Dockcheck 的运行用户能够直接执行 `docker` 命令，无需 `sudo`（参考：[将当前用户加入 docker 用户组](/posts/docker-与-docker-compose入门与实践/#将当前用户加入-docker-用户组)）
 - 所有需要自动更新的容器均由 Docker Compose 管理（通过 `docker run` 创建的容器即使拉取了新镜像，也无法由 Dockcheck 自动重新创建）
 - 主机能够访问所使用的镜像仓库和 GitHub
 - 不要同时运行其他自动更新工具，例如 Watchtower，以免多个程序同时拉取或重建同一容器

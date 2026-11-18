@@ -1,9 +1,13 @@
 ---
 title: "使用 Plymouth 美化 Linux 启动动画"
 published: 2026-05-13
+updated: 2026-09-29
 description: "受够了开机时满屏滚动的日志？本文介绍如何在 Arch Linux 上配置 Plymouth、隐藏 systemd-boot 菜单，打造更干净、更简洁的启动体验~"
 image: "./cover.png"
-tags: ["Linux", "Linux 美化", "Arch Linux", "Plymouth", "systemd-boot"]
+coverCredit:
+  text: "藤ちょこ（藤原） / 二人だけの楽園"
+  url: "https://www.pixiv.net/artworks/120269913"
+tags: ["美化", "Linux", "Arch Linux", "Plymouth", "systemd-boot"]
 category: "指南"
 draft: false
 numbering: H2

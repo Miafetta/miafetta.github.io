@@ -1,8 +1,12 @@
 ---
 title: "在树莓派上部署 Docker 应用"
 published: 2026-05-21
+updated: 2026-09-20
 description: "拯救你闲置的树莓派！本文以 Raspberry Pi 4B 为例，整理了 WatchTower、SakuraFrp、Syncthing 和 RabbitMQ 等常用 Docker 应用的部署方法~"
 image: "./cover.jpg"
+coverCredit:
+  text: "Umi / OC"
+  url: "https://www.pixiv.net/artworks/127870873"
 tags: ["自托管", "Raspberry Pi", "Docker"]
 category: "指南"
 draft: false

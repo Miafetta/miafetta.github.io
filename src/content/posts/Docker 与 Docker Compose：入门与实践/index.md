@@ -1,8 +1,12 @@
 ---
 title: "Docker 与 Docker Compose：入门与实践"
 published: 2026-07-10
+updated: 2026-10-25
 description: "想用 Docker 更方便地部署和管理应用吗？本文从基础概念出发，整理了 Docker 与 Docker Compose 在 Linux 和 Windows 下的安装与使用方法。"
 image: "./cover.png"
+coverCredit:
+  text: "janyhero / Alice"
+  url: "https://www.pixiv.net/artworks/97808075"
 tags: ["容器", "Linux", "Windows", "Docker", "Docker Compose"]
 category: "学习笔记"
 draft: false

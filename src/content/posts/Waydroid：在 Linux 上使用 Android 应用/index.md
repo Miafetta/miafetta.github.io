@@ -1,9 +1,13 @@
 ---
 title: "Waydroid：在 Linux 上使用 Android 应用"
 published: 2026-05-12
-description: "想在 Linux 桌面上运行 Android 应用？来看看 Waydroid 吧~"
+updated: 2026-09-20
+description: "Linux 也能运行 Android 应用？本文记录 Waydroid 的安装与使用~"
 image: "./cover.png"
-tags: ["容器", "Linux", "Android", "Arch Linux", "Waydroid"]
+coverCredit:
+  text: "胡麻乃りお / Novelism"
+  url: "https://www.pixiv.net/artworks/84179374"
+tags: ["Linux", "Arch Linux", "Android", "Waydroid"]
 category: "指南"
 draft: false
 numbering: H2

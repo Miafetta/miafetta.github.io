@@ -1,8 +1,12 @@
 ---
 title: "RabbitMQ：消息队列入门与实践"
 published: 2026-03-04
+updated: 2026-09-20
 description: "想了解如何使用 RabbitMQ 实现异步通信？本文从消息队列的核心概念讲起，介绍了 RabbitMQ 的安装、管理与配置，并通过 Python 示例完成消息收发。"
 image: "./cover.png"
+coverCredit:
+  text: "ミリペパー / 何かお探しですか？"
+  url: "https://www.pixiv.net/artworks/133825160"
 tags: ["消息队列", "RabbitMQ", "Docker", "Python"]
 category: "学习笔记"
 draft: false
