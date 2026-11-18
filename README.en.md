@@ -94,8 +94,12 @@ The card reads the latest device status from `apiUrl`. When the API is offline, 
 ---
 title: My First Blog Post
 published: 2026-01-01
+updated: 2026-01-01
 description: This is the first post of my blog.
 image: ./cover.jpg
+coverCredit:
+  text: "摄影作者 / Image source"
+  url: "https://example.com/source"
 tags: [Foo, Bar]
 category: Notes
 draft: false
@@ -103,6 +107,12 @@ lang: en      # Set only if the post's language differs from the site's language
 numbering: H2 # H1, H2, Roman, Chinese, none
 ---
 ```
+
+Maintain `updated` manually as a Beijing-time (`Asia/Shanghai`) `YYYY-MM-DD` date. It falls back to `published` when omitted; both the post header and enabled license block show it even when the two dates match. New posts initialize both dates to the same day. Existing posts were backfilled once from the last Git commit touching the entire post directory, falling back to the publication date when no history exists. Builds, deployments and editor saves do not update it automatically.
+
+`coverCredit`, `text` and `url` are optional and may be empty. A source link appears at the bottom right of the detail cover only when a cover exists and both trimmed fields are nonempty. New posts include empty placeholders; the editor may safely clear empty values.
+
+To check post rendering, start `pnpm dev`, then run `node scripts/check-post-details.mjs`. The check creates temporary articles and cleans them up afterward.
 
 ## 🧩 Markdown Extended Syntax
 

@@ -13,13 +13,17 @@ if (args.length !== 1 || !name || /[<>:"/\\|?*\x00-\x1f]/.test(name) ||
 }
 
 const today = new Date();
-const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).format(today);
 const fullPath = path.join("src", "content", "posts", name, "index.md");
 const content = `---
 title: ${JSON.stringify(name)}
 published: ${date}
+updated: ${date}
 description: ''
 image: ''
+coverCredit:
+  text: ''
+  url: ''
 tags: []
 category: ''
 draft: false

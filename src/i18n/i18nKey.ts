@@ -52,6 +52,7 @@ enum I18nKey {
 
 	author = "author",
 	publishedAt = "publishedAt",
+	updatedAt = "updatedAt",
 	license = "license",
 
 	phoneStatusFetching = "phoneStatusFetching",

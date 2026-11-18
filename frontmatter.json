@@ -41,13 +41,40 @@
           "name": "published",
           "type": "datetime",
           "default": "{{now}}",
-          "isPublishDate": true
+          "isPublishDate": true,
+          "dateFormat": "yyyy-MM-dd"
+        },
+        {
+          "title": "updated",
+          "name": "updated",
+          "type": "datetime",
+          "dateFormat": "yyyy-MM-dd",
+          "description": "手动维护最后修改日期（北京时间）"
         },
         {
           "title": "preview",
           "name": "image",
           "type": "image",
           "isPreviewImage": true
+        },
+        {
+          "title": "coverCredit",
+          "name": "coverCredit",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "text",
+              "name": "text",
+              "type": "string",
+              "single": true
+            },
+            {
+              "title": "url",
+              "name": "url",
+              "type": "string",
+              "single": true
+            }
+          ]
         },
         {
           "title": "tags",
@@ -84,5 +111,6 @@
         }
       ]
     }
-  ]
+  ],
+  "frontMatter.content.autoUpdateDate": false
 }

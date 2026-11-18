@@ -23,6 +23,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const updated = entry.data.updated ?? entry.data.published;
+const creditText = entry.data.coverCredit?.text?.trim();
+const creditUrl = entry.data.coverCredit?.url?.trim();
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const coverImage = entry.data.image
 	? await getImageUrl(
@@ -104,7 +107,7 @@ const jsonLd = {
                 <PostMetadata
                         class="mb-5"
                         published={entry.data.published}
-                        updated={entry.data.updated}
+                        updated={updated}
                         tags={entry.data.tags}
                         category={entry.data.category}
                 ></PostMetadata>
@@ -114,13 +117,24 @@ const jsonLd = {
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
-                <ImageWrapper
-                    id="post-cover"
-                    src={entry.data.image}
-                    basePath={getPostContentBasePath(entry)}
-                    alt={formatI18n(I18nKey.postCoverImageAlt, {title: entry.data.title})}
-                    class="mb-8 rounded-xl banner-container onload-animation"
-                />
+                <div class="relative mb-8 rounded-xl banner-container onload-animation">
+                    <ImageWrapper
+                        id="post-cover"
+                        src={entry.data.image}
+                        basePath={getPostContentBasePath(entry)}
+                        alt={formatI18n(I18nKey.postCoverImageAlt, {title: entry.data.title})}
+                        class="rounded-xl"
+                    />
+                    {creditText && creditUrl && <a
+                        href={creditUrl} target="_blank" rel="noopener"
+                        aria-label={`${i18n(I18nKey.visitImageSource)}: ${creditText}`}
+                        class="group transition-all absolute flex items-center rounded-full px-3 py-2 right-4 bottom-4 max-w-[calc(100%_-_2rem)] bg-black/60 hover:bg-black/70 hover:pr-9 focus-visible:pr-9 active:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                    >
+                        <Icon class="shrink-0 text-white/75 text-[1.25rem] mr-1" name="material-symbols:copyright-outline-rounded" />
+                        <span class="min-w-0 break-words text-white/75 text-xs">{creditText}</span>
+                        <Icon class="transition absolute text-[oklch(0.75_0.14_var(--hue))] right-4 text-[0.75rem] opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100" name="fa6-solid:arrow-up-right-from-square" />
+                    </a>}
+                </div>
             }
 
 
@@ -128,7 +142,7 @@ const jsonLd = {
                 <Content />
             </Markdown>
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} updated={updated} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
         </div>
     </div>

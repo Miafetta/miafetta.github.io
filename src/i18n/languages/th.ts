@@ -55,6 +55,7 @@ export const th: Translation = {
 
 	[Key.author]: "ผู้เขียน",
 	[Key.publishedAt]: "เผยแพร่เมื่อ",
+	[Key.updatedAt]: "แก้ไขล่าสุดเมื่อ",
 	[Key.license]: "สัญญาอนุญาต",
 
 	[Key.phoneStatusFetching]: "กำลังดึงข้อมูล",

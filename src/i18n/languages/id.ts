@@ -55,6 +55,7 @@ export const id: Translation = {
 
 	[Key.author]: "Penulis",
 	[Key.publishedAt]: "Diterbitkan pada",
+	[Key.updatedAt]: "Terakhir diubah",
 	[Key.license]: "Lisensi",
 
 	[Key.phoneStatusFetching]: "Mengambil",

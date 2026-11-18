@@ -94,8 +94,12 @@ phoneStatus: {
 ---
 title: My First Blog Post
 published: 2026-01-01
+updated: 2026-01-01
 description: This is the first post of my blog.
 image: ./cover.jpg
+coverCredit:
+  text: "摄影作者 / Image source"
+  url: "https://example.com/source"
 tags: [Foo, Bar]
 category: Notes
 draft: false
@@ -103,6 +107,12 @@ lang: en      # 仅当文章语言与 `config.ts` 中的网站语言不同时需
 numbering: H2 # H1, H2, Roman, Chinese, none
 ---
 ```
+
+`updated` 为手动维护的最后修改日期，使用北京时间 `YYYY-MM-DD`，省略时回退到 `published`；即使两个日期相同，文章头部和底部版权区仍显示修改日期。新文章会将两个日期初始化为同一天。已有文章仅在本次按整个文章目录的最后 Git 提交日期一次性回填，无历史时使用发布日期；构建、部署和编辑器保存不会自动更新它。
+
+`coverCredit` 可省略，`text` 与 `url` 也可省略或留空。只有封面存在且两项去除首尾空白后均非空时，才在详情封面右下角显示署名来源链接。新文章模板提供空占位，编辑器清理空值不影响显示。
+
+页面功能回归检查：先运行 `pnpm dev`，再运行 `node scripts/check-post-details.mjs`；检查会临时创建文章并在结束后清理。
 
 ## 🧩 Markdown 扩展语法
 

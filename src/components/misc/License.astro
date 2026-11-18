@@ -9,10 +9,11 @@ interface Props {
 	title: string;
 	slug: string;
 	pubDate: Date;
+	updated: Date;
 	class: string;
 }
 
-const { title, pubDate } = Astro.props;
+const { title, pubDate, updated } = Astro.props;
 const className = Astro.props.class;
 const profileConf = profileConfig;
 const licenseConf = licenseConfig;
@@ -22,10 +23,10 @@ const postUrl = decodeURIComponent(Astro.url.toString());
     <div class="transition font-bold text-black/75 dark:text-white/75">
         {title}
     </div>
-    <a href={postUrl} class="link text-[var(--primary)]">
+    <a href={postUrl} class="link text-[var(--primary)] break-all">
         {postUrl}
     </a>
-    <div class="flex gap-6 mt-2">
+    <div class="flex flex-wrap gap-x-6 gap-y-2 mt-2">
         <div>
             <div class="transition text-black/30 dark:text-white/30 text-sm">{i18n(I18nKey.author)}</div>
             <div class="transition text-black/75 dark:text-white/75 line-clamp-2">{profileConf.name}</div>
@@ -33,6 +34,10 @@ const postUrl = decodeURIComponent(Astro.url.toString());
         <div>
             <div class="transition text-black/30 dark:text-white/30 text-sm">{i18n(I18nKey.publishedAt)}</div>
             <div class="transition text-black/75 dark:text-white/75 line-clamp-2">{formatDateToYYYYMMDD(pubDate)}</div>
+        </div>
+        <div>
+            <div class="transition text-black/30 dark:text-white/30 text-sm">{i18n(I18nKey.updatedAt)}</div>
+            <div class="transition text-black/75 dark:text-white/75 line-clamp-2">{formatDateToYYYYMMDD(updated)}</div>
         </div>
         <div>
             <div class="transition text-black/30 dark:text-white/30 text-sm">{i18n(I18nKey.license)}</div>

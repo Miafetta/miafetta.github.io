@@ -55,6 +55,7 @@ export const en: Translation = {
 
 	[Key.author]: "Author",
 	[Key.publishedAt]: "Published at",
+	[Key.updatedAt]: "Last modified at",
 	[Key.license]: "License",
 
 	[Key.phoneStatusFetching]: "Fetching",

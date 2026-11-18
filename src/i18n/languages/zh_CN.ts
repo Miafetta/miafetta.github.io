@@ -55,6 +55,7 @@ export const zh_CN: Translation = {
 
 	[Key.author]: "作者",
 	[Key.publishedAt]: "发布于",
+	[Key.updatedAt]: "最后修改于",
 	[Key.license]: "许可协议",
 
 	[Key.phoneStatusFetching]: "正在获取",

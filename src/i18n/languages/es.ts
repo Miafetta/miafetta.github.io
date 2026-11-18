@@ -56,6 +56,7 @@ export const es: Translation = {
 
 	[Key.author]: "Autor",
 	[Key.publishedAt]: "Publicado el",
+	[Key.updatedAt]: "Última modificación",
 	[Key.license]: "Licencia",
 
 	[Key.phoneStatusFetching]: "Obteniendo",

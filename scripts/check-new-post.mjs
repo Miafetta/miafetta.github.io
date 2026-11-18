@@ -15,6 +15,10 @@ try {
     const target = path.join(cwd, "src/content/posts/你好 # new post/index.md");
     const content = readFileSync(target, "utf8");
     assert.match(content, /title: "你好 # new post"/);
+    const published = /^published: (\d{4}-\d{2}-\d{2})$/m.exec(content)?.[1];
+    assert.ok(published);
+    assert.equal(/^updated: (.+)$/m.exec(content)?.[1], published);
+    assert.match(content, /coverCredit:\n  text: ''\n  url: ''\n/);
     assert.equal(path.matchesGlob("你好 # new post/index.md", "*/index.md"), true);
     assert.notEqual(create("你好 # new post").status, 0);
     assert.equal(readFileSync(target, "utf8"), content, "Existing posts must not be overwritten");
