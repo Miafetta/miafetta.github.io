@@ -99,7 +99,7 @@ export async function getCategoryList(): Promise<Category[]> {
 	});
 
 	const lst = Object.keys(count).sort((a, b) => {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
+		return a.toLowerCase().localeCompare(b.toLowerCase(), "zh-CN");
 	});
 
 	const ret: Category[] = [];
