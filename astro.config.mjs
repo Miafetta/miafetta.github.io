@@ -54,6 +54,7 @@ export default defineConfig({
 			},
 		}),
 		expressiveCode({
+			emitExternalStylesheet: false,
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
 			plugins: [
 				pluginCollapsibleSections(),

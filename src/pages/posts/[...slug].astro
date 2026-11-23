@@ -122,6 +122,7 @@ const jsonLd = {
                         id="post-cover"
                         src={entry.data.image}
                         basePath={getPostContentBasePath(entry)}
+                        loading="eager"
                         alt={formatI18n(I18nKey.postCoverImageAlt, {title: entry.data.title})}
                         class="rounded-xl"
                     />

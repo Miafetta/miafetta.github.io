@@ -7,6 +7,17 @@ import {
 import { expressiveCodeConfig } from "@/config";
 import type { LIGHT_DARK_MODE } from "@/types/config";
 
+let themeTransitionFrame = 0;
+
+function disableThemeTransitions(): void {
+	const root = document.documentElement;
+	root.classList.add("theme-switching");
+	cancelAnimationFrame(themeTransitionFrame);
+	themeTransitionFrame = requestAnimationFrame(() => {
+		root.classList.remove("theme-switching");
+	});
+}
+
 export function getDefaultHue(): number {
 	const fallback = "250";
 	const configCarrier = document.getElementById("config-carrier");
@@ -24,10 +35,12 @@ export function setHue(hue: number): void {
 	if (!r) {
 		return;
 	}
+	disableThemeTransitions();
 	r.style.setProperty("--hue", String(hue));
 }
 
 export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
+	disableThemeTransitions();
 	switch (theme) {
 		case LIGHT_MODE:
 			document.documentElement.classList.remove("dark");
