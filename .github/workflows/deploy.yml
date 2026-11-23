@@ -30,6 +30,7 @@ jobs:
         with:
           node-version: '24.22.1'
           build-cmd: pnpm run build
+          cache: false
 
       - name: Prepare IndexNow URLs
         id: indexnow
